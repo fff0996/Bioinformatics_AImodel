@@ -1,0 +1,12 @@
+[
+  "/work/.venv/bin/python",
+  "-m",
+  "pip",
+  "install",
+  "--cache-dir",
+  "/work/.cache/pip",
+  "-c",
+  "/work/constraints.txt",
+  "cellpose==4.2.1",
+  "psutil"
+]

@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "name": "inference_L0256",
+      "task": "inference",
+      "max_length": 256
+    },
+    {
+      "name": "inference_L0512",
+      "task": "inference",
+      "max_length": 512
+    },
+    {
+      "name": "inference_L1024",
+      "task": "inference",
+      "max_length": 1024
+    },
+    {
+      "name": "inference_L1200",
+      "task": "inference",
+      "max_length": 1200
+    },
+    {
+      "name": "finetune_L0256",
+      "task": "finetune",
+      "max_length": 256
+    },
+    {
+      "name": "finetune_L0512",
+      "task": "finetune",
+      "max_length": 512
+    },
+    {
+      "name": "finetune_L1024",
+      "task": "finetune",
+      "max_length": 1024
+    },
+    {
+      "name": "finetune_L1200",
+      "task": "finetune",
+      "max_length": 1200
+    }
+  ],
+  "seed": 42,
+  "cells_per_task": 1000,
+  "batch_size": 8,
+  "precision": "FP32",
+  "epochs_per_finetune": 1,
+  "repeats_per_condition": 1,
+  "length_policy": "official random nonzero-gene sampling with dynamic batch padding; cap includes CLS",
+  "inference_split": "test",
+  "finetune_split": "train; stratified 20% validation held out",
+  "source_sha256": {
+    "01_inference.py": "2f7cef694a53112817e070530144a51f1ebf965670a07ac3b6377b7e0e41698c",
+    "02_finetune.py": "e5e6c06b7d8997df87a120dafd4a553f23882180478f554da8cf5bec39efa6bc"
+  }
+}

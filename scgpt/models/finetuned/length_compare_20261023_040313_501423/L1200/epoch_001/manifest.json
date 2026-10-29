@@ -1,0 +1,7 @@
+{
+  "model_sha256": "20dcddbdfb610e5fe792240a5ba8420b824f24fd550d6160a8ec9642aeca2f27",
+  "training_state_sha256": "0d750eabcb59fc8a00115d458b01c12505f1cccbe4b4688fb811f5d57e4ca41d",
+  "strict_reload_passed": true,
+  "reload_max_abs_logit_error": 0.0,
+  "results_directory": "/workspace/scgpt/results/length_compare_20261023_040313_501423/finetune_L1200"
+}

@@ -1,0 +1,16 @@
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "RUN_ID=actual_300k_resume_20261028_093701_696230",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/large_scale/resumable_inference.py"
+]

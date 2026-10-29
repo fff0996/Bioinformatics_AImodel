@@ -1,0 +1,28 @@
+{
+  "condition": "length_50_128",
+  "mode": "inference",
+  "unique_inputs": 16,
+  "processed_inputs": 48,
+  "repeats": 3,
+  "length_min": 56,
+  "length_max": 127,
+  "length_mean": 101.6875,
+  "preprocess_seconds": 4.5279000005393755e-05,
+  "execution_seconds": 1.3249328900001274,
+  "repeat_seconds": [
+    0.44939201299985143,
+    0.4385626359999151,
+    0.43697824100036087
+  ],
+  "save_seconds": 0.0015357080001194845,
+  "wall_seconds": 1.9286001030004627,
+  "throughput_per_second": 36.22825002102211,
+  "cuda_peak_allocated_gib": 2.7250828742980957,
+  "cuda_peak_reserved_gib": 2.916015625,
+  "sample_count": 3,
+  "gpu_util_mean_percent": 59.666666666666664,
+  "gpu_util_max_percent": 95.0,
+  "rss_sampled_peak_gib": 1.2929420471191406,
+  "system_available_min_gib": 110.7005386352539,
+  "swap_max_bytes": 0
+}

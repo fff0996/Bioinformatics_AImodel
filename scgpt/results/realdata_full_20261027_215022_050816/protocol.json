@@ -1,0 +1,16 @@
+{
+  "dataset": "existing actual TOSICA pancreas demo_train10600/demo_test4218",
+  "split": "training8480/validation2120/test4218, same seed42",
+  "batch_cases": [
+    8,
+    284
+  ],
+  "epochs": 1,
+  "max_length": 1200,
+  "padding": "original official collator dynamic max-in-batch, no forced1200 padding",
+  "precision": "FP32, TF32False",
+  "optimizer": "same original AdamW/lr1e-4/wd.01 clip1.0",
+  "initialization": "same fresh pretrained encoder + seed42 classifier per case",
+  "test_usage": "separate4218 evaluated from saved model; no model selection on test",
+  "warning": "different batch sizes imply different optimizer step counts, accuracy is not a batch-only causal effect"
+}

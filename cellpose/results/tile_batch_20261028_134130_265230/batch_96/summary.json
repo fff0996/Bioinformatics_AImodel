@@ -1,0 +1,103 @@
+{
+  "status": "complete",
+  "task": "official run_net tiled-image network inference; excludes mask dynamics",
+  "requested_tile_batch": 96,
+  "load_seconds": 1.1360559463500977,
+  "model_only_postload": {
+    "allocated_gib": 0.5682768821716309,
+    "reserved_gib": 1.740234375,
+    "peak_allocated_gib": 1.7182645797729492,
+    "peak_reserved_gib": 1.740234375,
+    "rss_gib": 0.8963432312011719,
+    "system_available_gib": 110.97602081298828,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 304628930,
+  "parameters_trainable_in_run": 0,
+  "weights_dtype": "torch.bfloat16",
+  "environment": {
+    "cellpose": "4.2.1",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10"
+  },
+  "warmup_seconds": 6.2200398445129395,
+  "warmup_actual_forward_shapes": [
+    [
+      96,
+      1,
+      256,
+      256
+    ]
+  ],
+  "condition": {
+    "requested_tile_batch": 96,
+    "unique_images": 8,
+    "unique_tiles": 96,
+    "repeats": 3,
+    "processed_images": 24,
+    "processed_tiles": 288,
+    "seconds": 16.574649572372437,
+    "baseline": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 0.798828125,
+      "peak_allocated_gib": 0.5995268821716309,
+      "peak_reserved_gib": 0.798828125,
+      "rss_gib": 1.8307113647460938,
+      "system_available_gib": 111.40705108642578,
+      "system_total_gib": 121.68751525878906
+    },
+    "memory": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 14.486328125,
+      "peak_allocated_gib": 11.29898977279663,
+      "peak_reserved_gib": 14.486328125,
+      "rss_gib": 1.8939437866210938,
+      "system_available_gib": 97.4122428894043,
+      "system_total_gib": 121.68751525878906
+    },
+    "peak_delta_gib": 10.699462890625,
+    "samples": 31,
+    "gpu_util_avg": 85.29032258064517,
+    "gpu_util_max": 96.0,
+    "rss_sampled_peak_gib": 1.9114036560058594,
+    "available_sampled_min_gib": 97.39158630371094,
+    "actual_forward_shapes": [
+      [
+        96,
+        1,
+        256,
+        256
+      ],
+      [
+        96,
+        1,
+        256,
+        256
+      ],
+      [
+        96,
+        1,
+        256,
+        256
+      ]
+    ],
+    "actual_max_tile_batch": 96,
+    "images_per_second": 1.4479944143135646,
+    "tiles_per_second": 17.375932971762776,
+    "allocated_fraction_shared_ram": 0.09285249804606019
+  },
+  "output_saved_exact_reload": true,
+  "all_output_shape": [
+    8,
+    520,
+    696,
+    3
+  ],
+  "all_outputs_finite": true,
+  "batch_invariance": {
+    "max_abs": 0.2062617540359497,
+    "mean_abs": 0.006788105238229036,
+    "cosine": 0.9999986886978149
+  }
+}

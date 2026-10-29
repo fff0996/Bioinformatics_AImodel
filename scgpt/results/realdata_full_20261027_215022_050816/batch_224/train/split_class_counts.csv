@@ -1,0 +1,14 @@
+Celltype,train_used,validation
+PP,285,71
+PSC,419,105
+acinar,915,229
+alpha,2509,627
+beta,2373,593
+delta,634,159
+ductal,1032,258
+endothelial,218,55
+epsilon,17,4
+macrophage,42,10
+mast,20,5
+schwann,10,3
+t_cell,6,1

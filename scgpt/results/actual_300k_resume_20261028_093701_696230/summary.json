@@ -1,0 +1,282 @@
+{
+  "status": "complete",
+  "dataset": "Tabula Sapiens actual human cells, Census2024-07-01",
+  "conditions": [
+    {
+      "name": "actual_cells_n10000_batch8",
+      "batch_size": 8,
+      "unique_cells": 10000,
+      "processed_cells": 10000,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "8x1200": 1250
+      },
+      "seconds": 90.40982866287231,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 1.7141914367675781,
+        "system_available_gib": 112.36790466308594,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.24274349212646484,
+        "reserved_gib": 0.404296875,
+        "peak_allocated_gib": 0.38937997817993164,
+        "peak_reserved_gib": 0.404296875,
+        "rss_gib": 1.7435989379882812,
+        "system_available_gib": 112.26481628417969,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.1649470329284668,
+      "samples": 171,
+      "gpu_util_avg": 94.12280701754386,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.7432327270507812,
+      "available_sampled_min_gib": 112.04463958740234,
+      "cells_per_second": 110.6074433266413
+    },
+    {
+      "name": "actual_cells_n100000_batch8",
+      "batch_size": 8,
+      "unique_cells": 100000,
+      "processed_cells": 100000,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "8x1200": 12500
+      },
+      "seconds": 903.0270133018494,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 1.7141914367675781,
+        "system_available_gib": 112.36790466308594,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.24274349212646484,
+        "reserved_gib": 0.404296875,
+        "peak_allocated_gib": 0.38937997817993164,
+        "peak_reserved_gib": 0.404296875,
+        "rss_gib": 2.4256515502929688,
+        "system_available_gib": 112.36163711547852,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.1649470329284668,
+      "samples": 1714,
+      "gpu_util_avg": 94.77246207701283,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.4252853393554688,
+      "available_sampled_min_gib": 111.36497497558594,
+      "cells_per_second": 110.73865845314819
+    },
+    {
+      "name": "actual_cells_n300000_batch8",
+      "batch_size": 8,
+      "unique_cells": 300000,
+      "processed_cells": 200000,
+      "resume_start_cell": 100000,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "8x1200": 25000
+      },
+      "seconds": 1760.1655962467194,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 1.7143440246582031,
+        "system_available_gib": 112.30746078491211,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.24274349212646484,
+        "reserved_gib": 0.404296875,
+        "peak_allocated_gib": 0.38937997817993164,
+        "peak_reserved_gib": 0.404296875,
+        "rss_gib": 3.15008544921875,
+        "system_available_gib": 112.40526962280273,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.1649470329284668,
+      "samples": 3339,
+      "gpu_util_avg": 94.95238095238095,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 3.1500282287597656,
+      "available_sampled_min_gib": 111.99983978271484,
+      "cells_per_second": 113.62567273583181
+    },
+    {
+      "name": "actual_cells_n10000_batch256",
+      "batch_size": 256,
+      "unique_cells": 10000,
+      "processed_cells": 10000,
+      "resume_start_cell": 0,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "256x1200": 39,
+        "16x1200": 1
+      },
+      "seconds": 85.89464974403381,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 2.7686119079589844,
+        "system_available_gib": 112.59142303466797,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.26105403900146484,
+        "reserved_gib": 12.787109375,
+        "peak_allocated_gib": 5.4253740310668945,
+        "peak_reserved_gib": 12.787109375,
+        "rss_gib": 2.8449554443359375,
+        "system_available_gib": 99.84837341308594,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 5.20094108581543,
+      "samples": 162,
+      "gpu_util_avg": 94.88271604938272,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.843994140625,
+      "available_sampled_min_gib": 99.50762176513672,
+      "cells_per_second": 116.42168668013683
+    },
+    {
+      "name": "actual_cells_n100000_batch256",
+      "batch_size": 256,
+      "unique_cells": 100000,
+      "processed_cells": 100000,
+      "resume_start_cell": 0,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "256x1200": 390,
+        "16x1200": 1,
+        "144x1200": 1
+      },
+      "seconds": 879.8849608898163,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 2.7686119079589844,
+        "system_available_gib": 112.59142303466797,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.5540227890014648,
+        "reserved_gib": 17.986328125,
+        "peak_allocated_gib": 5.462124824523926,
+        "peak_reserved_gib": 17.986328125,
+        "rss_gib": 3.520416259765625,
+        "system_available_gib": 94.5936050415039,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 5.237691879272461,
+      "samples": 1662,
+      "gpu_util_avg": 94.95126353790614,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 3.520172119140625,
+      "available_sampled_min_gib": 94.04681777954102,
+      "cells_per_second": 113.65122083558661
+    },
+    {
+      "name": "actual_cells_n300000_batch256",
+      "batch_size": 256,
+      "unique_cells": 300000,
+      "processed_cells": 300000,
+      "resume_start_cell": 0,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "256x1200": 1171,
+        "16x1200": 1,
+        "144x1200": 1,
+        "64x1200": 1
+      },
+      "seconds": 2628.604710817337,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 2.7686119079589844,
+        "system_available_gib": 112.59142303466797,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.37091732025146484,
+        "reserved_gib": 21.474609375,
+        "peak_allocated_gib": 5.4772539138793945,
+        "peak_reserved_gib": 21.474609375,
+        "rss_gib": 3.9046859741210938,
+        "system_available_gib": 90.77008819580078,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 5.25282096862793,
+      "samples": 4966,
+      "gpu_util_avg": 95.10169150221506,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 3.904499053955078,
+      "available_sampled_min_gib": 90.26547622680664,
+      "cells_per_second": 114.12898971284204
+    }
+  ],
+  "settings": {
+    "batches": [
+      8,
+      256
+    ],
+    "dtype": "FP32",
+    "tf32": false,
+    "seed": 42,
+    "max_length": 1200,
+    "padding": "actual batch maximum cached nonpad length",
+    "task": "pretrained whole-human normalized CLS embeddings, no cell-type classifier and no test accuracy claim",
+    "count_points": [
+      10000,
+      100000,
+      300000
+    ],
+    "measurement": "completed original prefix records plus separately timed resumed remainder; processed_cells and resume_start_cell define each measured interval, not uninterrupted cumulative timing",
+    "excludes": "download, h5ad audit, tokenization cache, model load, warmup",
+    "input_policy": "same cached tokens/values and same original cells/order for both batch settings"
+  },
+  "resume_from_run": "actual_300k_20261027_221433_021330",
+  "input_audit": "/workspace/scgpt/data_external/tabula_sapiens/prepared_300k_seed42/input_audit.json",
+  "model_loading_seconds": 0.645514726638794,
+  "model_only_postload": {
+    "allocated_gib": 0.19318294525146484,
+    "reserved_gib": 0.19921875,
+    "peak_allocated_gib": 0.19318294525146484,
+    "peak_reserved_gib": 0.19921875,
+    "rss_gib": 1.0688743591308594,
+    "system_available_gib": 113.08001708984375,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters": 51856898,
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "scgpt": "0.2.5",
+    "gpu": "NVIDIA GB10"
+  },
+  "warmup_seconds": 0.41781091690063477,
+  "output_verification": {
+    "sampled_actual_cells": 256,
+    "max_abs_embedding_difference_between_batches": 2.682209014892578e-07,
+    "minimum_cosine_similarity": 0.9999998211860657,
+    "output_shape": [
+      300000,
+      512
+    ],
+    "all_outputs_finite_checked_during_forward": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "parent_run": "vmap_batch_20261028_185758_495006",
+  "reason": "unwrap inner jitted apply and carry original tuned compiler options to top-level vmap jit; mathematical forward/weights unchanged"
+}

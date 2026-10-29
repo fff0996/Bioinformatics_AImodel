@@ -1,0 +1,53 @@
+[
+  {
+    "condition": "train_1024",
+    "model_path": "/work/models/scvi_20261027_184921_028161/train_1024",
+    "total_parameters": 1293526,
+    "weight_dtype": "torch.float32",
+    "cuda_before_load_gib": 0.0,
+    "cuda_after_load_allocated_gib": 0.004825592041015625,
+    "cuda_after_load_reserved_gib": 0.009765625,
+    "cuda_load_peak_allocated_gib": 0.00965118408203125,
+    "rss_before_model_load_gib": 0.9596138000488281,
+    "rss_after_model_load_gib": 1.0544548034667969,
+    "available_after_load_gib": 113.9206771850586,
+    "input_data_cpu_load_seconds": 0.022255632999076624,
+    "model_load_seconds": 0.17872046400043473,
+    "scope": "CUDA initialized first; saved AnnData read on CPU before model loading; no forward before this snapshot; optimizer not loaded",
+    "cuda_model_increment_gib": 0.004825592041015625
+  },
+  {
+    "condition": "train_4096",
+    "model_path": "/work/models/scvi_20261027_185327_767988/train_4096",
+    "total_parameters": 1293526,
+    "weight_dtype": "torch.float32",
+    "cuda_before_load_gib": 0.03125,
+    "cuda_after_load_allocated_gib": 0.036075592041015625,
+    "cuda_after_load_reserved_gib": 0.041015625,
+    "cuda_load_peak_allocated_gib": 0.04090118408203125,
+    "rss_before_model_load_gib": 1.5568962097167969,
+    "rss_after_model_load_gib": 1.5569076538085938,
+    "available_after_load_gib": 113.29571151733398,
+    "input_data_cpu_load_seconds": 0.02839840699925844,
+    "model_load_seconds": 0.013644812999700662,
+    "scope": "CUDA initialized first; saved AnnData read on CPU before model loading; no forward before this snapshot; optimizer not loaded",
+    "cuda_model_increment_gib": 0.004825592041015625
+  },
+  {
+    "condition": "train_10176",
+    "model_path": "/work/models/scvi_20261027_185327_767988/train_10176",
+    "total_parameters": 1293526,
+    "weight_dtype": "torch.float32",
+    "cuda_before_load_gib": 0.03125,
+    "cuda_after_load_allocated_gib": 0.036075592041015625,
+    "cuda_after_load_reserved_gib": 0.041015625,
+    "cuda_load_peak_allocated_gib": 0.04090118408203125,
+    "rss_before_model_load_gib": 1.6035804748535156,
+    "rss_after_model_load_gib": 1.6036033630371094,
+    "available_after_load_gib": 113.24993133544922,
+    "input_data_cpu_load_seconds": 0.04070594100085145,
+    "model_load_seconds": 0.014172220000546076,
+    "scope": "CUDA initialized first; saved AnnData read on CPU before model loading; no forward before this snapshot; optimizer not loaded",
+    "cuda_model_increment_gib": 0.004825592041015625
+  }
+]

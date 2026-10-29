@@ -1,0 +1,6 @@
+[
+  "sg",
+  "docker",
+  "-c",
+  "docker run --rm --gpus all --ipc=host --network none --user 1000:1000 -v /home/hyein/ai-benchmark/clair3:/work -v /home/hyein/ai-benchmark/scripts:/support:ro -e RUN_ID=clair3_20261027_203339_768667 -e PYTHONPATH=/work/scripts:/work/source -e MPLCONFIGDIR=/work/.cache/matplotlib local/clair3-spark:9d1dd3f /work/.venv/bin/python -u /work/scripts/reload.py"
+]

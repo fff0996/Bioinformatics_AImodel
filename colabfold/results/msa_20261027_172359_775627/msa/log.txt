@@ -1,0 +1,21 @@
+2026-10-27 08:24:00,446 Running colabfold 1.6.2
+2026-10-27 08:24:00,840 Running on GPU
+2026-10-27 08:24:00,890 Found 4 citations for tools or databases
+2026-10-27 08:24:00,890 Query 1/7: 1UBQ (length 76)
+2026-10-27 08:24:01,002 /cache is not a writable directory
+2026-10-27 08:24:01,002 Matplotlib created a temporary cache directory at /tmp/matplotlib-_iwj4duh because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+2026-10-27 08:24:01,140 generated new fontManager
+2026-10-27 08:24:12,929 Saved /work/results/msa_20261027_172359_775627/msa/1UBQ.pickle
+2026-10-27 08:24:13,453 Query 2/7: count1_A2RU14 (length 115)
+2026-10-27 08:24:15,156 Saved /work/results/msa_20261027_172359_775627/msa/count1_A2RU14.pickle
+2026-10-27 08:24:15,303 Query 3/7: count2_A6NFY7 (length 115)
+2026-10-27 08:24:20,282 Saved /work/results/msa_20261027_172359_775627/msa/count2_A6NFY7.pickle
+2026-10-27 08:24:20,462 Query 4/7: count3_O14519 (length 115)
+2026-10-27 08:24:22,807 Saved /work/results/msa_20261027_172359_775627/msa/count3_O14519.pickle
+2026-10-27 08:24:22,972 Query 5/7: count4_P01270 (length 115)
+2026-10-27 08:24:24,977 Saved /work/results/msa_20261027_172359_775627/msa/count4_P01270.pickle
+2026-10-27 08:24:25,134 Query 6/7: 1LYZ (length 129)
+2026-10-27 08:24:31,220 Saved /work/results/msa_20261027_172359_775627/msa/1LYZ.pickle
+2026-10-27 08:24:31,477 Query 7/7: 1TIM (length 247)
+2026-10-27 08:24:55,558 Saved /work/results/msa_20261027_172359_775627/msa/1TIM.pickle
+2026-10-27 08:24:56,355 Done

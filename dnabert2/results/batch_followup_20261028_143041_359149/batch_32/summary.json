@@ -1,0 +1,123 @@
+{
+  "status": "complete",
+  "model": "dnabert2",
+  "batch": 32,
+  "task": "inference resource batch sweep only, no training",
+  "conditions": [
+    {
+      "batch_size": 32,
+      "unique_inputs": 32,
+      "processed_inputs": 352,
+      "repeats": 11,
+      "seconds": 15.277253866195679,
+      "baseline": {
+        "allocated_gib": 0.4997425079345703,
+        "reserved_gib": 0.556640625,
+        "peak_allocated_gib": 0.4997425079345703,
+        "peak_reserved_gib": 0.556640625,
+        "rss_gib": 1.5787239074707031,
+        "system_available_gib": 111.72293853759766,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.4997425079345703,
+        "reserved_gib": 4.427734375,
+        "peak_allocated_gib": 4.21929407119751,
+        "peak_reserved_gib": 4.427734375,
+        "rss_gib": 1.5803871154785156,
+        "system_available_gib": 107.82423782348633,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 3.7195515632629395,
+      "samples": 28,
+      "gpu_util_avg": 95.39285714285714,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 1.5803871154785156,
+      "available_sampled_min_gib": 107.73794174194336,
+      "inputs_per_second": 23.040790123863705,
+      "allocated_fraction_shared_ram": 0.0346731878140865,
+      "model_only_allocated_gib": 0.43611812591552734
+    }
+  ],
+  "load_seconds": 0.5444850921630859,
+  "model_only_postload": {
+    "allocated_gib": 0.43611812591552734,
+    "reserved_gib": 0.478515625,
+    "peak_allocated_gib": 0.43611812591552734,
+    "peak_reserved_gib": 0.478515625,
+    "rss_gib": 1.1083793640136719,
+    "system_available_gib": 112.25600051879883,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 117068544,
+  "parameters_trained_in_this_run": 0,
+  "theoretical_weight_storage_gib": 0.4361143112182617,
+  "parameters_used_backbone": 117068544,
+  "checkpoint_reference": "/workspace/dnabert2_eval/model + model_revision.txt",
+  "environment": {
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "gpu": "NVIDIA GB10",
+    "precision": "FP32",
+    "tf32": false
+  },
+  "input": {
+    "unique_sequences": 32,
+    "pool_sequences": 1000,
+    "raw_length_min": 4000,
+    "raw_length_max": 4000,
+    "input_shapes": {
+      "input_ids": [
+        32,
+        851
+      ],
+      "attention_mask": [
+        32,
+        851
+      ]
+    },
+    "tokenizer_truncation": false,
+    "padding": "same pool-wide longest token width fixed across batches; explicit crop lengths in inputs provenance",
+    "ids": [
+      "chr3:152302071-152302583:+",
+      "chr6:15654976-15655488:+",
+      "chr16:83942032-83942544:+",
+      "chr3:120622620-120623132:+",
+      "chrX:24242140-24242652:+",
+      "chr7:74193881-74194393:+",
+      "chr15:92822529-92823041:+",
+      "chr17:8629757-8630269:+",
+      "chr7:12396377-12396889:+",
+      "chr22:41415401-41415913:+",
+      "chr16:50033280-50033792:+",
+      "chr3:65566404-65566916:+",
+      "chr10:80823605-80824117:+",
+      "chr13:51806914-51807426:+",
+      "chrX:123711161-123711673:+",
+      "chr6:37704142-37704654:+",
+      "chr22:39941670-39942182:+",
+      "chr18:78676658-78677170:+",
+      "chr5:151781299-151781811:+",
+      "chr3:152271676-152272188:+",
+      "chr11:126518950-126519462:+",
+      "chr7:73758645-73759157:+",
+      "chr14:74616643-74617155:+",
+      "chr6:119476185-119476697:+",
+      "chr6:166493998-166494510:+",
+      "chr17:28405240-28405752:+",
+      "chr19:12085948-12086460:+",
+      "chr13:113093710-113094222:+",
+      "chr3:14826338-14826850:+",
+      "chr12:123352659-123353171:+",
+      "chr12:8661029-8661541:+",
+      "chr7:44067180-44067692:+"
+    ]
+  },
+  "warmup_seconds": 1.7987933158874512,
+  "output_shape": [
+    32,
+    768
+  ],
+  "finite_and_exact_save_reload": true,
+  "batch_invariance_max_abs": 1.3113021850585938e-06
+}

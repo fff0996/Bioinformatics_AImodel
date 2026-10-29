@@ -1,0 +1,104 @@
+{
+  "_id": "695347f18be7adc11d17cdc1",
+  "id": "MedOtter/NucMM-M",
+  "author": "MedOtter",
+  "sha": "5c489be7532664b14d90f4c028c6b2f9b6fcd782",
+  "lastModified": "2026-08-28T03:51:15.000Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "task_categories:image-segmentation",
+    "license:mit",
+    "size_categories:n<1K",
+    "modality:text",
+    "region:us",
+    "medical-imaging",
+    "electron-microscopy",
+    "neuroscience",
+    "instance-segmentation",
+    "3d-segmentation",
+    "nucmm"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tNucMM-M Dataset (Mouse)\n\t\n\n3D Neuronal Nuclei Segmentation in Mouse Brain Electron Microscopy.\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Structure\n\t\n\n\u251c\u2500\u2500 Image/\n\u2502   \u251c\u2500\u2500 train/\n\u2502   \u2502   \u251c\u2500\u2500 img_000_200_200.h5\n\u2502   \u2502   \u251c\u2500\u2500 img_000_604_576.h5\n\u2502   \u2502   \u251c\u2500\u2500 img_508_200_576.h5\n\u2502   \u2502   \u2514\u2500\u2500 img_508_604_200.h5\n\u2502   \u2514\u2500\u2500 val/\n\u2502       \u251c\u2500\u2500 img_000_200_576.h5\n\u2502       \u251c\u2500\u2500 img_000_604_200.h5\n\u2502       \u251c\u2500\u2500 img_508_200_200.h5\n\u2502       \u2514\u2500\u2500 img_508_604_576.h5\n\u2514\u2500\u2500 Label/\n    \u251c\u2500\u2500 train/\n    \u2502   \u2514\u2500\u2500 seg_*.h5\n    \u2514\u2500\u2500 val/\n        \u2514\u2500\u2500\u2026 See the full description on the dataset page: https://huggingface.co/datasets/MedOtter/NucMM-M.",
+  "downloads": 530,
+  "likes": 0,
+  "cardData": {
+    "license": "mit",
+    "task_categories": [
+      "image-segmentation"
+    ],
+    "tags": [
+      "medical-imaging",
+      "electron-microscopy",
+      "neuroscience",
+      "instance-segmentation",
+      "3d-segmentation",
+      "nucmm"
+    ],
+    "size_categories": [
+      "n<1K"
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "Image/train/img_000_200_200.h5"
+    },
+    {
+      "rfilename": "Image/train/img_000_604_576.h5"
+    },
+    {
+      "rfilename": "Image/train/img_508_200_576.h5"
+    },
+    {
+      "rfilename": "Image/train/img_508_604_200.h5"
+    },
+    {
+      "rfilename": "Image/val/img_000_200_576.h5"
+    },
+    {
+      "rfilename": "Image/val/img_000_604_200.h5"
+    },
+    {
+      "rfilename": "Image/val/img_508_200_200.h5"
+    },
+    {
+      "rfilename": "Image/val/img_508_604_576.h5"
+    },
+    {
+      "rfilename": "Label/train/seg_000_200_200.h5"
+    },
+    {
+      "rfilename": "Label/train/seg_000_604_576.h5"
+    },
+    {
+      "rfilename": "Label/train/seg_508_200_576.h5"
+    },
+    {
+      "rfilename": "Label/train/seg_508_604_200.h5"
+    },
+    {
+      "rfilename": "Label/val/seg_000_200_576.h5"
+    },
+    {
+      "rfilename": "Label/val/seg_000_604_200.h5"
+    },
+    {
+      "rfilename": "Label/val/seg_508_200_200.h5"
+    },
+    {
+      "rfilename": "Label/val/seg_508_604_576.h5"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "README_original.txt"
+    }
+  ],
+  "createdAt": "2025-12-30T03:33:05.000Z",
+  "usedStorage": 39925651
+}

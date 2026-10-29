@@ -1,0 +1,97 @@
+{
+  "status": "complete",
+  "task": "official run_net tiled-image network inference; excludes mask dynamics",
+  "requested_tile_batch": 384,
+  "load_seconds": 1.1699068546295166,
+  "model_only_postload": {
+    "allocated_gib": 0.5682768821716309,
+    "reserved_gib": 1.740234375,
+    "peak_allocated_gib": 1.7182645797729492,
+    "peak_reserved_gib": 1.740234375,
+    "rss_gib": 0.9224777221679688,
+    "system_available_gib": 111.04314422607422,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 304628930,
+  "parameters_trainable_in_run": 0,
+  "weights_dtype": "torch.bfloat16",
+  "environment": {
+    "cellpose": "4.2.1",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10"
+  },
+  "warmup_seconds": 22.44252872467041,
+  "warmup_actual_forward_shapes": [
+    [
+      384,
+      1,
+      256,
+      256
+    ]
+  ],
+  "condition": {
+    "requested_tile_batch": 384,
+    "unique_images": 32,
+    "unique_tiles": 384,
+    "repeats": 2,
+    "processed_images": 64,
+    "processed_tiles": 768,
+    "seconds": 41.396151304244995,
+    "baseline": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 1.361328125,
+      "peak_allocated_gib": 0.5995268821716309,
+      "peak_reserved_gib": 1.361328125,
+      "rss_gib": 1.769287109375,
+      "system_available_gib": 110.64406967163086,
+      "system_total_gib": 121.68751525878906
+    },
+    "memory": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 56.11328125,
+      "peak_allocated_gib": 43.39664602279663,
+      "peak_reserved_gib": 56.11328125,
+      "rss_gib": 2.193286895751953,
+      "system_available_gib": 54.63167190551758,
+      "system_total_gib": 121.68751525878906
+    },
+    "peak_delta_gib": 42.797119140625,
+    "samples": 75,
+    "gpu_util_avg": 89.84,
+    "gpu_util_max": 96.0,
+    "rss_sampled_peak_gib": 2.6605873107910156,
+    "available_sampled_min_gib": 54.578460693359375,
+    "actual_forward_shapes": [
+      [
+        384,
+        1,
+        256,
+        256
+      ],
+      [
+        384,
+        1,
+        256,
+        256
+      ]
+    ],
+    "actual_max_tile_batch": 384,
+    "images_per_second": 1.546037445114785,
+    "tiles_per_second": 18.552449341377418,
+    "allocated_fraction_shared_ram": 0.3566236514116204
+  },
+  "output_saved_exact_reload": true,
+  "all_output_shape": [
+    32,
+    520,
+    696,
+    3
+  ],
+  "all_outputs_finite": true,
+  "batch_invariance": {
+    "max_abs": 0.1904296875,
+    "mean_abs": 0.002534594153985381,
+    "cosine": 1.0000003576278687
+  }
+}

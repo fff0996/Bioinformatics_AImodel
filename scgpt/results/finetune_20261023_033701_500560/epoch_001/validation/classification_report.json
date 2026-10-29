@@ -1,0 +1,93 @@
+{
+  "PP": {
+    "precision": 0.9047619047619048,
+    "recall": 0.2676056338028169,
+    "f1-score": 0.41304347826086957,
+    "support": 71.0
+  },
+  "PSC": {
+    "precision": 0.9719626168224299,
+    "recall": 0.9904761904761905,
+    "f1-score": 0.9811320754716981,
+    "support": 105.0
+  },
+  "acinar": {
+    "precision": 0.9024390243902439,
+    "recall": 0.9694323144104804,
+    "f1-score": 0.9347368421052632,
+    "support": 229.0
+  },
+  "alpha": {
+    "precision": 0.9493087557603687,
+    "recall": 0.9856459330143541,
+    "f1-score": 0.9671361502347418,
+    "support": 627.0
+  },
+  "beta": {
+    "precision": 0.9537190082644628,
+    "recall": 0.9730185497470489,
+    "f1-score": 0.9632721202003339,
+    "support": 593.0
+  },
+  "delta": {
+    "precision": 0.7790055248618785,
+    "recall": 0.8867924528301887,
+    "f1-score": 0.8294117647058824,
+    "support": 159.0
+  },
+  "ductal": {
+    "precision": 0.970954356846473,
+    "recall": 0.9069767441860465,
+    "f1-score": 0.9378757515030061,
+    "support": 258.0
+  },
+  "endothelial": {
+    "precision": 1.0,
+    "recall": 0.9818181818181818,
+    "f1-score": 0.9908256880733946,
+    "support": 55.0
+  },
+  "epsilon": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 4.0
+  },
+  "macrophage": {
+    "precision": 0.6428571428571429,
+    "recall": 0.9,
+    "f1-score": 0.75,
+    "support": 10.0
+  },
+  "mast": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 5.0
+  },
+  "schwann": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 3.0
+  },
+  "t_cell": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1.0
+  },
+  "accuracy": 0.9330188679245283,
+  "macro avg": {
+    "precision": 0.6211544872742234,
+    "recall": 0.6047512307911777,
+    "f1-score": 0.59749491311963,
+    "support": 2120.0
+  },
+  "weighted avg": {
+    "precision": 0.9290195010850915,
+    "recall": 0.9330188679245283,
+    "f1-score": 0.9244614398675396,
+    "support": 2120.0
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "run_id": "cellpose_20261027_193158_772742",
+  "seed": 42,
+  "environment": {
+    "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "cellpose": "4.2.1",
+    "gpu": "NVIDIA GB10",
+    "platform": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+    "tf32": true
+  },
+  "conditions": [
+    {
+      "name": "count_1",
+      "unique_images": 1,
+      "raw_shapes": [
+        [
+          520,
+          696
+        ]
+      ],
+      "repeats": 23,
+      "processed_images": 23,
+      "seconds": 15.301878929138184,
+      "images_per_second": 1.5030833864593505,
+      "forward_including_transfers_seconds": 14.289727210998535,
+      "tile_forward_calls": 46,
+      "actual_forward_shapes": [
+        "[4, 1, 256, 256]",
+        "[8, 1, 256, 256]"
+      ],
+      "processed_tiles": 276,
+      "baseline": {
+        "allocated_gib": 0.5995268821716309,
+        "reserved_gib": 0.642578125,
+        "peak_allocated_gib": 0.5995268821716309,
+        "peak_reserved_gib": 0.642578125,
+        "rss_gib": 2.2950439453125,
+        "system_available_gib": 111.77925872802734,
+        "system_total_gib": 121.68751525878906,
+        "swap_used_gib": 0.0
+      },
+      "memory": {
+        "allocated_gib": 0.5995268821716309,
+        "reserved_gib": 1.783203125,
+        "peak_allocated_gib": 1.4913725852966309,
+        "peak_reserved_gib": 1.783203125,
+        "rss_gib": 2.3432655334472656,
+        "system_available_gib": 110.70425796508789,
+        "system_total_gib": 121.68751525878906,
+        "swap_used_gib": 0.0
+      },
+      "sample_count": 28,
+      "gpu_util_avg": 93.75,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.3432655334472656,
+      "available_sampled_min_gib": 110.56506729125977,
+      "peak_delta_allocated_gib": 0.891845703125
+    }
+  ],
+  "input_audit": "data/input_audit.json",
+  "settings": {
+    "inference_dtype": "bfloat16",
+    "tile_batch_size": 8,
+    "tile_size": 256,
+    "tile_overlap": 0.1,
+    "augment": false,
+    "normalize": "official default 1st/99th percentile, grayscale + two zero channels",
+    "diameter": null,
+    "rescale": null,
+    "flow_threshold": 0.4,
+    "cellprob_threshold": 0.0,
+    "min_size": 15,
+    "max_size_fraction": 0.4,
+    "training_batch": 1,
+    "training_epochs": 100,
+    "learning_rate": 1e-05,
+    "weight_decay": 0.1,
+    "training_dtype": "float32 (official automatic conversion)",
+    "training_augmentation": "official random rotate/resize, scale_range=.5, rescale=False, 256 crop",
+    "seed_note": "global42; official trainer resets numpy seed to epoch index and validation42"
+  },
+  "before_load": {
+    "allocated_gib": 0.0,
+    "reserved_gib": 0.0,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.0,
+    "rss_gib": 0.7740745544433594,
+    "system_available_gib": 114.2389144897461,
+    "system_total_gib": 121.68751525878906,
+    "swap_used_gib": 0.0
+  },
+  "loading_seconds": 1.1581833362579346,
+  "model_only_postload": {
+    "allocated_gib": 0.5682768821716309,
+    "reserved_gib": 1.740234375,
+    "peak_allocated_gib": 1.7182645797729492,
+    "peak_reserved_gib": 1.740234375,
+    "rss_gib": 1.0139617919921875,
+    "system_available_gib": 111.8888053894043,
+    "system_total_gib": 121.68751525878906,
+    "swap_used_gib": 0.0
+  },
+  "parameters": {
+    "total": 304628930,
+    "requires_grad": 304592064,
+    "parameter_dtypes": {
+      "torch.bfloat16": 304628930
+    },
+    "theoretical_current_storage_gib": 0.5674155987799168
+  },
+  "warmup_seconds": 1.9381251335144043,
+  "error": "TypeError(\"event() got multiple values for argument 'name'\")",
+  "status": "failed"
+}

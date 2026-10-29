@@ -1,0 +1,7 @@
+{
+  "model_sha256": "81703c258f374ede211b1d6be8640934a0b1fba29dbb24bad4580b0e18c4e5b3",
+  "training_state_sha256": "b281bc0a857f5ff2e4ad5ea22db7f9ad365c614ff580353ac1319fbb3da9ac54",
+  "strict_reload_passed": true,
+  "reload_max_abs_logit_error": 0.0,
+  "results_directory": "/workspace/scgpt/results/length_compare_20261023_040313_501423/finetune_L0256"
+}

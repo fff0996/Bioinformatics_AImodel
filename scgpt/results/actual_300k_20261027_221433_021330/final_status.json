@@ -1,0 +1,7 @@
+{
+  "status": "paused",
+  "completed_cells_batch8": 100000,
+  "completed_cells_batch256": 0,
+  "gpu_process_exited": true,
+  "output_verification": "pause_output_verification.json"
+}

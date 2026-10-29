@@ -1,0 +1,70 @@
+[
+  {
+    "path": "data/images.zip",
+    "url": "https://data.broadinstitute.org/bbbc/BBBC039/images.zip",
+    "revision": "BBBC039v1",
+    "bytes": 77915748,
+    "sha256": "6f30a5d4fe38c928ded972704f085975f8dc0d65d9aa366df00e5a9d449fddd7",
+    "headers": {
+      "date": "Tue, 27 Oct 2026 10:22:08 GMT",
+      "server": "Apache",
+      "last-modified": "Fri, 08 Jun 2018 16:52:44 GMT",
+      "etag": "\"4a4e664-56e243a90cf00\"",
+      "accept-ranges": "bytes",
+      "content-length": "77915748",
+      "access-control-allow-origin": "*",
+      "content-type": "application/zip",
+      "connection": "close"
+    },
+    "checked_utc": "2026-10-27T10:22:27.223774+00:00",
+    "license_note": "BBBC039v1 CC0; model license notes preserved from official source"
+  },
+  {
+    "path": "data/masks.zip",
+    "url": "https://data.broadinstitute.org/bbbc/BBBC039/masks.zip",
+    "revision": "BBBC039v1",
+    "bytes": 2753811,
+    "sha256": "f9e6043d8ca56344a4886f96a700d804d6ee982f31e2b2cd3194af2a053c2710",
+    "headers": {
+      "date": "Tue, 27 Oct 2026 10:22:28 GMT",
+      "server": "Apache",
+      "last-modified": "Fri, 08 Jun 2018 16:52:46 GMT",
+      "etag": "\"2a0513-56e243aaf5380\"",
+      "accept-ranges": "bytes",
+      "content-length": "2753811",
+      "access-control-allow-origin": "*",
+      "content-type": "application/zip",
+      "connection": "close"
+    },
+    "checked_utc": "2026-10-27T10:22:29.750559+00:00",
+    "license_note": "BBBC039v1 CC0; model license notes preserved from official source"
+  },
+  {
+    "path": "data/metadata.zip",
+    "url": "https://data.broadinstitute.org/bbbc/BBBC039/metadata.zip",
+    "revision": "BBBC039v1",
+    "bytes": 17816,
+    "sha256": "a2c1f900bed9ba92a99553efd4c2ae98598433691c7401d818653ab61110deb2",
+    "headers": {
+      "date": "Tue, 27 Oct 2026 10:22:30 GMT",
+      "server": "Apache",
+      "last-modified": "Fri, 08 Jun 2018 16:52:52 GMT",
+      "etag": "\"4598-56e243b0ae100\"",
+      "accept-ranges": "bytes",
+      "content-length": "17816",
+      "access-control-allow-origin": "*",
+      "content-type": "application/zip",
+      "connection": "close"
+    },
+    "checked_utc": "2026-10-27T10:22:30.461570+00:00",
+    "license_note": "BBBC039v1 CC0; model license notes preserved from official source"
+  },
+  {
+    "path": "models/cpsam_v2",
+    "revision": "7c61431b5fbb078f3296754bd15d9f51b320f837",
+    "sha256": "0f1cc3f7ecdd8a037a57c6c48d9d8921391be4cbce3fa9f13c3e3a2e1253c667",
+    "bytes": 1233586851,
+    "url": "https://huggingface.co/mouseland/cellpose-sam/resolve/7c61431b5fbb078f3296754bd15d9f51b320f837/cpsam_v2",
+    "method": "Content-Range verified chunks after preserved prefix"
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "train_file_shape": [
+    10600,
+    3000
+  ],
+  "test_file_shape": [
+    4218,
+    3000
+  ],
+  "train_obs_id_unique": true,
+  "test_obs_id_unique": true,
+  "shared_cell_ids_between_files": 0,
+  "train_obs_columns": [
+    "Celltype"
+  ],
+  "test_obs_columns": [
+    "Celltype"
+  ],
+  "train_label_counts": {
+    "alpha": 3136,
+    "beta": 2966,
+    "ductal": 1290,
+    "acinar": 1144,
+    "delta": 793,
+    "PSC": 524,
+    "PP": 356,
+    "endothelial": 273,
+    "macrophage": 52,
+    "mast": 25,
+    "epsilon": 21,
+    "schwann": 13,
+    "t_cell": 7
+  },
+  "test_label_counts": {
+    "alpha": 2011,
+    "beta": 1006,
+    "ductal": 414,
+    "PP": 282,
+    "acinar": 209,
+    "delta": 188,
+    "PSC": 73,
+    "endothelial": 16,
+    "epsilon": 7,
+    "mast": 7,
+    "MHC class II": 5
+  }
+}

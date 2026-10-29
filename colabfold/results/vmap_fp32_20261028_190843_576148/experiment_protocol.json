@@ -1,0 +1,7 @@
+{
+  "runtime_precision": "FP32 activations and parameters, fixed across batch1/2/4; recycle boundary output/prev FP16 conversion matches native RunModel.predict",
+  "feature_capture_runner_config": "runner_config.json was captured during CPU preprocessing under original BF16 config; not the runtime precision",
+  "bf16_reference_failed_run": "vmap_batch_retry_20261028_190537_289704",
+  "batch1_reference_ca_rmsd_gate_angstrom": 0.5,
+  "gpu_order": "Clair3 completed before AlphaFold2 GPU jobs started"
+}

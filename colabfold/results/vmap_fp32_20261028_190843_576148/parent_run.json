@@ -1,0 +1,4 @@
+{
+  "parent_run": "vmap_batch_retry_20261028_190537_289704",
+  "reason": "BF16 vmap vs native reference CA alignedRMSD1.075A and pLDDT max2.781 failed preset0.5A gate. Try FP32 fixed consistently across batch1/2/4 to test numeric sensitivity; not tuned to accuracy or memory target."
+}

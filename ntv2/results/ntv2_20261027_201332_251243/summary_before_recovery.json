@@ -1,0 +1,306 @@
+{
+  "status": "failed",
+  "conditions": [
+    {
+      "name": "inference_bp3000_n8",
+      "mode": "inference",
+      "bp": 3000,
+      "unique_inputs": 8,
+      "repeats": 20,
+      "processed": 160,
+      "tokens_min": 501,
+      "tokens_mean": 501.0,
+      "tokens_max": 501,
+      "seconds": 15.528339862823486,
+      "baseline": {
+        "allocated_gib": 1.8891725540161133,
+        "reserved_gib": 1.90625,
+        "peak_allocated_gib": 1.8891725540161133,
+        "peak_reserved_gib": 1.90625,
+        "rss_gib": 1.510162353515625,
+        "system_available_gib": 110.88399124145508,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 2.43359375,
+        "peak_allocated_gib": 2.274777412414551,
+        "peak_reserved_gib": 2.43359375,
+        "rss_gib": 1.51019287109375,
+        "system_available_gib": 110.62385940551758,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.3856048583984375,
+      "samples": 29,
+      "gpu_util_avg": 92.06896551724138,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.51019287109375,
+      "available_sampled_min_gib": 110.3290023803711,
+      "throughput": 10.303741508328086
+    },
+    {
+      "name": "inference_bp3000_n32",
+      "mode": "inference",
+      "bp": 3000,
+      "unique_inputs": 32,
+      "repeats": 5,
+      "processed": 160,
+      "tokens_min": 501,
+      "tokens_mean": 501.0,
+      "tokens_max": 501,
+      "seconds": 15.665903091430664,
+      "baseline": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 1.912109375,
+        "peak_allocated_gib": 1.8947038650512695,
+        "peak_reserved_gib": 1.912109375,
+        "rss_gib": 1.5101966857910156,
+        "system_available_gib": 111.14925003051758,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 2.43359375,
+        "peak_allocated_gib": 2.274777412414551,
+        "peak_reserved_gib": 2.43359375,
+        "rss_gib": 1.5102157592773438,
+        "system_available_gib": 110.82030868530273,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.38007354736328125,
+      "samples": 30,
+      "gpu_util_avg": 95.0,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.5102157592773438,
+      "available_sampled_min_gib": 110.60741424560547,
+      "throughput": 10.213263740123663
+    },
+    {
+      "name": "inference_bp3000_n128",
+      "mode": "inference",
+      "bp": 3000,
+      "unique_inputs": 128,
+      "repeats": 2,
+      "processed": 256,
+      "tokens_min": 501,
+      "tokens_mean": 501.0,
+      "tokens_max": 501,
+      "seconds": 25.087876081466675,
+      "baseline": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 1.912109375,
+        "peak_allocated_gib": 1.8947038650512695,
+        "peak_reserved_gib": 1.912109375,
+        "rss_gib": 1.5102157592773438,
+        "system_available_gib": 111.3535270690918,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 2.43359375,
+        "peak_allocated_gib": 2.274777412414551,
+        "peak_reserved_gib": 2.43359375,
+        "rss_gib": 1.5102310180664062,
+        "system_available_gib": 110.84900283813477,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.38007354736328125,
+      "samples": 46,
+      "gpu_util_avg": 94.97826086956522,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.5102310180664062,
+      "available_sampled_min_gib": 110.82140731811523,
+      "throughput": 10.204132034481647
+    },
+    {
+      "name": "inference_bp600_n32",
+      "mode": "inference",
+      "bp": 600,
+      "unique_inputs": 32,
+      "repeats": 33,
+      "processed": 1056,
+      "tokens_min": 101,
+      "tokens_mean": 101.0,
+      "tokens_max": 101,
+      "seconds": 15.06499981880188,
+      "baseline": {
+        "allocated_gib": 1.8947038650512695,
+        "reserved_gib": 1.912109375,
+        "peak_allocated_gib": 1.8947038650512695,
+        "peak_reserved_gib": 1.912109375,
+        "rss_gib": 1.5102348327636719,
+        "system_available_gib": 111.37823486328125,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.8891725540161133,
+        "reserved_gib": 1.9765625,
+        "peak_allocated_gib": 1.9575324058532715,
+        "peak_reserved_gib": 1.9765625,
+        "rss_gib": 1.5102348327636719,
+        "system_available_gib": 111.33088302612305,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.06282854080200195,
+      "samples": 28,
+      "gpu_util_avg": 94.71428571428571,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.5102348327636719,
+      "available_sampled_min_gib": 111.30796813964844,
+      "throughput": 70.09625042823158
+    },
+    {
+      "name": "inference_bp6000_n32",
+      "mode": "inference",
+      "bp": 6000,
+      "unique_inputs": 32,
+      "repeats": 3,
+      "processed": 96,
+      "tokens_min": 1001,
+      "tokens_mean": 1001.0,
+      "tokens_max": 1001,
+      "seconds": 22.24816656112671,
+      "baseline": {
+        "allocated_gib": 1.8891725540161133,
+        "reserved_gib": 1.912109375,
+        "peak_allocated_gib": 1.8891725540161133,
+        "peak_reserved_gib": 1.912109375,
+        "rss_gib": 1.5102348327636719,
+        "system_available_gib": 111.39581680297852,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.9016180038452148,
+        "reserved_gib": 3.205078125,
+        "peak_allocated_gib": 3.140049457550049,
+        "peak_reserved_gib": 3.205078125,
+        "rss_gib": 1.5014991760253906,
+        "system_available_gib": 110.05043411254883,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 1.2508769035339355,
+      "samples": 41,
+      "gpu_util_avg": 93.1951219512195,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.501495361328125,
+      "available_sampled_min_gib": 110.05408096313477,
+      "throughput": 4.314962302005451
+    },
+    {
+      "name": "inference_bp12276_n32",
+      "mode": "inference",
+      "bp": 12276,
+      "unique_inputs": 32,
+      "repeats": 1,
+      "processed": 32,
+      "tokens_min": 2047,
+      "tokens_mean": 2047.0,
+      "tokens_max": 2047,
+      "seconds": 20.145867824554443,
+      "baseline": {
+        "allocated_gib": 1.9016180038452148,
+        "reserved_gib": 1.919921875,
+        "peak_allocated_gib": 1.9016180038452148,
+        "peak_reserved_gib": 1.919921875,
+        "rss_gib": 1.5015029907226562,
+        "system_available_gib": 111.35018539428711,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 1.9160823822021484,
+        "reserved_gib": 6.591796875,
+        "peak_allocated_gib": 6.474982261657715,
+        "peak_reserved_gib": 6.591796875,
+        "rss_gib": 1.5021743774414062,
+        "system_available_gib": 106.41391372680664,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 4.5733642578125,
+      "samples": 37,
+      "gpu_util_avg": 94.97297297297297,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.5035781860351562,
+      "available_sampled_min_gib": 106.26744079589844,
+      "throughput": 1.5884150674808535
+    }
+  ],
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "transformers": "4.44.2",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10"
+  },
+  "settings": {
+    "batch": 8,
+    "dtype": "FP32",
+    "tf32": false,
+    "seed": 42,
+    "lr": 1e-05,
+    "weight_decay": 0.0,
+    "epochs": 2,
+    "train": 512,
+    "validation": 128,
+    "test": 400,
+    "inference": "MLM model.esm backbone, masked mean including special tokens; MLM logits not computed",
+    "finetuning": "official custom EsmForSequenceClassification CLS MLP head; all trainable parameters"
+  },
+  "token_audit": {
+    "600": {
+      "min": 101,
+      "max": 101,
+      "mean": 101.0
+    },
+    "3000": {
+      "min": 501,
+      "max": 501,
+      "mean": 501.0
+    },
+    "6000": {
+      "min": 1001,
+      "max": 1001,
+      "mean": 1001.0
+    },
+    "12276": {
+      "min": 2047,
+      "max": 2047,
+      "mean": 2047.0
+    }
+  },
+  "input_audit": "data/input_audit.json",
+  "loading_seconds": 12.036430835723877,
+  "model_only_postload": {
+    "allocated_gib": 1.8565120697021484,
+    "reserved_gib": 1.873046875,
+    "peak_allocated_gib": 1.8565120697021484,
+    "peak_reserved_gib": 1.873046875,
+    "rss_gib": 1.1251564025878906,
+    "system_available_gib": 111.34940338134766,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters": {
+    "mlm_total": 498345436,
+    "embedding_backbone": 493084113,
+    "mlm_head": 5261323,
+    "classifier_total": 494135763,
+    "classifier_trainable": 494135763
+  },
+  "warmup_seconds": 0.642047643661499,
+  "classifier_loading_seconds": 11.73318338394165,
+  "classifier_model_only": {
+    "allocated_gib": 1.872079849243164,
+    "reserved_gib": 1.88671875,
+    "peak_allocated_gib": 6.474982261657715,
+    "peak_reserved_gib": 6.591796875,
+    "rss_gib": 1.3152275085449219,
+    "system_available_gib": 110.99953842163086,
+    "system_total_gib": 121.68751525878906
+  },
+  "initial_validation": {
+    "accuracy": 0.4921875,
+    "f1": 0.5038167938931297,
+    "mcc": -0.008859430733911012,
+    "auroc": 0.48137254901960785
+  },
+  "epochs": [],
+  "error": "RuntimeError('Inference tensors cannot be saved for backward. Please do not use Tensors created in inference mode in computation tracked by autograd. To work around this, you can make a clone to get a normal tensor and use it in autograd, or use `torch.no_grad()` instead of `torch.inference_mode()`.')"
+}

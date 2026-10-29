@@ -1,0 +1,67 @@
+{
+  "created_utc": "2026-10-27T08:23:59.745490+00:00",
+  "unique_sequences": 7,
+  "queries": [
+    {
+      "id": "1UBQ",
+      "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG",
+      "length": 76,
+      "kind": "length",
+      "source": "https://www.rcsb.org/fasta/entry/1UBQ",
+      "reference_chain": "A"
+    },
+    {
+      "id": "count1_A2RU14",
+      "sequence": "MAGTVLGVGAGVFILALLWVAVLLLCVLLSRASGAARFSVIFLFFGAVIITSVLLLFPRAGEFPAPEVEVKIVDDFFIGRYVLLAFLSAIFLGGLFLVLIHYVLEPIYAKPLHSY",
+      "length": 115,
+      "kind": "count",
+      "source": "UniProtKB reviewed 2026_03; reused ESM-2 source snapshot",
+      "source_id": "sp|A2RU14|TM218_HUMAN"
+    },
+    {
+      "id": "count2_A6NFY7",
+      "sequence": "MSRHSRLQRQVLSLYRDLLRAGRGKPGAEARVRAEFRQHAGLPRSDVLRIEYLYRRGRRQLQLLRSGHATAMGAFVRPRAPTGEPGGVGCQPDDGDSPRNPHDSTGAPETRPDGR",
+      "length": 115,
+      "kind": "count",
+      "source": "UniProtKB reviewed 2026_03; reused ESM-2 source snapshot",
+      "source_id": "sp|A6NFY7|SDHF1_HUMAN"
+    },
+    {
+      "id": "count3_O14519",
+      "sequence": "MSYKPNLAAHMPAAALNAAGSVHSPSTSMATSSQYRQLLSDYGPPSLGYTQGTGNSQVPQSKYAELLAIIEELGKEIRPTYAGSKSAMERLKRGIIHARGLVRECLAETERNARS",
+      "length": 115,
+      "kind": "count",
+      "source": "UniProtKB reviewed 2026_03; reused ESM-2 source snapshot",
+      "source_id": "sp|O14519|CDKA1_HUMAN"
+    },
+    {
+      "id": "count4_P01270",
+      "sequence": "MIPAKDMAKVMIVMLAICFLTKSDGKSVKKRSVSEIQLMHNLGKHLNSMERVEWLRKKLQDVHNFVALGAPLAPRDAGSQRPRKKEDNVLVESHEKSLGEADKADVNVLTKAKSQ",
+      "length": 115,
+      "kind": "count",
+      "source": "UniProtKB reviewed 2026_03; reused ESM-2 source snapshot",
+      "source_id": "sp|P01270|PTHY_HUMAN"
+    },
+    {
+      "id": "1LYZ",
+      "sequence": "KVFGRCELAAAMKRHGLDNYRGYSLGNWVCAAKFESNFNTQATNRNTDGSTDYGILQINSRWWCNDGRTPGSRNLCNIPCSALLSSDITASVNCAKKIVSDGNGMNAWVAWRNRCKGTDVQAWIRGCRL",
+      "length": 129,
+      "kind": "length",
+      "source": "https://www.rcsb.org/fasta/entry/1LYZ",
+      "reference_chain": "A"
+    },
+    {
+      "id": "1TIM",
+      "sequence": "APRKFFVGGNWKMNGKRKSLGELIHTLDGAKLSADTEVVCGAPSIYLDFARQKLDAKIGVAAQNCYKVPKGAFTGEISPAMIKDIGAAWVILGHSERRHVFGESDELIGQKVAHALAEGLGVIACIGEKLDEREAGITEKVVFQETKAIADNVKDWSKVVLAYEPVWAIGTGKTATPQQAQEVHEKLRGWLKTHVSDAVAVQSRIIYGGSVTGGNCKELASQHDVDGFLVGGASLKPEFVDIINAKH",
+      "length": 247,
+      "kind": "length",
+      "source": "https://www.rcsb.org/fasta/entry/1TIM",
+      "reference_chain": "A"
+    }
+  ],
+  "format": "FASTA amino-acid sequences; PDB reference chain A; no labels for count proteins",
+  "missing_sequences": 0,
+  "sequence_dtype": "text",
+  "preprocessed": false,
+  "msa": "not yet generated"
+}

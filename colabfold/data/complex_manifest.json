@@ -1,0 +1,21 @@
+{
+  "queries": [
+    {
+      "id": "3G5O_A_3G5O_B",
+      "sequence": "MRILPISTIKGKLNEFVDAVSSTQDQITITKNGAPAAVLVGADEWESLQETLYWLAQPGIRESIAEADADIASGRTYGEDEIRAEFGVPRRPHMPYTVRFTTTARRDLHKLPPRILAAVVEFAFGDLSREPLRVGKPLRRELAGTFSARRGTYRLLYRIDDEHTTVVILRVDHRADIYRR",
+      "chains": [
+        "MRILPISTIKGKLNEFVDAVSSTQDQITITKNGAPAAVLVGADEWESLQETLYWLAQPGIRESIAEADADIASGRTYGEDEIRAEFGVPRRPH",
+        "MPYTVRFTTTARRDLHKLPPRILAAVVEFAFGDLSREPLRVGKPLRRELAGTFSARRGTYRLLYRIDDEHTTVVILRVDHRADIYRR"
+      ],
+      "lengths": [
+        93,
+        87
+      ],
+      "length": 180,
+      "source": "https://github.com/sokrypton/ColabFold/blob/v1.6.2/test-data/complex/input.csv",
+      "kind": "complex"
+    }
+  ],
+  "format": "FASTA with colon-separated chains",
+  "unique_complexes": 1
+}

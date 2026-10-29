@@ -1,0 +1,213 @@
+{
+  "status": "success",
+  "run": "/work/results/af2_multimer_20261027_181640_431467",
+  "settings": {
+    "model_type": "alphafold2_multimer_v3",
+    "num_models": 5,
+    "model_order": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "num_recycles": 20,
+    "recycle_early_stop_tolerance": 0.0,
+    "num_ensemble": 1,
+    "num_seeds": 1,
+    "random_seed": 42,
+    "use_templates": false,
+    "num_relax": 0,
+    "dropout": false,
+    "msa_mode": "mmseqs2_uniref_env",
+    "max_seq": 508,
+    "max_extra_seq": 2048,
+    "use_bfloat16": true,
+    "use_pallas": false,
+    "compile_mode": "tuned",
+    "recompile_padding": 10,
+    "batch": "one protein at a time, five weight sets sequentially",
+    "preallocation": false
+  },
+  "predictions": [
+    {
+      "query": "3G5O_A_3G5O_B",
+      "tag": "alphafold2_multimer_v3_model_1_seed_042",
+      "lengths": [
+        93,
+        87
+      ],
+      "mean_plddt": 94.0625,
+      "ptm": 0.8828125,
+      "iptm": 0.876953125,
+      "plddt_shape": [
+        180
+      ],
+      "pae_shape": [
+        180,
+        180
+      ],
+      "coordinates_shape": [
+        180,
+        37,
+        3
+      ],
+      "finite_coordinates": true,
+      "finite_plddt": true
+    },
+    {
+      "query": "3G5O_A_3G5O_B",
+      "tag": "alphafold2_multimer_v3_model_2_seed_042",
+      "lengths": [
+        93,
+        87
+      ],
+      "mean_plddt": 94.3125,
+      "ptm": 0.8857421875,
+      "iptm": 0.87744140625,
+      "plddt_shape": [
+        180
+      ],
+      "pae_shape": [
+        180,
+        180
+      ],
+      "coordinates_shape": [
+        180,
+        37,
+        3
+      ],
+      "finite_coordinates": true,
+      "finite_plddt": true
+    },
+    {
+      "query": "3G5O_A_3G5O_B",
+      "tag": "alphafold2_multimer_v3_model_3_seed_042",
+      "lengths": [
+        93,
+        87
+      ],
+      "mean_plddt": 94.5625,
+      "ptm": 0.88720703125,
+      "iptm": 0.880859375,
+      "plddt_shape": [
+        180
+      ],
+      "pae_shape": [
+        180,
+        180
+      ],
+      "coordinates_shape": [
+        180,
+        37,
+        3
+      ],
+      "finite_coordinates": true,
+      "finite_plddt": true
+    },
+    {
+      "query": "3G5O_A_3G5O_B",
+      "tag": "alphafold2_multimer_v3_model_4_seed_042",
+      "lengths": [
+        93,
+        87
+      ],
+      "mean_plddt": 94.5625,
+      "ptm": 0.888671875,
+      "iptm": 0.88134765625,
+      "plddt_shape": [
+        180
+      ],
+      "pae_shape": [
+        180,
+        180
+      ],
+      "coordinates_shape": [
+        180,
+        37,
+        3
+      ],
+      "finite_coordinates": true,
+      "finite_plddt": true
+    },
+    {
+      "query": "3G5O_A_3G5O_B",
+      "tag": "alphafold2_multimer_v3_model_5_seed_042",
+      "lengths": [
+        93,
+        87
+      ],
+      "mean_plddt": 94.5,
+      "ptm": 0.888671875,
+      "iptm": 0.8798828125,
+      "plddt_shape": [
+        180
+      ],
+      "pae_shape": [
+        180,
+        180
+      ],
+      "coordinates_shape": [
+        180,
+        37,
+        3
+      ],
+      "finite_coordinates": true,
+      "finite_plddt": true
+    }
+  ],
+  "loaded_models": [
+    {
+      "model": "model_1",
+      "parameters": 93223705,
+      "parameter_dtypes": [
+        "float32"
+      ]
+    },
+    {
+      "model": "model_2",
+      "parameters": 93223705,
+      "parameter_dtypes": [
+        "float32"
+      ]
+    },
+    {
+      "model": "model_3",
+      "parameters": 93223705,
+      "parameter_dtypes": [
+        "float32"
+      ]
+    },
+    {
+      "model": "model_4",
+      "parameters": 93223705,
+      "parameter_dtypes": [
+        "float32"
+      ]
+    },
+    {
+      "model": "model_5",
+      "parameters": 93223705,
+      "parameter_dtypes": [
+        "float32"
+      ]
+    }
+  ],
+  "model_loading_seconds": 3.7893281660017237,
+  "pipeline_wall_seconds": 362.50957057900087,
+  "gpu_apply_seconds": 334.3037536019983,
+  "compilation_seconds": 19.50423007900099,
+  "final_device_memory": {
+    "num_allocs": 11078,
+    "bytes_in_use": 375286272,
+    "peak_bytes_in_use": 2329773568,
+    "largest_alloc_size": 335272960,
+    "bytes_limit": 522645929984,
+    "bytes_reserved": 0,
+    "peak_bytes_reserved": 0,
+    "largest_free_block_bytes": 0,
+    "pool_bytes": 4297064448,
+    "peak_pool_bytes": 4297064448
+  },
+  "wall_seconds": 363.05823785100074
+}

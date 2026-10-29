@@ -1,0 +1,8 @@
+{
+  "observed_exit_code": 0,
+  "evidence": "write_stdin(session_id=24715) returned exit_code=0; final stdout SUCCESS at 2026-10-27T16:45:26.114092+09:00",
+  "rechecked_utc": "2026-10-27T07:57:08.091108+00:00",
+  "gpu_recheck": "No ESM-2 compute process; GPU-Util 4%",
+  "duplicated_original_run": false,
+  "original_console_file": "Not redirected at launch; full stdout not persisted to a console file. Structured phase results and resources.csv are preserved."
+}

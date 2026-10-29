@@ -1,0 +1,626 @@
+[
+  {
+    "start": 1793097122.9269342,
+    "end": 1793097124.3326585,
+    "phase": "warmup",
+    "condition": "native_one",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097124.334165,
+    "end": 1793097124.5966277,
+    "phase": "warmup",
+    "condition": "native_one",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097124.8910854,
+    "end": 1793097125.3348584,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097125.3355386,
+    "end": 1793097125.5387502,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097125.5917656,
+    "end": 1793097126.0159028,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097126.01639,
+    "end": 1793097126.2581656,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097126.3101757,
+    "end": 1793097126.7148027,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097126.715151,
+    "end": 1793097126.9478383,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097126.9959497,
+    "end": 1793097127.40688,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097127.4072084,
+    "end": 1793097127.6156664,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097127.6633177,
+    "end": 1793097128.0665214,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097128.0669398,
+    "end": 1793097128.2752385,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097128.316615,
+    "end": 1793097128.7164748,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097128.7168093,
+    "end": 1793097128.9238825,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097128.9659142,
+    "end": 1793097129.3813417,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097129.3816407,
+    "end": 1793097129.58778,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097129.6293478,
+    "end": 1793097130.0529764,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097130.0533106,
+    "end": 1793097130.2674468,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097130.309373,
+    "end": 1793097130.7180915,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097130.7184305,
+    "end": 1793097130.9257932,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097130.9671836,
+    "end": 1793097131.3803027,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097131.380618,
+    "end": 1793097131.5819263,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097131.6238785,
+    "end": 1793097132.0295706,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097132.0298748,
+    "end": 1793097132.233523,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097132.2753663,
+    "end": 1793097132.6775591,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097132.6778836,
+    "end": 1793097132.8816752,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097132.9238873,
+    "end": 1793097133.3331008,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097133.3334265,
+    "end": 1793097133.5414248,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097133.5832012,
+    "end": 1793097134.0133753,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097134.0137117,
+    "end": 1793097134.2264292,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097134.268547,
+    "end": 1793097134.6841366,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097134.6845424,
+    "end": 1793097134.8897543,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097134.932177,
+    "end": 1793097135.3461814,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097135.346588,
+    "end": 1793097135.5479739,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097135.58989,
+    "end": 1793097135.9981709,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097135.9984958,
+    "end": 1793097136.204475,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097136.2461433,
+    "end": 1793097136.6450741,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097136.6453898,
+    "end": 1793097136.8527436,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097136.894665,
+    "end": 1793097137.3072484,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097137.307553,
+    "end": 1793097137.5136356,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097137.5559175,
+    "end": 1793097137.987004,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097137.987325,
+    "end": 1793097138.1980712,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097138.2416062,
+    "end": 1793097138.657201,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097138.6575108,
+    "end": 1793097138.8601081,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097138.9040775,
+    "end": 1793097139.3006208,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097139.3009439,
+    "end": 1793097139.5070617,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097139.550559,
+    "end": 1793097139.9535677,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      8,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  },
+  {
+    "start": 1793097139.953974,
+    "end": 1793097140.149301,
+    "phase": "inference",
+    "condition": "count_1",
+    "shape": [
+      4,
+      1,
+      256,
+      256
+    ],
+    "dtype": "torch.bfloat16"
+  }
+]

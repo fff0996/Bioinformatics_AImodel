@@ -1,0 +1,24 @@
+[
+  {
+    "batch": 8,
+    "unique_cells": 300000,
+    "active_seconds_sum": 2663.1926095485687,
+    "cells_per_second": 112.64675297024509,
+    "allocated_peak_gib_max_segments": 0.38937997817993164,
+    "reserved_peak_gib_max_segments": 0.404296875,
+    "gpu_util_mean_sample_weighted": 94.8913516722739,
+    "gpu_util_max": 96.0,
+    "segments": 2
+  },
+  {
+    "batch": 256,
+    "unique_cells": 300000,
+    "active_seconds_sum": 2628.604710817337,
+    "cells_per_second": 114.12898971284204,
+    "allocated_peak_gib_max_segments": 5.4772539138793945,
+    "reserved_peak_gib_max_segments": 21.474609375,
+    "gpu_util_mean_sample_weighted": 95.10169150221506,
+    "gpu_util_max": 96.0,
+    "segments": 1
+  }
+]

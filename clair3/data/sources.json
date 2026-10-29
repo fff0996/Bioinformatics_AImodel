@@ -1,0 +1,44 @@
+[
+  {
+    "file": "GRCh38_no_alt_chr20.fa",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/GRCh38_no_alt_chr20.fa",
+    "bytes": 65518244,
+    "sha256": "0ff3eab72be69fad01973c2261b965e1e4bd6bc49b77bb858d603ffbe11456d7"
+  },
+  {
+    "file": "GRCh38_no_alt_chr20.fa.fai",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/GRCh38_no_alt_chr20.fa.fai",
+    "bytes": 23,
+    "sha256": "7455fb06dab8ff448f729300bc8fb43ab486a06cfb97b8d91851696c1995a887"
+  },
+  {
+    "file": "HG003_chr20_demo.bam",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/HG003_chr20_demo.bam",
+    "bytes": 27541300,
+    "sha256": "ed4022b5b77533375fe9a8fe96a25636f95412386f65f4c618897b74eeee061f"
+  },
+  {
+    "file": "HG003_chr20_demo.bam.bai",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/HG003_chr20_demo.bam.bai",
+    "bytes": 9920,
+    "sha256": "90504152e97b89a4374c02a552861da1e048a4ee145a30ca9b99547180ef933c"
+  },
+  {
+    "file": "HG003_GRCh38_chr20_v4.2.1_benchmark.vcf.gz",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/HG003_GRCh38_chr20_v4.2.1_benchmark.vcf.gz",
+    "bytes": 3344467,
+    "sha256": "da3c275487ad01616809463f1364176bdaaee2ea90c9c745ae9752feb9bb35dc"
+  },
+  {
+    "file": "HG003_GRCh38_chr20_v4.2.1_benchmark.vcf.gz.tbi",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/HG003_GRCh38_chr20_v4.2.1_benchmark.vcf.gz.tbi",
+    "bytes": 36079,
+    "sha256": "deb63977231e56c18bb6d5d5c51d0174accaf86203579b3bb9a3b9e142223d06"
+  },
+  {
+    "file": "HG003_GRCh38_chr20_v4.2.1_benchmark_noinconsistent.bed",
+    "url": "https://www.bio8.cs.hku.hk/clair3/demo/quick_demo/ont/HG003_GRCh38_chr20_v4.2.1_benchmark_noinconsistent.bed",
+    "bytes": 274339,
+    "sha256": "29d03d1395f3f55b1d25407fe53f782f528e30b386b7f8b4c0c8821c654b71f3"
+  }
+]

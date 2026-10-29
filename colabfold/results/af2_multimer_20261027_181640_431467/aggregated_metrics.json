@@ -1,0 +1,35 @@
+[
+  {
+    "run": "af2_multimer_20261027_181640_431467",
+    "query": "3G5O_A_3G5O_B",
+    "unique_inputs": 1,
+    "total_processed_proteins": 1,
+    "predicted_models": 5,
+    "gpu_apply_calls": 105,
+    "original_residues": 180,
+    "actual_residues": 180,
+    "padded_residue_axis": 180,
+    "original_a3m_rows": 21350,
+    "actual_feature_msa_shape": [
+      3072,
+      180
+    ],
+    "extra_msa_shape": null,
+    "truncated": false,
+    "compute_seconds": 334.3037536019983,
+    "compilation_seconds": 19.50423007900099,
+    "query_wall_seconds": 357.36908928999947,
+    "protein_throughput_per_second": 0.002991291570092686,
+    "model_throughput_per_second": 0.01495645785046343,
+    "gpu_util_mean_percent": 92.91818181818182,
+    "gpu_util_max_percent": 95.0,
+    "sample_count": 660,
+    "rss_sampled_peak_gib": 5.1191558837890625,
+    "available_min_gib": 109.46295547485352,
+    "swap_max_bytes": 0,
+    "jax_allocator_peak_gib_since_process_start": 2.1697707176208496,
+    "jax_live_bytes_max_at_apply_return_gib": 1.8181002140045166,
+    "query_start": 1793092606.5303802,
+    "query_end": 1793092963.8994687
+  }
+]

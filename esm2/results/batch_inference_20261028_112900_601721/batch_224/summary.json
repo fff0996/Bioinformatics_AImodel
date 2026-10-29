@@ -1,0 +1,81 @@
+{
+  "status": "complete",
+  "batch": 224,
+  "task": "pretrained protein mean embeddings inference only",
+  "conditions": [
+    {
+      "batch_size": 224,
+      "unique_inputs": 224,
+      "processed_inputs": 448,
+      "repeats": 2,
+      "input_shape": [
+        224,
+        952
+      ],
+      "seconds": 127.94693183898926,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.748760223388672,
+        "system_available_gib": 108.68917846679688,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 42.529296875,
+        "peak_allocated_gib": 38.633145332336426,
+        "peak_reserved_gib": 42.529296875,
+        "rss_gib": 2.7515335083007812,
+        "system_available_gib": 68.19535064697266,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 36.09711980819702,
+      "samples": 233,
+      "gpu_util_avg": 94.44635193133047,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.7487754821777344,
+      "available_sampled_min_gib": 68.06254196166992,
+      "sequences_per_second": 3.501451684388738,
+      "allocated_fraction_shared_ram": 0.317478298822821
+    }
+  ],
+  "model_loading_seconds": 2.3426120281219482,
+  "model_only_postload": {
+    "allocated_gib": 2.489795207977295,
+    "reserved_gib": 2.55859375,
+    "peak_allocated_gib": 2.489795207977295,
+    "peak_reserved_gib": 2.55859375,
+    "rss_gib": 2.1960525512695312,
+    "system_available_gib": 108.98477172851562,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 651043254,
+  "parameters_backbone": 649400320,
+  "parameters_trainable_in_this_run": 0,
+  "environment": {
+    "python": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:36:13) [GCC 14.4.0]",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "esm": "2.0.0",
+    "gpu": "NVIDIA GB10",
+    "platform": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39"
+  },
+  "input": {
+    "unique_sequences": 224,
+    "length_min": 900,
+    "length_max": 950,
+    "length_mean": 923.8258928571429,
+    "actual_token_shape": [
+      224,
+      952
+    ],
+    "dtype": "torch.int64",
+    "truncation": false,
+    "padding": "official converter, batch longest950AA + BOS/EOS =952 positions"
+  },
+  "warmup_seconds": 69.54936981201172,
+  "saved_output_exact_reload": true,
+  "first_sequence_batch_invariance_max_abs": 1.430511474609375e-06
+}

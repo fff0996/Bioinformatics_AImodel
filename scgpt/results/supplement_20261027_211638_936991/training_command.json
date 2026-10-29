@@ -1,0 +1,6 @@
+[
+  "sg",
+  "docker",
+  "-c",
+  "docker exec --user 1000:1000 -e MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib -e NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba scgpt-spark python -u /workspace/scgpt/scripts/train_util_supplement.py --out /workspace/scgpt/results/supplement_20261027_211638_936991/training_util --model-out /workspace/scgpt/models/finetuned/supplement_20261027_211638_936991 --n-cells 1000 --epochs 1 --batch-size 8 --max-length 1200"
+]

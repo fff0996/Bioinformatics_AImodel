@@ -1,0 +1,88 @@
+{
+  "status": "complete",
+  "model": "rnafm",
+  "batch": 1,
+  "task": "inference resource batch sweep only, no training",
+  "conditions": [
+    {
+      "batch_size": 1,
+      "unique_inputs": 1,
+      "processed_inputs": 667,
+      "repeats": 667,
+      "seconds": 15.004332065582275,
+      "baseline": {
+        "allocated_gib": 0.40199756622314453,
+        "reserved_gib": 0.451171875,
+        "peak_allocated_gib": 0.40199756622314453,
+        "peak_reserved_gib": 0.451171875,
+        "rss_gib": 1.4755935668945312,
+        "system_available_gib": 111.98821640014648,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.40199756622314453,
+        "reserved_gib": 0.494140625,
+        "peak_allocated_gib": 0.4484577178955078,
+        "peak_reserved_gib": 0.494140625,
+        "rss_gib": 1.4783821105957031,
+        "system_available_gib": 111.90662002563477,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.04646015167236328,
+      "samples": 29,
+      "gpu_util_avg": 91.82758620689656,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.4782981872558594,
+      "available_sampled_min_gib": 111.81607818603516,
+      "inputs_per_second": 44.45382820672169,
+      "allocated_fraction_shared_ram": 0.0036853223351778256,
+      "model_only_allocated_gib": 0.37074756622314453
+    }
+  ],
+  "load_seconds": 2.2285561561584473,
+  "model_only_postload": {
+    "allocated_gib": 0.37074756622314453,
+    "reserved_gib": 0.419921875,
+    "peak_allocated_gib": 0.37074756622314453,
+    "peak_reserved_gib": 0.419921875,
+    "rss_gib": 1.0883216857910156,
+    "system_available_gib": 112.43917083740234,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 99521546,
+  "parameters_trained_in_this_run": 0,
+  "theoretical_weight_storage_gib": 0.3707466498017311,
+  "parameters_used_backbone": 99521546,
+  "checkpoint_reference": "models/RNA-FM_pretrained.pth; existing data/sources.json",
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10",
+    "precision": "FP32",
+    "tf32": false
+  },
+  "input": {
+    "unique_sequences": 1,
+    "pool_sequences": 76,
+    "raw_length_min": 512,
+    "raw_length_max": 512,
+    "input_shapes": {
+      "input_ids": [
+        1,
+        514
+      ]
+    },
+    "tokenizer_truncation": false,
+    "padding": "same pool-wide longest token width fixed across batches; explicit crop lengths in inputs provenance",
+    "ids": [
+      "URS0000D0DF8F"
+    ]
+  },
+  "warmup_seconds": 0.32042670249938965,
+  "output_shape": [
+    1,
+    640
+  ],
+  "finite_and_exact_save_reload": true,
+  "reference_first_created": true
+}

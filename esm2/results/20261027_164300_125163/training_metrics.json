@@ -1,0 +1,56 @@
+{
+  "mode": "partial_backbone_finetuning",
+  "epochs": 1,
+  "train_inputs": 128,
+  "validation_inputs": 64,
+  "test_inputs": 128,
+  "trainable_backbone_parameters": 19680000,
+  "head_parameters": 1281,
+  "trainable_total": 19681281,
+  "complete_model_parameters": 651044535,
+  "execution_seconds": 7.216273201999684,
+  "throughput_per_second": 17.737687642498102,
+  "cuda_peak_allocated_gib": 3.6230783462524414,
+  "cuda_peak_reserved_gib": 3.814453125,
+  "backbone_updated": true,
+  "head_updated": true,
+  "losses": [
+    1.3499709367752075,
+    0.6532456874847412,
+    1.4175997972488403,
+    0.9497911930084229,
+    1.424241065979004,
+    0.8848074674606323,
+    1.141989827156067,
+    0.5032334923744202
+  ],
+  "sample_count": 14,
+  "gpu_util_mean_percent": 88.14285714285714,
+  "gpu_util_max_percent": 95.0,
+  "rss_sampled_peak_gib": 1.6403999328613281,
+  "system_available_min_gib": 109.4414291381836,
+  "swap_max_bytes": 0,
+  "save_seconds": 1.1063288169998486,
+  "model_path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163",
+  "reload_verified": true,
+  "reload_max_abs_difference": 0.0,
+  "independent_test_evaluated": true,
+  "test_metrics": {
+    "n": 128,
+    "mse": 1.9612319458002507,
+    "mae": 1.302844517864287,
+    "spearman": 0.02408973160514958
+  },
+  "validation_metrics": {
+    "n": 64,
+    "mse": 1.0076555758466395,
+    "mae": 0.8477534390985966,
+    "spearman": -0.13720395151942313
+  },
+  "initial_validation_metrics": {
+    "n": 64,
+    "mse": 1.196663818210105,
+    "mae": 0.7491469979286194,
+    "spearman": -0.10011561488310318
+  }
+}

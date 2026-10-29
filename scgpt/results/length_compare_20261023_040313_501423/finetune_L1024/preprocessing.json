@@ -1,0 +1,12 @@
+{
+  "pad_token": "<pad>",
+  "pad_value": -2,
+  "n_bins": 51,
+  "max_length_including_cls": 1024,
+  "additional_normalize_total": false,
+  "additional_log1p": false,
+  "expression_provenance": "Supplied h5ad values; no raw layer or preprocessing metadata",
+  "tokenization": "nonzero genes only; prepend CLS; official per-cell quantile binning; random overlength sampling; dynamic padding",
+  "pooling": "raw CLS features into official cls_decoder; no L2 normalization",
+  "prediction_genes": "require every saved training gene; reorder to training gene order; ignore additional genes"
+}

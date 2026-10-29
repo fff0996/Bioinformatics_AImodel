@@ -1,0 +1,1 @@
+sudo docker exec scgpt-spark python -u /workspace/scgpt/scripts/00_prepare_inputs.py /workspace/scgpt /workspace/scgpt/results/input_check_20261023_030617_498960

@@ -1,0 +1,7 @@
+{
+  "independent_process": true,
+  "validation_cells": 2120,
+  "max_abs_difference": 0.0,
+  "predictions_match": true,
+  "passed": true
+}

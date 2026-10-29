@@ -1,0 +1,13 @@
+{
+  "input": {
+    "path": "/workspace/scgpt/data/pancreas_demo/demo_train.h5ad",
+    "sha256": "660e120cb991d47e101ef1259f763bdd64f2de0a51f1778336cc4322458c94e2"
+  },
+  "pretrained_checkpoint": {
+    "path": "/workspace/scgpt/models/whole-human/best_model.pt",
+    "sha256": "6cb5d451ab5c4b33eb673adbe4fddc61d2389df1b89b7651a9fe2e557572b922"
+  },
+  "script_sha256": "e5e6c06b7d8997df87a120dafd4a553f23882180478f554da8cf5bec39efa6bc",
+  "tutorial": "https://scgpt.readthedocs.io/en/latest/tutorial_annotation.html",
+  "dataset_source": "TOSICA author-distributed Figshare demo_train.h5ad (file 39009503)"
+}

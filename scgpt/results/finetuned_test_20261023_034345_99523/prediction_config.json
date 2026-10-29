@@ -1,0 +1,25 @@
+{
+  "bundle": "/workspace/scgpt/models/finetuned/finetune_20261023_033701_500560/epoch_001",
+  "model_sha256": "4e7881b22185b278a44f6052ce478cc95a0c7a57249de48f047b830eea190e70",
+  "input": "/workspace/scgpt/data/pancreas_demo/demo_test.h5ad",
+  "input_sha256": "6fd33b1d8e5a9b3eb515ce3252869e32db7e5088edf8b9302b0ab698fdab5b29",
+  "seed": 42,
+  "batch_size": 8,
+  "precision": "FP32",
+  "preprocessing": {
+    "pad_token": "<pad>",
+    "pad_value": -2,
+    "n_bins": 51,
+    "max_length_including_cls": 1200,
+    "additional_normalize_total": false,
+    "additional_log1p": false,
+    "expression_provenance": "Supplied h5ad values; no raw layer or preprocessing metadata",
+    "tokenization": "nonzero genes only; prepend CLS; official per-cell quantile binning; random overlength sampling; dynamic padding",
+    "pooling": "raw CLS features into official cls_decoder; no L2 normalization",
+    "prediction_genes": "require every saved training gene; reorder to training gene order; ignore additional genes"
+  },
+  "unknown_label_counts": {
+    "MHC class II": 5
+  },
+  "unknown_policy": "retain all predictions; evaluate known ground-truth labels only; no unknown-class detector"
+}

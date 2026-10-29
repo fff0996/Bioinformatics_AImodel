@@ -1,0 +1,33 @@
+{
+  "started_at_utc": "2026-10-22T18:37:04.530838+00:00",
+  "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+  "architecture": "aarch64",
+  "packages": {
+    "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+    "scgpt": "0.2.5",
+    "numpy": "2.1.0",
+    "anndata": "0.12.19",
+    "scanpy": "1.12.4",
+    "scipy": "1.17.1",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.1",
+    "psutil": "7.2.2"
+  },
+  "scgpt_install_source": {
+    "url": "https://github.com/bowang-lab/scGPT.git",
+    "vcs_info": {
+      "commit_id": "cebd6fae655b9c585a4807daa3ac31bb764f06b4",
+      "requested_revision": "cebd6fae655b9c585a4807daa3ac31bb764f06b4",
+      "vcs": "git"
+    }
+  },
+  "cuda_version": "13.3",
+  "gpu_name": "NVIDIA GB10",
+  "gpu_compute_capability": [
+    12,
+    1
+  ],
+  "cuda_reported_total_memory_gib": 121.68751525878906,
+  "system_total_memory_gib": 121.68751525878906,
+  "torch_cpu_threads": 8
+}

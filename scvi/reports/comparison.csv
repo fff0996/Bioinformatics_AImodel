@@ -1,0 +1,7 @@
+mode,cells,genes,batch,epochs,gpu_util_mean_percent,gpu_util_max_percent,model_loading_reference_gib,runtime_peak_allocated_gib,reference_additional_gib,execution_seconds,throughput,memory_comparison
+training,1024,2000,128,400,21.8,30.0,0.004825592041015625,0.09736299514770508,0.09253740310668945,19.42403915001887,21087.272159848486,different-run loading reference; training includes gradients/optimizer/workspace
+training,4096,2000,128,400,26.54621848739496,32.0,0.004825592041015625,0.09743928909301758,0.09261369705200195,60.20143001002907,27215.300362915896,different-run loading reference; training includes gradients/optimizer/workspace
+training,10176,2000,128,400,25.7626582278481,33.0,0.004825592041015625,0.09743928909301758,0.09261369705200195,159.0651606000174,25589.513031300172,different-run loading reference; training includes gradients/optimizer/workspace
+latent_inference,1024,2000,128,,24.066666666666666,29.0,0.004825592041015625,0.03901863098144531,0.03419303894042969,15.002227847999166,242037.6517934486,different-run loading reference; includes input/intermediate/workspace
+latent_inference,4096,2000,128,,27.733333333333334,31.0,0.004825592041015625,0.03901863098144531,0.03419303894042969,15.010383699000158,278335.32331876975,different-run loading reference; includes input/intermediate/workspace
+latent_inference,12721,2000,128,,29.1,33.0,0.004825592041015625,0.03901863098144531,0.03419303894042969,15.012856510000347,298263.8245438007,different-run loading reference; includes input/intermediate/workspace

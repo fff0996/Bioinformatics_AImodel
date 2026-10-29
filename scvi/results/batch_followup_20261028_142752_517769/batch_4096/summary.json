@@ -1,0 +1,79 @@
+{
+  "status": "complete",
+  "model": "scvi",
+  "batch": 4096,
+  "task": "inference resource batch sweep only, no training",
+  "conditions": [
+    {
+      "batch_size": 4096,
+      "unique_inputs": 4096,
+      "processed_inputs": 9056256,
+      "repeats": 2211,
+      "seconds": 15.00086760520935,
+      "baseline": {
+        "allocated_gib": 0.036075592041015625,
+        "reserved_gib": 0.037109375,
+        "peak_allocated_gib": 0.036075592041015625,
+        "peak_reserved_gib": 0.037109375,
+        "rss_gib": 1.5226860046386719,
+        "system_available_gib": 112.51547241210938,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.036075592041015625,
+        "reserved_gib": 0.150390625,
+        "peak_allocated_gib": 0.13182449340820312,
+        "peak_reserved_gib": 0.150390625,
+        "rss_gib": 1.5625953674316406,
+        "system_available_gib": 112.4080581665039,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.0957489013671875,
+      "samples": 29,
+      "gpu_util_avg": 24.862068965517242,
+      "gpu_util_max": 28.0,
+      "rss_sampled_peak_gib": 1.5625953674316406,
+      "available_sampled_min_gib": 112.37411880493164,
+      "inputs_per_second": 603715.4808869212,
+      "allocated_fraction_shared_ram": 0.0010833033539049267,
+      "model_only_allocated_gib": 0.004825592041015625
+    }
+  ],
+  "checkpoint": "/work/models/scvi_20261027_185327_767988/train_10176",
+  "input": {
+    "unique_cells": 4096,
+    "genes": 2000,
+    "raw_counts_source": "saved adata.h5ad layers counts, actual 10x PBMC4k+8k",
+    "original_pool_cells": 12721,
+    "batch_covariate": "sample_id, biological batch distinct from GPU batch"
+  },
+  "load_seconds": 2.1114470958709717,
+  "model_only_postload": {
+    "allocated_gib": 0.004825592041015625,
+    "reserved_gib": 0.005859375,
+    "peak_allocated_gib": 0.004825592041015625,
+    "peak_reserved_gib": 0.005859375,
+    "rss_gib": 1.0793609619140625,
+    "system_available_gib": 113.10316467285156,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 1293526,
+  "parameters_trained_in_this_run": 0,
+  "theoretical_weight_storage_gib": 0.004818759858608246,
+  "parameters_used_backbone": 1293526,
+  "checkpoint_reference": "models/scvi_20261027_185327_767988/train_10176",
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10",
+    "precision": "FP32",
+    "tf32": false
+  },
+  "warmup_seconds": 0.3565089702606201,
+  "output_shape": [
+    4096,
+    10
+  ],
+  "finite_and_exact_save_reload": true,
+  "batch_invariance_max_abs": 4.76837158203125e-07
+}

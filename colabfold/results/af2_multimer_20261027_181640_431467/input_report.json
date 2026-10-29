@@ -1,0 +1,37 @@
+[
+  {
+    "id": "3G5O_A_3G5O_B",
+    "residues": 180,
+    "msa_depth": 21350,
+    "msa_aligned_columns": 180,
+    "msa_characters": [
+      "-",
+      "A",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "K",
+      "L",
+      "M",
+      "N",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "V",
+      "W",
+      "X",
+      "Y"
+    ],
+    "msa_sha256": "df9a1e37a4c292fb17ef50745abb85a98287505ec36b6f9cae6a163c8cf19382",
+    "msa_bytes": 5363868,
+    "token_dtype": "int32 features",
+    "truncated": false,
+    "templates": false
+  }
+]

@@ -1,0 +1,83 @@
+{
+  "source_run": "actual_300k_20261027_221433_021330",
+  "conditions": [
+    {
+      "name": "actual_cells_n10000_batch8",
+      "batch_size": 8,
+      "unique_cells": 10000,
+      "processed_cells": 10000,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "8x1200": 1250
+      },
+      "seconds": 90.40982866287231,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 1.7141914367675781,
+        "system_available_gib": 112.36790466308594,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.24274349212646484,
+        "reserved_gib": 0.404296875,
+        "peak_allocated_gib": 0.38937997817993164,
+        "peak_reserved_gib": 0.404296875,
+        "rss_gib": 1.7435989379882812,
+        "system_available_gib": 112.26481628417969,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.1649470329284668,
+      "samples": 171,
+      "gpu_util_avg": 94.12280701754386,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.7432327270507812,
+      "available_sampled_min_gib": 112.04463958740234,
+      "cells_per_second": 110.6074433266413
+    },
+    {
+      "name": "actual_cells_n100000_batch8",
+      "batch_size": 8,
+      "unique_cells": 100000,
+      "processed_cells": 100000,
+      "measurement_repeats": 1,
+      "actual_token_shapes": {
+        "8x1200": 12500
+      },
+      "seconds": 903.0270133018494,
+      "baseline": {
+        "allocated_gib": 0.22443294525146484,
+        "reserved_gib": 0.23046875,
+        "peak_allocated_gib": 0.22443294525146484,
+        "peak_reserved_gib": 0.23046875,
+        "rss_gib": 1.7141914367675781,
+        "system_available_gib": 112.36790466308594,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.24274349212646484,
+        "reserved_gib": 0.404296875,
+        "peak_allocated_gib": 0.38937997817993164,
+        "peak_reserved_gib": 0.404296875,
+        "rss_gib": 2.4256515502929688,
+        "system_available_gib": 112.36163711547852,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.1649470329284668,
+      "samples": 1714,
+      "gpu_util_avg": 94.77246207701283,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.4252853393554688,
+      "available_sampled_min_gib": 111.36497497558594,
+      "cells_per_second": 110.73865845314819
+    }
+  ],
+  "completed_prefixes": {
+    "8": 100000,
+    "256": 0
+  },
+  "saved_at": 1793108090.9639878,
+  "note": "Only completed measured milestones are durable resume points. Work after the latest milestone will be repeated. Download and token cache reused. Resume timing is a separate segment."
+}

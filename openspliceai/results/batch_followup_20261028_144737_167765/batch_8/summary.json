@@ -1,0 +1,97 @@
+{
+  "status": "complete",
+  "model": "openspliceai",
+  "batch": 8,
+  "task": "inference resource batch sweep only, no training",
+  "conditions": [
+    {
+      "batch_size": 8,
+      "unique_inputs": 8,
+      "processed_inputs": 664,
+      "repeats": 83,
+      "seconds": 15.021369934082031,
+      "baseline": {
+        "allocated_gib": 0.013391971588134766,
+        "reserved_gib": 0.013671875,
+        "peak_allocated_gib": 0.013391971588134766,
+        "peak_reserved_gib": 0.013671875,
+        "rss_gib": 1.0860748291015625,
+        "system_available_gib": 113.02488708496094,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.013391971588134766,
+        "reserved_gib": 0.11328125,
+        "peak_allocated_gib": 0.0876002311706543,
+        "peak_reserved_gib": 0.11328125,
+        "rss_gib": 1.0849685668945312,
+        "system_available_gib": 112.8900375366211,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.07420825958251953,
+      "samples": 28,
+      "gpu_util_avg": 93.35714285714286,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 1.086181640625,
+      "available_sampled_min_gib": 112.86271286010742,
+      "inputs_per_second": 44.2036913353321,
+      "allocated_fraction_shared_ram": 0.0007198785428756401,
+      "model_only_allocated_gib": 0.013391971588134766
+    }
+  ],
+  "load_seconds": 0.30923008918762207,
+  "model_only_postload": {
+    "allocated_gib": 0.013391971588134766,
+    "reserved_gib": 0.013671875,
+    "peak_allocated_gib": 0.013391971588134766,
+    "peak_reserved_gib": 0.013671875,
+    "rss_gib": 0.6275863647460938,
+    "system_available_gib": 113.37492370605469,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 3483695,
+  "parameters_trained_in_this_run": 0,
+  "theoretical_weight_storage_gib": 0.012977775186300278,
+  "parameters_used_backbone": 3483695,
+  "checkpoint_reference": "source/models/openspliceai-mane/10000nt seeds10..14",
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10",
+    "precision": "FP32",
+    "tf32": false
+  },
+  "input": {
+    "unique_sequences": 8,
+    "pool_sequences": 156,
+    "raw_length_min": 15000,
+    "raw_length_max": 15000,
+    "input_shapes": {
+      "onehot": [
+        8,
+        4,
+        15000
+      ]
+    },
+    "tokenizer_truncation": false,
+    "padding": "same pool-wide longest token width fixed across batches; explicit crop lengths in inputs provenance",
+    "ids": [
+      "FAM110C_2_43532_-",
+      "SH3YL1_2_221931_-",
+      "ACP1_2_268435_+",
+      "TMEM18_2_669715_-",
+      "TPO_2_1413978_+",
+      "PXDN_2_1634864_-",
+      "MYT1L_2_1792163_-",
+      "TSSC1_2_3190960_-"
+    ]
+  },
+  "warmup_seconds": 0.4420137405395508,
+  "output_shape": [
+    8,
+    3,
+    5000
+  ],
+  "finite_and_exact_save_reload": true,
+  "batch_invariance_max_abs": 0.0
+}

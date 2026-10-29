@@ -1,0 +1,391 @@
+{
+  "status": "complete",
+  "task": "official run_net tiled-image network inference; excludes mask dynamics",
+  "requested_tile_batch": 8,
+  "load_seconds": 1.1836025714874268,
+  "model_only_postload": {
+    "allocated_gib": 0.5682768821716309,
+    "reserved_gib": 1.740234375,
+    "peak_allocated_gib": 1.7182645797729492,
+    "peak_reserved_gib": 1.740234375,
+    "rss_gib": 0.9475669860839844,
+    "system_available_gib": 110.84099197387695,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 304628930,
+  "parameters_trainable_in_run": 0,
+  "weights_dtype": "torch.bfloat16",
+  "environment": {
+    "cellpose": "4.2.1",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10"
+  },
+  "warmup_seconds": 1.626248836517334,
+  "warmup_actual_forward_shapes": [
+    [
+      8,
+      1,
+      256,
+      256
+    ],
+    [
+      4,
+      1,
+      256,
+      256
+    ]
+  ],
+  "condition": {
+    "requested_tile_batch": 8,
+    "unique_images": 1,
+    "unique_tiles": 12,
+    "repeats": 24,
+    "processed_images": 24,
+    "processed_tiles": 288,
+    "seconds": 15.541576385498047,
+    "baseline": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 0.642578125,
+      "peak_allocated_gib": 0.5995268821716309,
+      "peak_reserved_gib": 0.642578125,
+      "rss_gib": 1.7570877075195312,
+      "system_available_gib": 111.26668167114258,
+      "system_total_gib": 121.68751525878906
+    },
+    "memory": {
+      "allocated_gib": 0.5995268821716309,
+      "reserved_gib": 1.783203125,
+      "peak_allocated_gib": 1.4913725852966309,
+      "peak_reserved_gib": 1.783203125,
+      "rss_gib": 1.7811927795410156,
+      "system_available_gib": 110.25340270996094,
+      "system_total_gib": 121.68751525878906
+    },
+    "peak_delta_gib": 0.891845703125,
+    "samples": 29,
+    "gpu_util_avg": 91.06896551724138,
+    "gpu_util_max": 95.0,
+    "rss_sampled_peak_gib": 1.7811927795410156,
+    "available_sampled_min_gib": 110.11338424682617,
+    "actual_forward_shapes": [
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ],
+      [
+        8,
+        1,
+        256,
+        256
+      ],
+      [
+        4,
+        1,
+        256,
+        256
+      ]
+    ],
+    "actual_max_tile_batch": 8,
+    "images_per_second": 1.5442448954145067,
+    "tiles_per_second": 18.530938744974083,
+    "allocated_fraction_shared_ram": 0.012255756739916787
+  },
+  "output_saved_exact_reload": true,
+  "all_output_shape": [
+    1,
+    520,
+    696,
+    3
+  ],
+  "all_outputs_finite": true,
+  "whole_image_eval_reference_max_abs_difference": 0.0,
+  "reference_mask_shape": [
+    520,
+    696
+  ]
+}

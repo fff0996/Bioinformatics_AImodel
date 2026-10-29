@@ -1,0 +1,807 @@
+[
+  {
+    "query": "1UBQ",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      76
+    ],
+    "mean_plddt": 95.0,
+    "ptm": 0.81689453125,
+    "plddt_shape": [
+      86
+    ],
+    "pae_shape": [
+      86,
+      86
+    ],
+    "coordinates_shape": [
+      86,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1UBQ",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      76
+    ],
+    "mean_plddt": 95.1875,
+    "ptm": 0.8271484375,
+    "plddt_shape": [
+      86
+    ],
+    "pae_shape": [
+      86,
+      86
+    ],
+    "coordinates_shape": [
+      86,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1UBQ",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      76
+    ],
+    "mean_plddt": 95.4375,
+    "ptm": 0.833984375,
+    "plddt_shape": [
+      86
+    ],
+    "pae_shape": [
+      86,
+      86
+    ],
+    "coordinates_shape": [
+      86,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1UBQ",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      76
+    ],
+    "mean_plddt": 95.9375,
+    "ptm": 0.84130859375,
+    "plddt_shape": [
+      86
+    ],
+    "pae_shape": [
+      86,
+      86
+    ],
+    "coordinates_shape": [
+      86,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1UBQ",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      76
+    ],
+    "mean_plddt": 94.1875,
+    "ptm": 0.8076171875,
+    "plddt_shape": [
+      86
+    ],
+    "pae_shape": [
+      86,
+      86
+    ],
+    "coordinates_shape": [
+      86,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count1_A2RU14",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 84.125,
+    "ptm": 0.4697265625,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count1_A2RU14",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 78.9375,
+    "ptm": 0.44384765625,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count1_A2RU14",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 84.5,
+    "ptm": 0.450927734375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count1_A2RU14",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 82.0,
+    "ptm": 0.4638671875,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count1_A2RU14",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 86.0625,
+    "ptm": 0.5205078125,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count2_A6NFY7",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 71.3125,
+    "ptm": 0.49755859375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count2_A6NFY7",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 70.3125,
+    "ptm": 0.5224609375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count2_A6NFY7",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 72.375,
+    "ptm": 0.5244140625,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count2_A6NFY7",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 74.0,
+    "ptm": 0.5263671875,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count2_A6NFY7",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 71.75,
+    "ptm": 0.529296875,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count3_O14519",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 71.375,
+    "ptm": 0.452392578125,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count3_O14519",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 69.9375,
+    "ptm": 0.4423828125,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count3_O14519",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 70.3125,
+    "ptm": 0.460205078125,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count3_O14519",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 70.25,
+    "ptm": 0.45556640625,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count3_O14519",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 69.125,
+    "ptm": 0.446044921875,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count4_P01270",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 69.0625,
+    "ptm": 0.32861328125,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count4_P01270",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 63.8125,
+    "ptm": 0.24755859375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count4_P01270",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 70.25,
+    "ptm": 0.308349609375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count4_P01270",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 59.15625,
+    "ptm": 0.2474365234375,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "count4_P01270",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      115
+    ],
+    "mean_plddt": 64.0625,
+    "ptm": 0.258056640625,
+    "plddt_shape": [
+      125
+    ],
+    "pae_shape": [
+      125,
+      125
+    ],
+    "coordinates_shape": [
+      125,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1LYZ",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      129
+    ],
+    "mean_plddt": 97.375,
+    "ptm": 0.892578125,
+    "plddt_shape": [
+      139
+    ],
+    "pae_shape": [
+      139,
+      139
+    ],
+    "coordinates_shape": [
+      139,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1LYZ",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      129
+    ],
+    "mean_plddt": 97.5625,
+    "ptm": 0.900390625,
+    "plddt_shape": [
+      139
+    ],
+    "pae_shape": [
+      139,
+      139
+    ],
+    "coordinates_shape": [
+      139,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1LYZ",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      129
+    ],
+    "mean_plddt": 97.8125,
+    "ptm": 0.90185546875,
+    "plddt_shape": [
+      139
+    ],
+    "pae_shape": [
+      139,
+      139
+    ],
+    "coordinates_shape": [
+      139,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1LYZ",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      129
+    ],
+    "mean_plddt": 97.875,
+    "ptm": 0.904296875,
+    "plddt_shape": [
+      139
+    ],
+    "pae_shape": [
+      139,
+      139
+    ],
+    "coordinates_shape": [
+      139,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1LYZ",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      129
+    ],
+    "mean_plddt": 98.1875,
+    "ptm": 0.912109375,
+    "plddt_shape": [
+      139
+    ],
+    "pae_shape": [
+      139,
+      139
+    ],
+    "coordinates_shape": [
+      139,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1TIM",
+    "tag": "alphafold2_ptm_model_1_seed_042",
+    "lengths": [
+      247
+    ],
+    "mean_plddt": 96.125,
+    "ptm": 0.9306640625,
+    "plddt_shape": [
+      247
+    ],
+    "pae_shape": [
+      247,
+      247
+    ],
+    "coordinates_shape": [
+      247,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1TIM",
+    "tag": "alphafold2_ptm_model_2_seed_042",
+    "lengths": [
+      247
+    ],
+    "mean_plddt": 95.625,
+    "ptm": 0.93359375,
+    "plddt_shape": [
+      247
+    ],
+    "pae_shape": [
+      247,
+      247
+    ],
+    "coordinates_shape": [
+      247,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1TIM",
+    "tag": "alphafold2_ptm_model_3_seed_042",
+    "lengths": [
+      247
+    ],
+    "mean_plddt": 96.4375,
+    "ptm": 0.9384765625,
+    "plddt_shape": [
+      247
+    ],
+    "pae_shape": [
+      247,
+      247
+    ],
+    "coordinates_shape": [
+      247,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1TIM",
+    "tag": "alphafold2_ptm_model_4_seed_042",
+    "lengths": [
+      247
+    ],
+    "mean_plddt": 96.375,
+    "ptm": 0.9375,
+    "plddt_shape": [
+      247
+    ],
+    "pae_shape": [
+      247,
+      247
+    ],
+    "coordinates_shape": [
+      247,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  },
+  {
+    "query": "1TIM",
+    "tag": "alphafold2_ptm_model_5_seed_042",
+    "lengths": [
+      247
+    ],
+    "mean_plddt": 96.5,
+    "ptm": 0.9384765625,
+    "plddt_shape": [
+      247
+    ],
+    "pae_shape": [
+      247,
+      247
+    ],
+    "coordinates_shape": [
+      247,
+      37,
+      3
+    ],
+    "finite_coordinates": true,
+    "finite_plddt": true
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "source": "public third-party mirror, pinned revision; original README_original.txt and primary NucMM project used for modality and release specification",
+  "repo": "MedOtter/NucMM-M",
+  "revision": "5c489be7532664b14d90f4c028c6b2f9b6fcd782",
+  "files": [
+    {
+      "file": "Image/train/img_000_200_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/train/img_000_200_200.h5",
+      "bytes": 4872696,
+      "sha256": "849264fbb6c9bf2194158583531b8705238cfff9e744a48755d6b8f8f5067496"
+    },
+    {
+      "file": "Image/train/img_000_604_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/train/img_000_604_576.h5",
+      "bytes": 4927505,
+      "sha256": "27ca49aa6886c867a38061c74e337c4b7e9ab7d03998c87e18e1f03046887ae1"
+    },
+    {
+      "file": "Image/train/img_508_200_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/train/img_508_200_576.h5",
+      "bytes": 4911680,
+      "sha256": "085b315a8d556dbbfb9a64ede247024db56ebdf16df31f833c08dca6af540653"
+    },
+    {
+      "file": "Image/train/img_508_604_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/train/img_508_604_200.h5",
+      "bytes": 4584903,
+      "sha256": "a42c8d69a366e466528208e2c4560f024feb033c6a0ff0d59a0811c04faea4e6"
+    },
+    {
+      "file": "Image/val/img_000_200_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/val/img_000_200_576.h5",
+      "bytes": 4999520,
+      "sha256": "3244aac7759166844ce67214273b99c58862eb54c123a63af7d72ff383ef3269"
+    },
+    {
+      "file": "Image/val/img_000_604_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/val/img_000_604_200.h5",
+      "bytes": 4858119,
+      "sha256": "5e6b47df2d25c2ce0d8c8c81015abdcf41dfb3bb3b27082070e25ba7a1562513"
+    },
+    {
+      "file": "Image/val/img_508_200_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/val/img_508_200_200.h5",
+      "bytes": 4888814,
+      "sha256": "af2d328cbb32fa9779d7d2d10def11c7ea6f41cd9c245e876bcd03c24c50ecc3"
+    },
+    {
+      "file": "Image/val/img_508_604_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Image/val/img_508_604_576.h5",
+      "bytes": 4783391,
+      "sha256": "32cef757209cc2c326ebdf76620fb4312c22da93de3728e603bc524a18e14dd2"
+    },
+    {
+      "file": "Label/train/seg_000_200_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/train/seg_000_200_200.h5",
+      "bytes": 159571,
+      "sha256": "76645ab1dfae295b5bb9d80dc1e60897b60e1960f9aff47552f4837f5260b749"
+    },
+    {
+      "file": "Label/train/seg_000_604_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/train/seg_000_604_576.h5",
+      "bytes": 148951,
+      "sha256": "c3b04874d84689e692d6c6a21e72e9f3252770bb88aec02eafe68e165cab9917"
+    },
+    {
+      "file": "Label/train/seg_508_200_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/train/seg_508_200_576.h5",
+      "bytes": 133128,
+      "sha256": "c183b20473c5163a7d55595ebb47980f46acebc8e0a452842434195ecf69d272"
+    },
+    {
+      "file": "Label/train/seg_508_604_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/train/seg_508_604_200.h5",
+      "bytes": 82292,
+      "sha256": "783785237a5bb19d660a00becd2fc1620d09fd3f4b95765cc511e645df3df1a1"
+    },
+    {
+      "file": "Label/val/seg_000_200_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/val/seg_000_200_576.h5",
+      "bytes": 204724,
+      "sha256": "8abcbf12e8c2d08d45b35b77b0e8bd5e2bde549c98975bd81a6a435b647d0c4b"
+    },
+    {
+      "file": "Label/val/seg_000_604_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/val/seg_000_604_200.h5",
+      "bytes": 161812,
+      "sha256": "46feb3c61aba8e6d677dc4f9d498f9b8966a5a5fc74ecea87b8a2af09118e1e6"
+    },
+    {
+      "file": "Label/val/seg_508_200_200.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/val/seg_508_200_200.h5",
+      "bytes": 106157,
+      "sha256": "6bb7e4022c8884141e92d57badf69feb8dc054391f90edb46b0a3a35a5bc5336"
+    },
+    {
+      "file": "Label/val/seg_508_604_576.h5",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/Label/val/seg_508_604_576.h5",
+      "bytes": 102388,
+      "sha256": "0cca44f413b240cb61a77ab057f56e46862d61fbb470ce610204ce5c1df97aff"
+    },
+    {
+      "file": "README.md",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/README.md",
+      "bytes": 2106,
+      "sha256": "c0215a4f25df5c98c6feab95f7919e235423ac4545cff93abfca9335d7d7b5a9"
+    },
+    {
+      "file": "README_original.txt",
+      "url": "https://huggingface.co/datasets/MedOtter/NucMM-M/resolve/5c489be7532664b14d90f4c028c6b2f9b6fcd782/README_original.txt",
+      "bytes": 1198,
+      "sha256": "9077bb40b77cea5541be4e855bfb93ea59ee6fc359de4503608661fe07aa70aa"
+    }
+  ],
+  "primary_project": "https://connectomics-bazaar.github.io/proj/nucMM/index.html",
+  "original_release_folder": "https://drive.google.com/drive/folders/1_4CrlYvzx0ITnGlJOHdgcTRgeSkm9wT8",
+  "mirrored_readme_discrepancies": [
+    "README.md incorrectly calls mouse volume EM; primary paper and README_original.txt identify micro-CT",
+    "README.md says200cubed; original release says192cubed; actual h5 shape must be inspected"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "checked_kst": "2026-10-27T18:25:48+09:00",
+  "checks": [
+    {
+      "command": [
+        "nvidia-smi"
+      ],
+      "exit_code": 0,
+      "stdout": "Tue Oct 27 18:25:48 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GB10                    On  |   0000000F:01:00.0  On |                  N/A |\n| N/A   44C    P8              7W /  N/A  | Not Supported          |      5%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A            3503      G   /usr/lib/xorg/Xorg                      344MiB |\n|    0   N/A  N/A            3701      G   /usr/bin/gnome-shell                    207MiB |\n|    0   N/A  N/A            5827      G   .../9112/usr/lib/firefox/firefox        402MiB |\n+-----------------------------------------------------------------------------------------+\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sg",
+        "docker",
+        "-c",
+        "docker image inspect ghcr.io/sokrypton/colabfold:1.6.2-cuda13"
+      ],
+      "exit_code": 0,
+      "stdout": "[\n    {\n        \"Id\": \"sha256:4ad464a268ab1306765487a06632a171ef9c2ddc941f1822123ea59de3c090c4\",\n        \"RepoTags\": [\n            \"ghcr.io/sokrypton/colabfold:1.6.2-cuda13\"\n        ],\n        \"RepoDigests\": [\n            \"ghcr.io/sokrypton/colabfold@sha256:c9eab0253fe324b7ec2ec644607141539d7580a4e88d1d3788abba8c92d61ef1\"\n        ],\n        \"Comment\": \"buildkit.dockerfile.v0\",\n        \"Created\": \"2026-07-15T14:03:38.409389679Z\",\n        \"Config\": {\n            \"Env\": [\n                \"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"MPLBACKEND=Agg\",\n                \"MPLCONFIGDIR=/cache\",\n                \"XDG_CACHE_HOME=/cache\",\n                \"CONDA_VERSION=25.9.1-0\"\n            ],\n            \"Cmd\": [\n                \"bash\"\n            ],\n            \"Volumes\": {\n                \"cache\": {}\n            },\n            \"WorkingDir\": \"/app\",\n            \"Shell\": [\n                \"/bin/bash\",\n                \"--login\",\n                \"-x\",\n                \"-c\"\n            ]\n        },\n        \"Architecture\": \"arm64\",\n        \"Os\": \"linux\",\n        \"Size\": 5906375023,\n        \"GraphDriver\": {\n            \"Data\": {\n                \"LowerDir\": \"/var/lib/docker/overlay2/035a04e7e333486ec8f303a03d25d60aaad00edcdb08307e48e0cb678d81b41c/diff:/var/lib/docker/overlay2/35172f7fec1286569f022e71fe27c2ab2ccacd05de6e101b2bc1343097c7f60e/diff:/var/lib/docker/overlay2/d9d888ed1a957327d7537651689655b745ecf1c919bdb41d035d34f10e17a8fa/diff:/var/lib/docker/overlay2/94c4c50359b5f444cecc0ce0766b690beed75599ac057981eff877d7833ba659/diff:/var/lib/docker/overlay2/493a7a2306eda90e15e2d245da693f712e94011beb3f1d49899512d94c565f1c/diff:/var/lib/docker/overlay2/8535509c76980494f2ce82269f821ae4cbb0dec41187362adbe47f5a5ee8010e/diff\",\n                \"MergedDir\": \"/var/lib/docker/overlay2/6792086de4f5d5a7dcbcd656e6abb98cef74974e7ec2a6a9824a9dff7037be6f/merged\",\n                \"UpperDir\": \"/var/lib/docker/overlay2/6792086de4f5d5a7dcbcd656e6abb98cef74974e7ec2a6a9824a9dff7037be6f/diff\",\n                \"WorkDir\": \"/var/lib/docker/overlay2/6792086de4f5d5a7dcbcd656e6abb98cef74974e7ec2a6a9824a9dff7037be6f/work\"\n            },\n            \"Name\": \"overlay2\"\n        },\n        \"RootFS\": {\n            \"Type\": \"layers\",\n            \"Layers\": [\n                \"sha256:4e6fee325600a0377566ca159a4da9833f6e35e04eaa4194c47dd3b2fe901717\",\n                \"sha256:49296de53c910b16a3111941665199c8d081952569cbd54f9bce3c11a6ecd500\",\n                \"sha256:b5789a184b74134c43e680cc0feecdf5e630f104b121c85c1d7ac20f44158047\",\n                \"sha256:6b673b39c61f982b990eef846effbab34ac98da902d2b46b6cfc2d0ded791260\",\n                \"sha256:95140e898897d0c9ca908a3a7032f3c402b6635d11e5c769d6b88d96bbe82ee8\",\n                \"sha256:a47154dfdea9e753330e46a3bb84641af26f9de2f95ae42dcd0b85d8b4ff3675\",\n                \"sha256:8d32cd2efe04d0d445d7e482aa531bdd2df29cff622f67a204105a79741ea0fd\"\n            ]\n        },\n        \"Metadata\": {\n            \"LastTagTime\": \"0001-01-01T00:00:00Z\"\n        }\n    }\n]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "sg",
+        "docker",
+        "-c",
+        "docker ps -a --format \"{{.Names}} {{.Image}} {{.Status}}\""
+      ],
+      "exit_code": 0,
+      "stdout": "scgpt-spark nvcr.io/nvidia/pytorch:26.06-py3 Exited (137) 4 hours ago\n",
+      "stderr": ""
+    }
+  ]
+}

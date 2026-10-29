@@ -1,0 +1,5 @@
+{
+  "exit_code": 143,
+  "reason": "user requested pause; SIGTERM after durable completed-prefix checkpoint",
+  "completed_cells_batch8": 100000
+}

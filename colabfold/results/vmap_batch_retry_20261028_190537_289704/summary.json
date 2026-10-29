@@ -1,0 +1,221 @@
+{
+  "status": "stopped",
+  "run_id": "vmap_batch_retry_20261028_190537_289704",
+  "workers": [
+    {
+      "status": "failed",
+      "batch": 1,
+      "implementation": "experimental jax.vmap over unmodified ColabFold RunModel.apply; shared fixed model_1 weights, independent actual query features and RNG; not a native CLI batch option",
+      "conditions": [
+        {
+          "batch": 1,
+          "unique_queries": 1,
+          "repeats": 3,
+          "processed_queries": 3,
+          "seconds": 17.463308095932007,
+          "queries_per_second": 0.17178875752062323,
+          "gpu_util_avg": 91.93939393939394,
+          "gpu_util_max": 94.0,
+          "sample_count": 33,
+          "jax_memory_stats": {
+            "num_allocs": 8683,
+            "bytes_in_use": 487419648,
+            "peak_bytes_in_use": 2314823424,
+            "largest_alloc_size": 205551360,
+            "bytes_limit": 97997815808,
+            "bytes_reserved": 0,
+            "peak_bytes_reserved": 0,
+            "largest_free_block_bytes": 0,
+            "pool_bytes": 4292870144,
+            "peak_pool_bytes": 4292870144
+          },
+          "memory_definition": "peak_bytes_in_use is cumulative process allocator peak including compilation and warmup; execution bytes_in_use samples separate, no unsupported reset",
+          "execution_sampled_peak_bytes_in_use": 738826240,
+          "rss_sampled_peak_gib": 2.6119003295898438,
+          "available_sampled_min_gib": 107.16032409667969
+        }
+      ],
+      "input": {
+        "unique_queries": 1,
+        "query_ids": [
+          "count1_A2RU14"
+        ],
+        "actual_residues": [
+          115
+        ],
+        "feature_shapes_per_query": {
+          "aatype": [
+            4,
+            115
+          ],
+          "residue_index": [
+            4,
+            115
+          ],
+          "seq_length": [
+            4
+          ],
+          "is_distillation": [
+            4
+          ],
+          "seq_mask": [
+            4,
+            115
+          ],
+          "msa_mask": [
+            4,
+            512,
+            115
+          ],
+          "msa_row_mask": [
+            4,
+            512
+          ],
+          "random_crop_to_size_seed": [
+            4,
+            2
+          ],
+          "atom14_atom_exists": [
+            4,
+            115,
+            14
+          ],
+          "residx_atom14_to_atom37": [
+            4,
+            115,
+            14
+          ],
+          "residx_atom37_to_atom14": [
+            4,
+            115,
+            37
+          ],
+          "atom37_atom_exists": [
+            4,
+            115,
+            37
+          ],
+          "extra_msa": [
+            4,
+            1869,
+            115
+          ],
+          "extra_msa_mask": [
+            4,
+            1869,
+            115
+          ],
+          "extra_msa_row_mask": [
+            4,
+            1869
+          ],
+          "bert_mask": [
+            4,
+            512,
+            115
+          ],
+          "true_msa": [
+            4,
+            512,
+            115
+          ],
+          "extra_has_deletion": [
+            4,
+            1869,
+            115
+          ],
+          "extra_deletion_value": [
+            4,
+            1869,
+            115
+          ],
+          "msa_feat": [
+            4,
+            512,
+            115,
+            49
+          ],
+          "target_feat": [
+            4,
+            115,
+            22
+          ],
+          "asym_id": [
+            4,
+            115
+          ]
+        },
+        "padding": "pool-wide max feature shapes; zero-padded extra-MSA/cluster entries masked by zero masks; no sequence duplication",
+        "actual_msa_valid_rows": [
+          512
+        ]
+      },
+      "loading_seconds": 2.3358871936798096,
+      "parameters": 92907930,
+      "weights_dtype": [
+        "float32"
+      ],
+      "model_only_postload": {
+        "jax": {
+          "num_allocs": 3600,
+          "bytes_in_use": 372698624,
+          "peak_bytes_in_use": 2314823424,
+          "largest_alloc_size": 99614720,
+          "bytes_limit": 97997815808,
+          "bytes_reserved": 0,
+          "peak_bytes_reserved": 0,
+          "largest_free_block_bytes": 0,
+          "pool_bytes": 4292870144,
+          "peak_pool_bytes": 4292870144
+        },
+        "system": {
+          "rss_gib": 1.5863113403320312,
+          "available_gib": 108.28838348388672,
+          "total_gib": 121.68751525878906,
+          "swap_gib": 0.00743865966796875
+        }
+      },
+      "environment": {
+        "jax": "0.10.2",
+        "device": "cuda:0",
+        "preallocate": "false",
+        "compute": "original BF16 config, FP32 weights",
+        "recycles": 3,
+        "ensembles": 1,
+        "templates": false,
+        "relaxation": false,
+        "seed_per_query": 42
+      },
+      "compilation_seconds": 9.260764122009277,
+      "compiled_memory_analysis": "CompiledMemoryStats(generated_code_size_in_bytes=25196, argument_size_in_bytes=390249042, output_size_in_bytes=10470204, alias_size_in_bytes=0, temp_size_in_bytes=205551320, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)",
+      "warmup_seconds": 6.050188064575195,
+      "predictions": [
+        {
+          "id": "count1_A2RU14",
+          "residues": 115,
+          "mean_plddt": 84.1875,
+          "finite_and_pdb_valid": true
+        }
+      ],
+      "native_reference_seconds_excluded": 13.148254632949829,
+      "native_reference_comparison": {
+        "ca_aligned_rmsd_angstrom": 1.0747666369199307,
+        "plddt_max_abs": 2.78125,
+        "native_recycles": 3
+      },
+      "error": "AssertionError()"
+    }
+  ],
+  "failed": [
+    {
+      "batch": 1,
+      "exit_code": 1
+    }
+  ],
+  "scope": "experimental JAX vmap independent monomer batch axis on existing ColabFold model_1, no simultaneous GPU jobs",
+  "settings": {
+    "guard_available_gib": 16,
+    "guard_swap_increase_gib": 2
+  },
+  "stop_reason": "worker_error_or_guard_see_log"
+}

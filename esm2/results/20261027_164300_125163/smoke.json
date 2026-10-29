@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "output_shape": [
+    2,
+    1280
+  ],
+  "token_shape": [
+    2,
+    196
+  ],
+  "device": "cuda:0",
+  "dtype": "torch.float32"
+}

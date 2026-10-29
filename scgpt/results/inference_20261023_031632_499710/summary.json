@@ -1,0 +1,46 @@
+{
+  "status": "complete",
+  "task": "pretrained cell embeddings",
+  "split": "test",
+  "cells": 1000,
+  "matched_genes": 2999,
+  "embedding_shape": [
+    1000,
+    512
+  ],
+  "batch_size": 8,
+  "max_length_including_cls": 1200,
+  "precision": "FP32",
+  "seed": 42,
+  "parameter_count_constructed_model": 51856898,
+  "parameter_count_embedding_encoder": 50278400,
+  "input_preparation_seconds": 0.1395108129363507,
+  "model_loading_seconds": 0.34668866405263543,
+  "warmup_seconds": 0.47556602396070957,
+  "inference_seconds": 3.847307180054486,
+  "cells_per_second": 259.92205800053586,
+  "output_save_seconds": 0.2732655459549278,
+  "gpu_peak_allocated_gib": 0.36938047409057617,
+  "gpu_peak_reserved_gib": 0.51171875,
+  "python_process_rss_peak_observed_gib": 2.0493087768554688,
+  "resource_sampling_interval_seconds": 0.2,
+  "length_sampling_cells": 4,
+  "tokens_before_sampling_min_mean_max": [
+    185,
+    616.229,
+    1302
+  ],
+  "tokens_after_sampling_min_mean_max": [
+    185,
+    616.004,
+    1200
+  ],
+  "embedding_l2_norm_min_max": [
+    0.9999998807907104,
+    1.0000001192092896
+  ],
+  "accuracy_evaluated": false,
+  "weights_updated": false,
+  "timing_scope": "gene/value tokenization, binning, length sampling/padding, CPU-to-GPU transfer, encoder, CLS selection, L2 normalization, GPU-to-CPU transfer, in-memory input/output recording",
+  "memory_notes": "CUDA allocator peaks are process-local PyTorch counters, not total device usage. Reserved memory can include warmup cache. RSS is sampled, not an exact peak. Spark uses shared memory; do not sum RSS and CUDA counters as independent physical pools."
+}

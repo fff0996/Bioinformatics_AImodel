@@ -1,0 +1,7 @@
+{
+  "time_unix": 1793106811.8309977,
+  "available_gib": 4.424278259277344,
+  "swap_gib": 0.003997802734375,
+  "cuda_allocated_gib": 69.09493350982666,
+  "cuda_reserved_gib": 106.6015625
+}

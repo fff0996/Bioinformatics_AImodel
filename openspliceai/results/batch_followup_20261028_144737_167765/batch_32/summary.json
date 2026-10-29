@@ -1,0 +1,121 @@
+{
+  "status": "complete",
+  "model": "openspliceai",
+  "batch": 32,
+  "task": "inference resource batch sweep only, no training",
+  "conditions": [
+    {
+      "batch_size": 32,
+      "unique_inputs": 32,
+      "processed_inputs": 608,
+      "repeats": 19,
+      "seconds": 15.819069385528564,
+      "baseline": {
+        "allocated_gib": 0.013391971588134766,
+        "reserved_gib": 0.013671875,
+        "peak_allocated_gib": 0.013391971588134766,
+        "peak_reserved_gib": 0.013671875,
+        "rss_gib": 1.0830154418945312,
+        "system_available_gib": 112.92901611328125,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 0.013391971588134766,
+        "reserved_gib": 0.326171875,
+        "peak_allocated_gib": 0.3102231025695801,
+        "peak_reserved_gib": 0.326171875,
+        "rss_gib": 1.08795166015625,
+        "system_available_gib": 112.60932922363281,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.2968311309814453,
+      "samples": 30,
+      "gpu_util_avg": 94.96666666666667,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 1.0909538269042969,
+      "available_sampled_min_gib": 112.52041625976562,
+      "inputs_per_second": 38.43462502011681,
+      "allocated_fraction_shared_ram": 0.002549342074327331,
+      "model_only_allocated_gib": 0.013391971588134766
+    }
+  ],
+  "load_seconds": 0.3187413215637207,
+  "model_only_postload": {
+    "allocated_gib": 0.013391971588134766,
+    "reserved_gib": 0.013671875,
+    "peak_allocated_gib": 0.013391971588134766,
+    "peak_reserved_gib": 0.013671875,
+    "rss_gib": 0.6275978088378906,
+    "system_available_gib": 113.37451934814453,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters_total": 3483695,
+  "parameters_trained_in_this_run": 0,
+  "theoretical_weight_storage_gib": 0.012977775186300278,
+  "parameters_used_backbone": 3483695,
+  "checkpoint_reference": "source/models/openspliceai-mane/10000nt seeds10..14",
+  "environment": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA GB10",
+    "precision": "FP32",
+    "tf32": false
+  },
+  "input": {
+    "unique_sequences": 32,
+    "pool_sequences": 156,
+    "raw_length_min": 15000,
+    "raw_length_max": 15000,
+    "input_shapes": {
+      "onehot": [
+        32,
+        4,
+        15000
+      ]
+    },
+    "tokenizer_truncation": false,
+    "padding": "same pool-wide longest token width fixed across batches; explicit crop lengths in inputs provenance",
+    "ids": [
+      "FAM110C_2_43532_-",
+      "SH3YL1_2_221931_-",
+      "ACP1_2_268435_+",
+      "TMEM18_2_669715_-",
+      "TPO_2_1413978_+",
+      "PXDN_2_1634864_-",
+      "MYT1L_2_1792163_-",
+      "TSSC1_2_3190960_-",
+      "TRAPPC12_2_3383728_+",
+      "ADI1_2_3499947_-",
+      "RNASEH1_2_3546900_-",
+      "RPS7_2_3575470_+",
+      "COLEC11_2_3599740_+",
+      "DCDC2C_2_3706292_+",
+      "CMPK2_2_6850710_-",
+      "RSAD2_2_6880757_+",
+      "ID2_2_8680403_+",
+      "KIDINS220_2_8732712_-",
+      "MBOAT2_2_8859757_-",
+      "ITGB1BP1_2_9407176_-",
+      "IAH1_2_9475316_+",
+      "YWHAQ_2_9586378_-",
+      "TAF1B_2_9844388_+",
+      "GRHL1_2_9953383_+",
+      "KLF11_2_10044953_+",
+      "RRM2_2_10122939_+",
+      "ODC1_2_10441187_-",
+      "NOL10_2_10574912_-",
+      "ATP6V1C2_2_10722276_+",
+      "PDIA6_2_10784629_-",
+      "C2orf50_2_11137049_+",
+      "PQLC3_2_11158076_+"
+    ]
+  },
+  "warmup_seconds": 1.114288568496704,
+  "output_shape": [
+    32,
+    3,
+    5000
+  ],
+  "finite_and_exact_save_reload": true,
+  "batch_invariance_max_abs": 0.0
+}

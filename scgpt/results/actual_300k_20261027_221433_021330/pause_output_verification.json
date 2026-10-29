@@ -1,0 +1,9 @@
+{
+  "durable_completed_cells": 100000,
+  "completed_output_shape": [
+    100000,
+    512
+  ],
+  "all_completed_outputs_finite": true,
+  "max_unit_norm_error": 1.7881393432617188e-07
+}

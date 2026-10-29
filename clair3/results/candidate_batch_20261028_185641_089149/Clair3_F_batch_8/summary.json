@@ -1,0 +1,66 @@
+{
+  "status": "complete",
+  "model": "Clair3_F",
+  "batch": 8,
+  "task": "actual candidate tensor native model inference, excludes BAM preprocessing/VCF calling",
+  "loading_seconds": 0.18111276626586914,
+  "model_only_postload": {
+    "allocated_gib": 0.01114511489868164,
+    "reserved_gib": 0.0234375,
+    "peak_allocated_gib": 0.01114511489868164,
+    "peak_reserved_gib": 0.0234375,
+    "rss_gib": 0.619171142578125,
+    "system_available_gib": 113.20574188232422,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters": 2986522,
+  "parameters_trained_in_run": 0,
+  "input_shape": [
+    8,
+    89,
+    33,
+    8
+  ],
+  "input_dtype": "int8",
+  "unique_candidates": 8,
+  "warmup_seconds": 0.3015727996826172,
+  "condition": {
+    "batch_size": 8,
+    "unique_candidates": 8,
+    "repeats": 9756,
+    "processed_candidates": 78048,
+    "seconds": 15.000794887542725,
+    "baseline": {
+      "allocated_gib": 0.04239511489868164,
+      "reserved_gib": 0.0546875,
+      "peak_allocated_gib": 0.04239511489868164,
+      "peak_reserved_gib": 0.0546875,
+      "rss_gib": 1.1487770080566406,
+      "system_available_gib": 112.67323684692383,
+      "system_total_gib": 121.68751525878906
+    },
+    "memory": {
+      "allocated_gib": 0.04239511489868164,
+      "reserved_gib": 0.056640625,
+      "peak_allocated_gib": 0.0476222038269043,
+      "peak_reserved_gib": 0.056640625,
+      "rss_gib": 1.1316909790039062,
+      "system_available_gib": 112.69027709960938,
+      "system_total_gib": 121.68751525878906
+    },
+    "peak_delta_gib": 0.005227088928222656,
+    "samples": 29,
+    "gpu_util_avg": 87.0,
+    "gpu_util_max": 93.0,
+    "rss_sampled_peak_gib": 1.1491737365722656,
+    "available_sampled_min_gib": 112.63233947753906,
+    "candidates_per_second": 5202.9242840200595,
+    "allocated_fraction_shared_ram": 0.0003913483131414725
+  },
+  "output_shape": [
+    8,
+    90
+  ],
+  "batch_invariance_max_abs": 3.7602148950099945e-08,
+  "finite_and_exact_save_reload": true
+}

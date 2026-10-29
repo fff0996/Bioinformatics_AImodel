@@ -1,0 +1,202 @@
+{
+  "status": "complete",
+  "batch": 1,
+  "implementation": "experimental jax.vmap over unmodified ColabFold RunModel.apply; shared fixed model_1 weights, independent actual query features and RNG; not a native CLI batch option",
+  "conditions": [
+    {
+      "batch": 1,
+      "unique_queries": 1,
+      "repeats": 2,
+      "processed_queries": 2,
+      "seconds": 22.847734451293945,
+      "queries_per_second": 0.08753603138479812,
+      "gpu_util_avg": 93.37209302325581,
+      "gpu_util_max": 95.0,
+      "sample_count": 43,
+      "jax_memory_stats": {
+        "num_allocs": 7811,
+        "bytes_in_use": 463533056,
+        "peak_bytes_in_use": 2321053696,
+        "largest_alloc_size": 381945600,
+        "bytes_limit": 97997815808,
+        "bytes_reserved": 0,
+        "peak_bytes_reserved": 0,
+        "largest_free_block_bytes": 0,
+        "pool_bytes": 4292870144,
+        "peak_pool_bytes": 4292870144
+      },
+      "memory_definition": "peak_bytes_in_use is cumulative process allocator peak including compilation and warmup; execution bytes_in_use samples separate, no unsupported reset",
+      "execution_sampled_peak_bytes_in_use": 881670656,
+      "rss_sampled_peak_gib": 2.31463623046875,
+      "available_sampled_min_gib": 107.46133804321289
+    }
+  ],
+  "input": {
+    "unique_queries": 1,
+    "query_ids": [
+      "count1_A2RU14"
+    ],
+    "actual_residues": [
+      115
+    ],
+    "feature_shapes_per_query": {
+      "aatype": [
+        4,
+        115
+      ],
+      "residue_index": [
+        4,
+        115
+      ],
+      "seq_length": [
+        4
+      ],
+      "is_distillation": [
+        4
+      ],
+      "seq_mask": [
+        4,
+        115
+      ],
+      "msa_mask": [
+        4,
+        512,
+        115
+      ],
+      "msa_row_mask": [
+        4,
+        512
+      ],
+      "random_crop_to_size_seed": [
+        4,
+        2
+      ],
+      "atom14_atom_exists": [
+        4,
+        115,
+        14
+      ],
+      "residx_atom14_to_atom37": [
+        4,
+        115,
+        14
+      ],
+      "residx_atom37_to_atom14": [
+        4,
+        115,
+        37
+      ],
+      "atom37_atom_exists": [
+        4,
+        115,
+        37
+      ],
+      "extra_msa": [
+        4,
+        1869,
+        115
+      ],
+      "extra_msa_mask": [
+        4,
+        1869,
+        115
+      ],
+      "extra_msa_row_mask": [
+        4,
+        1869
+      ],
+      "bert_mask": [
+        4,
+        512,
+        115
+      ],
+      "true_msa": [
+        4,
+        512,
+        115
+      ],
+      "extra_has_deletion": [
+        4,
+        1869,
+        115
+      ],
+      "extra_deletion_value": [
+        4,
+        1869,
+        115
+      ],
+      "msa_feat": [
+        4,
+        512,
+        115,
+        49
+      ],
+      "target_feat": [
+        4,
+        115,
+        22
+      ],
+      "asym_id": [
+        4,
+        115
+      ]
+    },
+    "padding": "pool-wide max feature shapes; zero-padded extra-MSA/cluster entries masked by zero masks; no sequence duplication",
+    "actual_msa_valid_rows": [
+      512
+    ]
+  },
+  "loading_seconds": 2.432121515274048,
+  "parameters": 92907930,
+  "weights_dtype": [
+    "float32"
+  ],
+  "model_only_postload": {
+    "jax": {
+      "num_allocs": 3600,
+      "bytes_in_use": 373869824,
+      "peak_bytes_in_use": 2321053696,
+      "largest_alloc_size": 99614720,
+      "bytes_limit": 97997815808,
+      "bytes_reserved": 0,
+      "peak_bytes_reserved": 0,
+      "largest_free_block_bytes": 0,
+      "pool_bytes": 4292870144,
+      "peak_pool_bytes": 4292870144
+    },
+    "system": {
+      "rss_gib": 1.5773162841796875,
+      "available_gib": 108.31254959106445,
+      "total_gib": 121.68751525878906,
+      "swap_gib": 0.00743865966796875
+    }
+  },
+  "environment": {
+    "jax": "0.10.2",
+    "device": "cuda:0",
+    "preallocate": "false",
+    "compute": "FP32 activations/weights, explicit separate validation condition after BF16 vmap reference drift",
+    "recycles": 3,
+    "ensembles": 1,
+    "templates": false,
+    "relaxation": false,
+    "seed_per_query": 42
+  },
+  "compilation_seconds": 7.9508092403411865,
+  "compiled_memory_analysis": "CompiledMemoryStats(generated_code_size_in_bytes=25196, argument_size_in_bytes=390249042, output_size_in_bytes=10470204, alias_size_in_bytes=0, temp_size_in_bytes=381945560, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)",
+  "warmup_seconds": 11.607905626296997,
+  "predictions": [
+    {
+      "id": "count1_A2RU14",
+      "residues": 115,
+      "mean_plddt": 83.9375,
+      "finite_and_pdb_valid": true
+    }
+  ],
+  "native_reference_seconds_excluded": 17.070082187652588,
+  "native_reference_comparison": {
+    "ca_aligned_rmsd_angstrom": 0.17949736570387045,
+    "plddt_max_abs": 0.1875,
+    "native_recycles": 3
+  }
+}

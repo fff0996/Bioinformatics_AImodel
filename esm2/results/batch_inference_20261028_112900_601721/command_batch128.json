@@ -1,0 +1,1 @@
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "128"]

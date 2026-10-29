@@ -1,0 +1,41 @@
+{
+  "epoch": 1,
+  "training_cells": 8480,
+  "training_seconds": 202.88499515999865,
+  "training_cells_per_second": 41.79707815904534,
+  "online_training_loss": 0.32035121583014087,
+  "online_training_accuracy": 0.9320754716981132,
+  "gpu_util_mean_percent": 93.0183908045977,
+  "gpu_util_max_percent": 95.0,
+  "gpu_util_samples": 870,
+  "gpu_peak_allocated_gib": 3.374143600463867,
+  "gpu_peak_reserved_gib": 4.693359375,
+  "python_process_rss_peak_observed_gib": 2.77008056640625,
+  "validation": {
+    "cells_total": 2120,
+    "cells_evaluated_known_labels": 2120,
+    "cells_without_known_training_label": 0,
+    "forward_seconds": 3.8487031789991306,
+    "cells_per_second": 550.8348920145393,
+    "timing_scope": "cached input batching, CPU-to-GPU, encoder/classifier, GPU-to-CPU logits; excludes tokenization and file saving",
+    "gpu_util_mean_percent": 74.26315789473684,
+    "gpu_util_max_percent": 94.0,
+    "gpu_util_samples": 19,
+    "gpu_peak_allocated_gib": 0.7571239471435547,
+    "gpu_peak_reserved_gib": 4.693359375,
+    "python_process_rss_peak_observed_gib": 2.3290977478027344,
+    "loss": 0.3006041944026947,
+    "accuracy": 0.9320754716981132,
+    "macro_f1_all_training_classes": 0.6764915422035108,
+    "macro_f1_present_true_classes": 0.6764915422035108,
+    "weighted_f1": 0.9283806673159697
+  },
+  "weight_probe_max_abs_deltas": {
+    "transformer_encoder.layers.0.self_attn.in_proj_weight": 0.01844094693660736,
+    "cls_decoder.out_layer.weight": 0.017070859670639038
+  },
+  "model_bundle": "/workspace/scgpt/models/finetuned/realdata_full_20261027_215022_050816/batch_8/epoch_001",
+  "checkpoint_save_seconds": 2.2351961559979827,
+  "strict_reload_passed": true,
+  "reload_max_abs_logit_error": 0.0
+}

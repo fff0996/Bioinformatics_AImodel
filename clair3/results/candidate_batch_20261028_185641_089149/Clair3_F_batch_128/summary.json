@@ -1,0 +1,66 @@
+{
+  "status": "complete",
+  "model": "Clair3_F",
+  "batch": 128,
+  "task": "actual candidate tensor native model inference, excludes BAM preprocessing/VCF calling",
+  "loading_seconds": 0.18406271934509277,
+  "model_only_postload": {
+    "allocated_gib": 0.01114511489868164,
+    "reserved_gib": 0.0234375,
+    "peak_allocated_gib": 0.01114511489868164,
+    "peak_reserved_gib": 0.0234375,
+    "rss_gib": 0.6192512512207031,
+    "system_available_gib": 113.23297119140625,
+    "system_total_gib": 121.68751525878906
+  },
+  "parameters": 2986522,
+  "parameters_trained_in_run": 0,
+  "input_shape": [
+    128,
+    89,
+    33,
+    8
+  ],
+  "input_dtype": "int8",
+  "unique_candidates": 128,
+  "warmup_seconds": 0.40537548065185547,
+  "condition": {
+    "batch_size": 128,
+    "unique_candidates": 128,
+    "repeats": 823,
+    "processed_candidates": 105344,
+    "seconds": 15.01783537864685,
+    "baseline": {
+      "allocated_gib": 0.04239511489868164,
+      "reserved_gib": 0.0703125,
+      "peak_allocated_gib": 0.04239511489868164,
+      "peak_reserved_gib": 0.0703125,
+      "rss_gib": 1.2192153930664062,
+      "system_available_gib": 112.63789367675781,
+      "system_total_gib": 121.68751525878906
+    },
+    "memory": {
+      "allocated_gib": 0.04239511489868164,
+      "reserved_gib": 0.515625,
+      "peak_allocated_gib": 0.3766169548034668,
+      "peak_reserved_gib": 0.515625,
+      "rss_gib": 1.2195816040039062,
+      "system_available_gib": 112.19988632202148,
+      "system_total_gib": 121.68751525878906
+    },
+    "peak_delta_gib": 0.33422183990478516,
+    "samples": 28,
+    "gpu_util_avg": 91.89285714285714,
+    "gpu_util_max": 96.0,
+    "rss_sampled_peak_gib": 1.219573974609375,
+    "available_sampled_min_gib": 112.14381408691406,
+    "candidates_per_second": 7014.59280541746,
+    "allocated_fraction_shared_ram": 0.003094951474705743
+  },
+  "output_shape": [
+    128,
+    90
+  ],
+  "batch_invariance_max_abs": 1.1920928955078125e-07,
+  "finite_and_exact_save_reload": true
+}

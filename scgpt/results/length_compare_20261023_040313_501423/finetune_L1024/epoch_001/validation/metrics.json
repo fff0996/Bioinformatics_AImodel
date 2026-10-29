@@ -1,0 +1,16 @@
+{
+  "cells_total": 2120,
+  "cells_evaluated_known_labels": 2120,
+  "cells_without_known_training_label": 0,
+  "forward_seconds": 3.343832121929154,
+  "cells_per_second": 634.0031205803808,
+  "timing_scope": "cached input batching, CPU-to-GPU, encoder/classifier, GPU-to-CPU logits; excludes tokenization and file saving",
+  "gpu_peak_allocated_gib": 0.7502808570861816,
+  "gpu_peak_reserved_gib": 3.630859375,
+  "python_process_rss_peak_observed_gib": 2.7022132873535156,
+  "loss": 0.22601570188999176,
+  "accuracy": 0.9528301886792453,
+  "macro_f1_all_training_classes": 0.6285653920112961,
+  "macro_f1_present_true_classes": 0.6285653920112961,
+  "weighted_f1": 0.9511658915115926
+}
