@@ -1,5 +1,13 @@
 *
-!*/
-!*.md
-!.gitignore
-!.gitattributes
+!/ESM-2.md
+!/AlphaFold2.md
+!/scVI.md
+!/Cellpose.md
+!/DNABERT-2.md
+!/Nucleotide_Transformer_V2.md
+!/Clair3.md
+!/RNA-FM.md
+!/OpenSpliceAI.md
+!/scGPT.md
+!/.gitignore
+!/.gitattributes
