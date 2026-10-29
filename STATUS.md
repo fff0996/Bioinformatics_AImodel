@@ -109,3 +109,5 @@ af2 전용추가후속 complete; [결과](colabfold/reports/Batch_memory_followu
 최종수동검증완료: Clair3 P5708/F894 실제feature 추론·native pipeline 확률일치, AF2 FP32 vmap batch1/2/4 native대조 및7개PDB·finite·CA잔기수 검증완료. AF2 batch4 누적JAX allocator peak2.308GiB,평균GPU94.476%. 원래BF16실패두run보존,현재FP32조건과명확히구분. nvidia-smi compute process 없음 확인. 통합10종 FOLLOWUP_RESULTS.md 재생성완료.
 
 뇌이미지 추가 Cellpose NucMM-M brain_nucmm_20261029_110603_965442 상태 complete. [보고서](cellpose/reports/Cellpose_brain_NucMM.md). 일반뇌MRI가아닌세포핵micro-CT·정답instance검증,기본/배치실험과별도run.
+
+최종보고구조변경: 모델별reports/FINAL.md에기본·후속·추가데이터실험본문을통합했고 README/FINAL_REPORT.md의주요읽기경로도단일최종보고로변경했다. 모든모델80%도달목표는완료되지않았으며scGPT학습용량probe만확인된것으로표기했다. 추가GPU실험없음.

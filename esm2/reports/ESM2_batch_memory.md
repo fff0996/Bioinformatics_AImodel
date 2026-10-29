@@ -1,5 +1,7 @@
 # ESM-2 실제 긴 단백질 서열의 배치별 추론 메모리
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 실행 `batch_inference_20261028_112900_601721` · 상태 **complete** · 종료 사유 `predicted_reservation_exceeds_available_budget`
 
 ## 입력과 배치의 의미

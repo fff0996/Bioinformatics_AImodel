@@ -1,5 +1,7 @@
 # scGPT 기존 완료 결과와 입력 규모·GPU 사용률 보완
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 보완run `supplement_20261027_211638_936991` · 상태 **complete** · [원본summary](../results/supplement_20261027_211638_936991/summary.json) · [자원시계열](../results/supplement_20261027_211638_936991/resources.csv)
 
 ## 기존 기본 실험은 이미 완료

@@ -1,0 +1,4 @@
+{
+  "source_path": "/home/hyein/dnabert2-benchmark/dnabert2_eval/bend_length_results/20261011_151930_training_n1000_b8_bp4000_fp32_1791731970455157330/summary.json",
+  "note": "Existing completed BEND n1000 batch8 FP32 4000bp training reference; copied summary only, no new experiment and no model weights copied"
+}

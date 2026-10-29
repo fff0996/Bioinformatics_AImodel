@@ -1,5 +1,7 @@
 # Cellpose-SAM 실제 이미지의 타일 배치별 추론 자원
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 실행 `tile_batch_20261028_134130_265230` · 상태 **complete** · 종료 사유 `predicted_reservation_exceeds_available_budget`
 
 ## 이미지 개수와 GPU 배치의 차이

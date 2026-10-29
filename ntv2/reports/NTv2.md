@@ -1,5 +1,7 @@
 # Nucleotide Transformer V2 — DGX Spark
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 실행 `ntv2_20261027_201332_251243` · 상태 **complete** · [원본 summary](../results/ntv2_20261027_201332_251243/summary.json) · 실행 로그 (로컬 보관: `../results/ntv2_20261027_201332_251243/benchmark.log`) · [GPU·메모리 시계열](../results/ntv2_20261027_201332_251243/resources.csv)
 
 ## 모델과 기준 조건

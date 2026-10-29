@@ -1,5 +1,7 @@
 # scGPT 실제 pancreas 전체 데이터 처리
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 실행: `realdata_full_20261027_215022_050816`. 총 14,818개 실제 세포: 학습 8,480 / validation 2,120 / 독립 test 4,218. FP32, batch8, seed42, 최대1,200토큰, 원래 dynamic padding, 1epoch. 입력 ID 중복·파일 간 겹침 없음은 source_data_audit.json에서 확인했다. 원시 count provenance는 확인되지 않았다.
 
 |조건|학습시간|allocated peak|GPU 평균/최대|독립 test Accuracy|

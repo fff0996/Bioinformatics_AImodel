@@ -1,5 +1,7 @@
 # Clair3 실제 후보 tensor의 배치 확대 후속 실험
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 상태 **complete** · candidate_batch_20261028_185641_089149
 
 기존HG003 ONT BAM/GRCh38 chr20:100000~300000/threads4/한GPUworker의공식variant calling을다시실행해실제후보feature tensor 전체를cache했다. 모델입력이나호출결과를바꾸지않는opt-in capture hook을사용했다. CLI옵션이없더라도모델의실제forward 입력을분리해batch를조절할수있음을확인한실험이다. 후보생성과VCF호출은별도단계이며후속시간은CPUcache→GPU nativeforward→CPU확률반환만포함한다.

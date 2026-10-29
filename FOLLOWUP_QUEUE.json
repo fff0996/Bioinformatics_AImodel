@@ -51,5 +51,18 @@
       "run_id": "candidate_batch_20261028_185641_089149",
       "report": "clair3/reports/Batch_memory_followup.md"
     }
+  },
+  "completion_definition": "execution/output/report completion only; does not mean 80 percent allocated memory goal reached",
+  "memory_80percent_goal": {
+    "esm2": "unconfirmed",
+    "colabfold": "unconfirmed",
+    "scvi": "unconfirmed",
+    "cellpose": "unconfirmed",
+    "dnabert2": "unconfirmed",
+    "ntv2": "unconfirmed",
+    "clair3": "unconfirmed",
+    "rnafm": "unconfirmed",
+    "openspliceai": "unconfirmed",
+    "scgpt": "confirmed only in fixed1200padding training capacity probe; regular full-data training unconfirmed"
   }
 }

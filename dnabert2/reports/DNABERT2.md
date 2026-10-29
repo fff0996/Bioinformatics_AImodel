@@ -1,5 +1,7 @@
 # DNABERT-2 기존 결과와 GPU 사용률 보완
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 보완 run: `supplement_20261027_195301_706540`; 상태: complete. 기존 원본은 `/home/hyein/dnabert2-benchmark/dnabert2_eval`에 보존했다.
 
 ## 모델·실행 조건

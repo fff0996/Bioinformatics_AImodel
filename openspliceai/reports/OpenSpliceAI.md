@@ -1,5 +1,7 @@
 # OpenSpliceAI — DGX Spark splice-site 추론·파인튜닝
 
+> 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
+
 run `openspliceai_20261027_205554_995618` · 상태 **complete** · [summary](../results/openspliceai_20261027_205554_995618/summary.json) · 로그 (로컬 보관: `../results/openspliceai_20261027_205554_995618/benchmark.log`) · [GPU·메모리 시계열](../results/openspliceai_20261027_205554_995618/resources.csv)
 
 ## 공식 모델과 환경

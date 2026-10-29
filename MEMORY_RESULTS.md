@@ -1,5 +1,7 @@
 # scGPT 후속 실험 결과
 
+> 최신 읽기 경로: [기본·후속을 합친 최종 보고](FINAL_REPORT.md). 이 문서는 이전 실행/계측 기록이며, 80% 메모리 조건 확인은 scGPT 학습용량probe에 한정된다. 다른 모델은 미확인이다.
+
 최신 사용자 범위: 후속 실험은 **scGPT만**, 나머지9종의 추가 sweep은 진행하지 않는다.
 
 - [배치별 학습 용량 실험](scgpt/reports/scGPT_memory_batch.md): 완료. FP32/고정1200열 padding에서 시험한 최대 성공batch292, CUDA allocated peak100.750GiB / 전체공유RAM121.688GiB =82.79%. 90% 미도달. 정상 dynamic padding과 다른 capacity probe다.

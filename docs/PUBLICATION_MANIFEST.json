@@ -7236,5 +7236,11 @@
     "Python trailing whitespace removed",
     "Local artifact Markdown links adapted for GitHub",
     "Original source hashes refer to local originals before these publication transformations"
-  ]
+  ],
+  "integrated_report_update": {
+    "entrypoint": "FINAL_REPORT.md",
+    "models": 10,
+    "each_model": "<model>/reports/FINAL.md includes base and followup bodies",
+    "memory_80percent_goal": "only scGPT fixed-padding training capacity probe confirmed; other model conditions unconfirmed"
+  }
 }
