@@ -1,6 +1,0 @@
-[
-  "sg",
-  "docker",
-  "-c",
-  "docker exec --user 1000:1000 -e RUN_ID=supplement_20261027_211638_936991 -e MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib -e NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba scgpt-spark python -u /workspace/scgpt/scripts/supplement.py"
-]

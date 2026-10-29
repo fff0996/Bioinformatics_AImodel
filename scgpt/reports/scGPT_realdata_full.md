@@ -12,6 +12,6 @@
 
 batch284·256·224 학습은 시스템 가용 RAM8GiB guard가 발동해 중단됐다. 완료된 학습·배치 비교 결과로 쓰지 않는다. 각각 실패 로그 및 memory_guard.json을 보존했다. 샘플링 감지 지연으로224 조건은 가용4.424GiB에서 중단됐으며, 안전한 최대 배치가 검증됐다는 의미가 아니다. 추가 대형 학습 배치 재시도 대신 사용자 우선 요청인 실제30만세포 임베딩 추론을 진행한다.
 
-[원본 결과](../results/realdata_full_20261027_215022_050816/summary.json) · [실행·입력·저장 모델 코드](../scripts/full_realdata.py)
+[원본 결과](../results/realdata_full_20261027_215022_050816/RECORDS.md#file-def4ed1b1494) · [실행·입력·저장 모델 코드](FINAL.md)
 
 CUDA allocated와 reserved는 프로세스 allocator 값이다. Spark 공유 RAM에서 RSS와 CUDA를 독립 물리 메모리처럼 더하지 않는다. GPU-Util은 메모리 점유율이 아니다. 학습시간은 전처리/전송/forward/backward/optimizer를 포함하며 validation·모델저장은 제외한다.

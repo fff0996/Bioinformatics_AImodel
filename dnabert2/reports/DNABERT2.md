@@ -49,7 +49,7 @@ ID: `chr3:152302071-152302583:+`; 양성 라벨 인덱스: `[4, 16]`. 전체 서
 
 추론 warmup 뒤 baseline이 모델 적재량보다 큰 것은 실제 실행 후 유지되는 버퍼/상태를 포함한 관찰값이다. 정확한 내부 원인은 계측하지 않았다. 입력당 순수 버퍼 증가량이라고 표현하지 않는다. 체크포인트와 코드 SHA-256은 verification.json에 저장했다.
 
-시계열은 [resources.csv](../results/supplement_20261027_195301_706540/resources.csv)에 저장했다. nvidia-smi GPU 활동시간 비율을0.5초 대기+조회 간격으로 표본화하며 최대 FLOPS/메모리%가 아니다. 장치 전체에 디스플레이 영향이 포함될 수 있다. 같은 run의 현재 allocated에서 peak 증가량을 계산했고 peak는 조건마다 reset했다. 학습 증가는 gradient·optimizer·중간값을 포함한다. RSS/available/swap은 시계열 표본이다. Spark 공유 RAM121.688GiB에서 CUDA와RSS를 더하면 안 된다.
+시계열은 [resources.csv](../results/supplement_20261027_195301_706540/RECORDS.md#file-6fb2fed4477e)에 저장했다. nvidia-smi GPU 활동시간 비율을0.5초 대기+조회 간격으로 표본화하며 최대 FLOPS/메모리%가 아니다. 장치 전체에 디스플레이 영향이 포함될 수 있다. 같은 run의 현재 allocated에서 peak 증가량을 계산했고 peak는 조건마다 reset했다. 학습 증가는 gradient·optimizer·중간값을 포함한다. RSS/available/swap은 시계열 표본이다. Spark 공유 RAM121.688GiB에서 CUDA와RSS를 더하면 안 된다.
 
 시간은 CPU메모리에 준비한 데이터의 토큰화·전송·forward·pooling, 학습은 backward·optimizer까지 포함하며 CUDA 경계는 동기화했다. 디스크 읽기/저장 시간은 제외하고 별도 미측정(N/A), compile은 분리되지 않았다. 추론3배치 warmup은 별도 수행했다. 학습은 초기 optimizer 생성을 포함한 실제 첫 step부터 측정한다.
 
@@ -63,7 +63,7 @@ ID: `chr3:152302071-152302583:+`; 양성 라벨 인덱스: `[4, 16]`. 전체 서
 
 scGPT 기본 추론·파인튜닝·저장·재로드·test·길이 비교는 완료돼 있다. 새로 필요한 것은 입력 개수와 GPU 사용률의 보완이다.
 
-[scGPT 저장 모델 test summary](../../scgpt/results/finetuned_test_20261023_034345_99523/summary.json) · [기존 길이 비교](../../scgpt/results/length_compare_20261023_040313_501423/comparison.csv)
+[scGPT 저장 모델 test summary](../../scgpt/results/finetuned_test_20261023_034345_99523/RECORDS.md#file-9cd02c9a4f70) · [기존 길이 비교](../../scgpt/results/length_compare_20261023_040313_501423/RECORDS.md#file-d50c252c8230)
 
 test4,218세포 중 알려진 라벨4,213세포 기준 Accuracy0.9380489, 학습13클래스 macroF1 0.5349519, weightedF1 0.9311712. test-only 라벨5세포는 해당 지표에서 제외했다.
 

@@ -2,7 +2,7 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-run `rnafm_20261027_204440_142840` · 상태 **complete** · [summary](../results/rnafm_20261027_204440_142840/summary.json) · 로그 (로컬 보관: `../results/rnafm_20261027_204440_142840/benchmark.log`) · [자원 시계열](../results/rnafm_20261027_204440_142840/resources.csv)
+run `rnafm_20261027_204440_142840` · 상태 **complete** · [summary](../results/rnafm_20261027_204440_142840/RECORDS.md#file-5714ea133022) · 로그 (로컬 보관: `../results/rnafm_20261027_204440_142840/benchmark.log`) · [자원 시계열](../results/rnafm_20261027_204440_142840/RECORDS.md#file-4897d02da524)
 
 ## 체크포인트와 실행 구성
 
@@ -42,7 +42,7 @@ FP32,TF32=False,seed42,8CPUthreads. 공식RNAtype추론chunk50을배치상한으
 UUUUUUUUUUUUUUUUUUUUUUUUUUGGUUCUAGUAACUAACAGGAAAGCCCAGAAAAACUGCUGCGUUGUUCCAUUUUCAAUUAUCGCGU
 ```
 
-RNA-FM은염기당1token+BOS/EOS로변환한다.원본최대1020nt→1022tokens로max_positions1024범위내다. 분류기학습입력은동결RNA-FM에서미리추출한B×640 FP32 embedding과B정수label이다. 원본서열·라벨과split은 inputs.json (로컬 보관: `../data/inputs.json`),검사는 [input_audit](../data/input_audit.json)에있다.
+RNA-FM은염기당1token+BOS/EOS로변환한다.원본최대1020nt→1022tokens로max_positions1024범위내다. 분류기학습입력은동결RNA-FM에서미리추출한B×640 FP32 embedding과B정수label이다. 원본서열·라벨과split은 inputs.json (로컬 보관: `../data/inputs.json`),검사는 [input_audit](../data/RECORDS.md#file-d4c1c95d3dfb)에있다.
 
 개수비교는512nt이상인실제서열64개를동일512ntcrop으로만들어중첩8/32/64개,길이비교는960nt이상인동일실제7개에서128/256/512/960nt앞부분crop이다. 반복은계측반복이며고유입력으로세지않는다. 최대길이비교에일곱개만있다는데이터한계를명시한다.
 

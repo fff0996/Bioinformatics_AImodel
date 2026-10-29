@@ -1,7 +1,0 @@
-{
-  "model_sha256": "1ea988f98575af6e0400d003c71724aece812497abc48efd1016c735965d5711",
-  "training_state_sha256": "8450e8079761d4b66ec8f7bdd0d02bb23cca6b8f2ca68238bd8140657b043e64",
-  "strict_reload_passed": true,
-  "reload_max_abs_logit_error": 0.0,
-  "results_directory": "/workspace/scgpt/results/supplement_20261027_211638_936991/training_util"
-}

@@ -1,8 +1,0 @@
-{
-  "independent_process": true,
-  "inputs": 280,
-  "embedding_max_abs_difference": 0.0,
-  "logits_max_abs_difference": 0.0,
-  "predictions_match": true,
-  "passed": true
-}

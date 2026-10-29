@@ -1,8 +1,0 @@
-from pathlib import Path
-import json,pysam,numpy as np
-R=Path('/work');bam=R/'data/HG003_chr20_demo.bam';fa=R/'data/GRCh38_no_alt_chr20.fa';b=pysam.AlignmentFile(bam,'rb');f=pysam.FastaFile(fa);assert b.has_index() and f.get_reference_length('chr20')==b.get_reference_length('chr20');rows=[]
-for size in [50000,100000,200000]:
- start=100000;end=start+size;(R/f'data/region_{size}.bed').write_text(f'chr20\t{start}\t{end}\n');depth=np.zeros(size,dtype=np.int32)
- for col in b.pileup('chr20',start,end,truncate=True,stepper='samtools',min_base_quality=0,max_depth=10000):depth[col.reference_pos-start]=col.nsegments
- reads=list(b.fetch('chr20',start,end));rows.append({'region_0based_halfopen':['chr20',start,end],'length_bp':size,'reads_overlapping':len(reads),'coverage_mean':float(depth.mean()),'coverage_median':float(np.median(depth)),'coverage_min':int(depth.min()),'coverage_max':int(depth.max()),'read_length_mean':float(np.mean([r.query_length for r in reads]))})
-r=next(b.fetch('chr20',100000,300000));out={'bam_header':b.header.to_dict(),'sort_order':b.header.to_dict().get('HD',{}).get('SO'),'reference_length':f.get_reference_length('chr20'),'regions':rows,'first_read':{'name':r.query_name,'reference_start_0based':r.reference_start,'cigar':r.cigarstring,'length':r.query_length,'mapping_quality':r.mapping_quality,'sequence_first100':r.query_sequence[:100],'tags':r.get_tags()},'source':'official Clair3 ONT quick demo HG003 Guppy3.6 ~85x; ONT non-dwell model ont','truth':'GIAB HG003 GRCh38 chr20 v4.2.1 VCF and confident BED'};(R/'data/input_audit.json').write_text(json.dumps(out,indent=2,default=str));print(json.dumps({k:v for k,v in out.items() if k not in ['bam_header','first_read']},indent=2))

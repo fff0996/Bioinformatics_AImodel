@@ -2,7 +2,7 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-run `openspliceai_20261027_205554_995618` · 상태 **complete** · [summary](../results/openspliceai_20261027_205554_995618/summary.json) · 로그 (로컬 보관: `../results/openspliceai_20261027_205554_995618/benchmark.log`) · [GPU·메모리 시계열](../results/openspliceai_20261027_205554_995618/resources.csv)
+run `openspliceai_20261027_205554_995618` · 상태 **complete** · [summary](../results/openspliceai_20261027_205554_995618/RECORDS.md#file-e3051816aa6e) · 로그 (로컬 보관: `../results/openspliceai_20261027_205554_995618/benchmark.log`) · [GPU·메모리 시계열](../results/openspliceai_20261027_205554_995618/RECORDS.md#file-ee59b8737e84)
 
 ## 공식 모델과 환경
 
@@ -24,7 +24,7 @@ FP32,TF32=False,seed42,8CPUthreads. 공식predict/transfer소스의context10000�
 
 ## 실제 서열·splice-site 정답
 
-기존검증된GRCh38.primary_assembly참조와공식패키지의grch38 transcript/exon표를사용했다. 표의SHA-256과전처리정책은 [input_audit.json](../data/input_audit.json),실제서열·염기별라벨은 inputs.json (로컬 보관: `../data/inputs.json`)에있다. pretrained모델은MANE모델이지만이평가주석표가동일MANE원본이라고주장하지않는다. 주석기반정답이며새로운실험검증라벨은아니다.
+기존검증된GRCh38.primary_assembly참조와공식패키지의grch38 transcript/exon표를사용했다. 표의SHA-256과전처리정책은 [input_audit.json](../data/RECORDS.md#file-246beda1e980),실제서열·염기별라벨은 inputs.json (로컬 보관: `../data/inputs.json`)에있다. pretrained모델은MANE모델이지만이평가주석표가동일MANE원본이라고주장하지않는다. 주석기반정답이며새로운실험검증라벨은아니다.
 
 | split | 구간수 | 허용염색체 | 원본입력nt | 보관라벨nt |
 | --- | --- | --- | --- | --- |

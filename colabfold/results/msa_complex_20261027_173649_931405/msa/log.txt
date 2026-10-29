@@ -1,9 +1,0 @@
-2026-10-27 08:36:50,592 Running colabfold 1.6.2
-2026-10-27 08:36:50,651 WARNING: no GPU detected, will be using CPU
-2026-10-27 08:36:50,704 Found 4 citations for tools or databases
-2026-10-27 08:36:50,704 Query 1/1: 3G5O_A_3G5O_B (length 180)
-2026-10-27 08:36:50,763 /cache is not a writable directory
-2026-10-27 08:36:50,763 Matplotlib created a temporary cache directory at /tmp/matplotlib-gfyu3_cq because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
-2026-10-27 08:36:50,836 generated new fontManager
-2026-10-27 08:37:09,298 Saved /work/results/msa_complex_20261027_173649_931405/msa/3G5O_A_3G5O_B.pickle
-2026-10-27 08:37:09,796 Done

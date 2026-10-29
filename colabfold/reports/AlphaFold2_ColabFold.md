@@ -131,7 +131,7 @@ JAX memory_stats의 peak_bytes_in_use는 프로세스 시작 후 누적 최고�
 
 단일체 길이가 증가하면서 실행 시간이 증가했다. 서로 다른 단백질과 MSA 깊이를 사용했으므로 완전한 길이 단독 인과 실험은 아니다. MSA와 template·모델·정밀도 정책은 고정했으며 실제 padding과 MSA shape를 공개했다. 복합체는 다른 Multimer v3 체크포인트와 20 recycles를 사용하므로 180 길이를 단일체 길이 곡선에 섞지 않았다. 단일체·복합체 모두 지원되는 작은 입력에서 이미 GPU 평균 80%를 넘었고 더 큰 입력으로 사용률을 억지로 맞추지 않았다.
 
-![입력 규모별 시간과 GPU 사용률](performance.png)
+![입력 규모별 시간과 GPU 사용률](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/colabfold/reports/performance.png)
 
 ## MSA·모델 로딩·컴파일·실행·저장 구분
 

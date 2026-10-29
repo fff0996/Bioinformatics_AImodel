@@ -1,6 +1,0 @@
-[
-  "sg",
-  "docker",
-  "-c",
-  "docker run --rm --name scvi_20261027_184921_028161 --gpus all --network none --shm-size=1g --user 1000:1000 -e MPLCONFIGDIR=/work/.cache/matplotlib -e NUMBA_CACHE_DIR=/work/.cache/numba -e OMP_NUM_THREADS=8 -v /home/hyein/ai-benchmark/scvi:/work nvcr.io/nvidia/pytorch:26.06-py3 /work/.venv/bin/python -u /work/scripts/benchmark.py scvi_20261027_184921_028161"
-]

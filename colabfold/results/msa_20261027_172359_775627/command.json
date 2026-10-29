@@ -1,6 +1,0 @@
-[
-  "sg",
-  "docker",
-  "-c",
-  "docker run --rm --gpus all --user 1000:1000 -e JAX_PLATFORMS=cuda -e SSL_CERT_FILE=/etc/ssl/certs/host-ca.crt -e REQUESTS_CA_BUNDLE=/etc/ssl/certs/host-ca.crt -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/host-ca.crt:ro -v /home/hyein/ai-benchmark/colabfold:/work -v /home/hyein/ai-benchmark/colabfold/cache/colabfold:/cache:ro ghcr.io/sokrypton/colabfold:1.6.2-cuda13 colabfold_batch /work/data/queries.fasta /work/results/msa_20261027_172359_775627/msa --msa-only --data /cache --sort-queries-by length"
-]

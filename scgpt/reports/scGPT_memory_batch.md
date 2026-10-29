@@ -62,7 +62,7 @@ GPU 연산 사용률(예:95%)은 GPU 커널이 활동한 시간 비율이다. �
 
 batch8 대비 최대메모리 조건의처리량은약1.08배다. 메모리는 3.39→100.75GiB로늘었다. 중간batch에서이미처리량이비슷하면더큰batch의추가메모리효용은작다.
 
-![batch별메모리와처리량](memory_batch_curve.png)
+![batch별메모리와처리량](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/scgpt/reports/memory_batch_curve.png)
 
 ## 정확한 입력·학습·시간 범위
 
@@ -87,7 +87,7 @@ reserved는cache/단편화포함이며실제살아있는tensor할당과다르다
 
 ## 원본 경로
 
-- [run memory_batch_20261027_213310_982032](../results/memory_batch_20261027_213310_982032/summary.json) · 로그 (로컬 보관: `../results/memory_batch_20261027_213310_982032/run.log`) · [시계열](../results/memory_batch_20261027_213310_982032/resources.csv)
-- [run memory_batch_refine_20261027_214026_294469](../results/memory_batch_refine_20261027_214026_294469/summary.json) · 로그 (로컬 보관: `../results/memory_batch_refine_20261027_214026_294469/run.log`) · [시계열](../results/memory_batch_refine_20261027_214026_294469/resources.csv)
+- [run memory_batch_20261027_213310_982032](../results/memory_batch_20261027_213310_982032/RECORDS.md#file-07bb42ecb3c2) · 로그 (로컬 보관: `../results/memory_batch_20261027_213310_982032/run.log`) · [시계열](../results/memory_batch_20261027_213310_982032/RECORDS.md#file-0c5cfa466baf)
+- [run memory_batch_refine_20261027_214026_294469](../results/memory_batch_refine_20261027_214026_294469/RECORDS.md#file-e3eae8ef5503) · 로그 (로컬 보관: `../results/memory_batch_refine_20261027_214026_294469/run.log`) · [시계열](../results/memory_batch_refine_20261027_214026_294469/RECORDS.md#file-fa362b498035)
 
 [기본 scGPT 보고서](scGPT.md) · [기존모델·공식소스](https://github.com/bowang-lab/scGPT)

@@ -1,7 +1,0 @@
-{
-  "independent_process": true,
-  "test_inputs": 400,
-  "max_abs_difference": 0.0,
-  "predictions_exact_match": true,
-  "passed": true
-}

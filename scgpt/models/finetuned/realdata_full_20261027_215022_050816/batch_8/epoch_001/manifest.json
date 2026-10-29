@@ -1,7 +1,0 @@
-{
-  "model_sha256": "7e96ef794a3cf04cc101f0abfec53659fdfba52acf392cc5563934768f836f5f",
-  "training_state_sha256": "d95dab2805b425404cd3fa80600dc5aad2ab941be979d9bf4da27d653aff20e1",
-  "strict_reload_passed": true,
-  "reload_max_abs_logit_error": 0.0,
-  "results_directory": "/workspace/scgpt/results/realdata_full_20261027_215022_050816/batch_8/train"
-}

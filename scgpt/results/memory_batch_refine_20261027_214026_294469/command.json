@@ -1,6 +1,0 @@
-[
-  "sg",
-  "docker",
-  "-c",
-  "docker exec --user 1000:1000 -e RUN_ID=memory_batch_refine_20261027_214026_294469 scgpt-spark python -u /workspace/scgpt/scripts/memory_batch_refine.py"
-]

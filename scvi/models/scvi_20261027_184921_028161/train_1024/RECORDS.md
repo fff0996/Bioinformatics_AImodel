@@ -1,0 +1,79 @@
+# 원본 설정·측정 기록
+
+파일 내용을 Markdown 코드 블록에 그대로 보존했다. 본문 결과 해석은 모델별 `reports/FINAL.md`를 우선한다. CSV/JSON 원본 파일이 필요하면 `docs/RESTORE_FILES.md`의 복원 코드를 사용한다. PNG는 base64로 보관하며 본문 그림은 이전 커밋의 고정 원본 URL로 표시한다.
+
+## file-35055375b0f5
+
+원래 경로: `scvi/models/scvi_20261027_184921_028161/train_1024/benchmark_metadata.json` · SHA256: `b3ff95be8bfe13055faf668c2f9b646f8d9956a0f7a4af338076901ecf4ff842`
+
+<details>
+<summary>benchmark_metadata.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "scvi/models/scvi_20261027_184921_028161/train_1024/benchmark_metadata.json", "sha256": "b3ff95be8bfe13055faf668c2f9b646f8d9956a0f7a4af338076901ecf4ff842", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{
+  "condition": "train_1024",
+  "unique_training_cells": 1024,
+  "processed_training_cells": 409600,
+  "validation_cells": 1272,
+  "test_cells": 1273,
+  "epochs": 400,
+  "optimizer_steps": 3200,
+  "genes": 2000,
+  "latent_dim": 10,
+  "total_parameters": 1293526,
+  "configured_trainable_parameters": 1293526,
+  "encoder_parameters": 258964,
+  "observed_gradient_parameters": 778884,
+  "updated_parameter_tensors": 17,
+  "initialization_sha256": "a1a88a8f3b1b835b70a4716a83fe2013d646d8c0ef2bfff34afc5165b4bf4926",
+  "preprocess_seconds": 0.016154836999703548,
+  "initialization_seconds": 0.21386451199941803,
+  "training_loop_seconds": 19.42403915001887,
+  "validation_loop_seconds": 0.4198489200007316,
+  "fit_wall_seconds": 20.26310327899955,
+  "evaluation_seconds": 0.04207060200133128,
+  "save_seconds": 0.09504940700026054,
+  "condition_wall_seconds": 22.690486571000292,
+  "training_cells_per_second": 21087.272159848486,
+  "test_elbo": -597.572265625,
+  "validation_elbo": -620.4060668945312,
+  "elbo_definition": "scVI 1.5.1 get_elbo returns ELBO; higher is better",
+  "cuda_peak_allocated_gib": 0.09736299514770508,
+  "cuda_peak_reserved_gib": 0.099609375,
+  "fit_profile": {
+    "gpu_util_mean_percent": 21.8,
+    "gpu_util_max_percent": 30.0,
+    "sample_count": 40,
+    "rss_sampled_peak_gib": 1.9554595947265625,
+    "available_min_gib": 112.7890510559082,
+    "swap_max_bytes": 0
+  },
+  "training_phase_profile": {
+    "gpu_util_mean_percent": 21.8,
+    "gpu_util_max_percent": 30.0,
+    "sample_count": 40,
+    "rss_sampled_peak_gib": 1.9554595947265625,
+    "available_min_gib": 112.7890510559082,
+    "swap_max_bytes": 0
+  },
+  "validation_phase_profile": {
+    "gpu_util_mean_percent": null,
+    "gpu_util_max_percent": null,
+    "sample_count": 0,
+    "rss_sampled_peak_gib": 0.0,
+    "available_min_gib": 0.0,
+    "swap_max_bytes": 0
+  },
+  "model_path": "/work/models/scvi_20261027_184921_028161/train_1024",
+  "training_success": true,
+  "model_saved": true,
+  "reload_verified": false,
+  "training_resume_verified": false
+}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>

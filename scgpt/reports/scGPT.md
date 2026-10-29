@@ -2,13 +2,13 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-보완run `supplement_20261027_211638_936991` · 상태 **complete** · [원본summary](../results/supplement_20261027_211638_936991/summary.json) · [자원시계열](../results/supplement_20261027_211638_936991/resources.csv)
+보완run `supplement_20261027_211638_936991` · 상태 **complete** · [원본summary](../results/supplement_20261027_211638_936991/RECORDS.md#file-d2249d667745) · [자원시계열](../results/supplement_20261027_211638_936991/RECORDS.md#file-9e2c53c779d6)
 
 ## 기존 기본 실험은 이미 완료
 
 2026-10-23에입력검사·사전학습임베딩추론·1,000세포파인튜닝·저장/재로드·독립test·최대길이256/512/1024/1200비교를완료했다. 원본파일과학습모델을보존했고이번보완값을과거GPU-Util실측처럼소급해붙이지않는다.
 
-[기존test](../results/finetuned_test_20261023_034345_99523/summary.json) · [기존길이비교](../results/length_compare_20261023_040313_501423/comparison.csv)
+[기존test](../results/finetuned_test_20261023_034345_99523/RECORDS.md#file-9cd02c9a4f70) · [기존길이비교](../results/length_compare_20261023_040313_501423/RECORDS.md#file-d50c252c8230)
 
 기존저장모델test4218세포중학습라벨이있는4213세포의Accuracy 0.9380,학습13클래스macroF1 0.5350,weightedF1 0.9312.test-onlyMHCclassII5세포는해당지표에서제외했다. 기존1epoch파인튜닝CUDApeak3.3741GiB,저장모델test추론peak0.3811GiB다.
 

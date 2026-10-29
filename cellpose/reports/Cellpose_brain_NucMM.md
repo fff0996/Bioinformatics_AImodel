@@ -56,7 +56,7 @@ GPU-Util은커널활동시간비율이며메모리점유율이아니다. CUDAall
 
 ## 실제 입력·정답·예측 예시
 
-![뇌조직 중앙단면의 원본·정답·2D예측·3D예측](../results/brain_nucmm_20261029_110603_965442/brain_prediction_examples.png)
+![뇌조직 중앙단면의 원본·정답·2D예측·3D예측](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/cellpose/results/brain_nucmm_20261029_110603_965442/brain_prediction_examples.png)
 
 ## 보관 파일
 

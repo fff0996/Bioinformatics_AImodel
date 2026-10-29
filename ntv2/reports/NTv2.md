@@ -2,7 +2,7 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-실행 `ntv2_20261027_201332_251243` · 상태 **complete** · [원본 summary](../results/ntv2_20261027_201332_251243/summary.json) · 실행 로그 (로컬 보관: `../results/ntv2_20261027_201332_251243/benchmark.log`) · [GPU·메모리 시계열](../results/ntv2_20261027_201332_251243/resources.csv)
+실행 `ntv2_20261027_201332_251243` · 상태 **complete** · [원본 summary](../results/ntv2_20261027_201332_251243/RECORDS.md#file-88011100c0fb) · 실행 로그 (로컬 보관: `../results/ntv2_20261027_201332_251243/benchmark.log`) · [GPU·메모리 시계열](../results/ntv2_20261027_201332_251243/RECORDS.md#file-53bccab8ae73)
 
 ## 모델과 기준 조건
 
@@ -39,7 +39,7 @@ batch8,FP32,TF32=False,seed42,8CPU threads. 공식 fine-tuning notebook의 batch
 GGGCGGTGTAATGCATGGAGAGAAGCCTCTCCATAAGGAGGCAGTGGCTTACTGGCAGAGAAAGTGAGCGGTGCCTCAAGTTATGTTAGTGCGAGTCTGCTGGAAGAGAGCCTGGCGGTAAGGCTCGCTGGGAGCTCGTAATCAATTCACAGTTTAGAGGAAAGATGCTTGACTCAAACTGCCTATCTTGTTGGGGCAA
 ```
 
-입력은6-mer 중심 토큰화 후 int64 input_ids/attention_mask의B×실제token수, 라벨은B 정수다. [검사 결과](../data/input_audit.json)와 선택 서열·split·해시 `data/inputs.json`을 보관했다.
+입력은6-mer 중심 토큰화 후 int64 input_ids/attention_mask의B×실제token수, 라벨은B 정수다. [검사 결과](../data/RECORDS.md#file-5c86518a2a1e)와 선택 서열·split·해시 `data/inputs.json`을 보관했다.
 
 길이/개수 실험은 별도의 GRCh38 참조 유전체 동일 구간128개를 사용한다. BEND에서 이미 확인한 좌표 중심으로12,282nt를 추출하고 ACGT 외 문자가 없는 실제 구간을 택했다. 같은 구간의 중심 crop600/3000/6000/12276nt를 사용하며 무라벨 추론 전용이다. 음의 가닥은 reverse-complement했다. 짧은 enhancer 학습 데이터의 정확도와 이 긴 무라벨 서열을 혼동하지 않는다.
 

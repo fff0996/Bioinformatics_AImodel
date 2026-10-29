@@ -1,6 +1,0 @@
-[
-  "sg",
-  "docker",
-  "-c",
-  "docker run --rm --name af2_multimer_20261027_181640_431467 --gpus all --network none --user 1000:1000 -e JAX_PLATFORMS=cuda,cpu -e XLA_PYTHON_CLIENT_PREALLOCATE=false -e MPLCONFIGDIR=/work/results/af2_multimer_20261027_181640_431467/mplcache -v /home/hyein/ai-benchmark/colabfold:/work -v /home/hyein/ai-benchmark/colabfold/cache/colabfold:/cache:ro ghcr.io/sokrypton/colabfold:1.6.2-cuda13 python -u /work/scripts/benchmark_af2.py af2_multimer_20261027_181640_431467 msa_complex_20261027_173649_931405 multimer"
-]

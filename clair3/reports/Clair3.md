@@ -2,7 +2,7 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-run `clair3_20261027_203339_768667` · 상태 **complete** · [summary](../results/clair3_20261027_203339_768667/summary.json) · 로그 (로컬 보관: `../results/clair3_20261027_203339_768667/benchmark.log`) · [자원 시계열](../results/clair3_20261027_203339_768667/resources.csv)
+run `clair3_20261027_203339_768667` · 상태 **complete** · [summary](../results/clair3_20261027_203339_768667/RECORDS.md#file-ccc0aa43f73b) · 로그 (로컬 보관: `../results/clair3_20261027_203339_768667/benchmark.log`) · [자원 시계열](../results/clair3_20261027_203339_768667/RECORDS.md#file-11cc0da66d78)
 
 ## 모델과 실제 실행 환경
 

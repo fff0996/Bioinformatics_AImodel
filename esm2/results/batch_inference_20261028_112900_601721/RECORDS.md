@@ -1,0 +1,1257 @@
+# 원본 설정·측정 기록
+
+파일 내용을 Markdown 코드 블록에 그대로 보존했다. 본문 결과 해석은 모델별 `reports/FINAL.md`를 우선한다. CSV/JSON 원본 파일이 필요하면 `docs/RESTORE_FILES.md`의 복원 코드를 사용한다. PNG는 base64로 보관하며 본문 그림은 이전 커밋의 고정 원본 URL로 표시한다.
+
+## file-a668c744d144
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch1.json` · SHA256: `d02372c7d22821361b4496efc2b2f01993300bcea790ca4eba9480a0e3722993`
+
+<details>
+<summary>command_batch1.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch1.json", "sha256": "d02372c7d22821361b4496efc2b2f01993300bcea790ca4eba9480a0e3722993", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "1"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-49c3b36bab8f
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch128.json` · SHA256: `30a90523cbaf2d9a89ccbf69cec3b295e9e72dc4c6674427d9f10cf033753e7d`
+
+<details>
+<summary>command_batch128.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch128.json", "sha256": "30a90523cbaf2d9a89ccbf69cec3b295e9e72dc4c6674427d9f10cf033753e7d", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "128"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-7fe2b0a3a0df
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch16.json` · SHA256: `8a4c5619e0b6d036b70f9f2b21e73320004b9e0d7789625412d8191ee1c92453`
+
+<details>
+<summary>command_batch16.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch16.json", "sha256": "8a4c5619e0b6d036b70f9f2b21e73320004b9e0d7789625412d8191ee1c92453", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "16"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-c25525f247cc
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch160.json` · SHA256: `8787007fdf02b7fdd7dd16a3c24cbc9bf5b5cbcde3498ecdeac674c712588fbe`
+
+<details>
+<summary>command_batch160.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch160.json", "sha256": "8787007fdf02b7fdd7dd16a3c24cbc9bf5b5cbcde3498ecdeac674c712588fbe", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "160"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-81817ff3e595
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch192.json` · SHA256: `2c25bbad309678d22a78e35f1b1f21d1a4305cad17c57acd11460be193aa97b0`
+
+<details>
+<summary>command_batch192.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch192.json", "sha256": "2c25bbad309678d22a78e35f1b1f21d1a4305cad17c57acd11460be193aa97b0", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "192"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-c6553d7fdf68
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch2.json` · SHA256: `377b8b8f0a30a72c02d513eda4e92f06eb3fae6acae497d10e86b5263a4de6d3`
+
+<details>
+<summary>command_batch2.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch2.json", "sha256": "377b8b8f0a30a72c02d513eda4e92f06eb3fae6acae497d10e86b5263a4de6d3", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "2"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-ee9bef4bb0a7
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch224.json` · SHA256: `19604ae1e252f678cc3db60078ed7077d41d0ac36fe80b4ab1d55a9461077c38`
+
+<details>
+<summary>command_batch224.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch224.json", "sha256": "19604ae1e252f678cc3db60078ed7077d41d0ac36fe80b4ab1d55a9461077c38", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "224"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-6e6b5a1cc250
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch256.json` · SHA256: `d8a6f691138fca1c508d10fcb2d2dbfef8664b89ec2608d25c97adabbcc7f82c`
+
+<details>
+<summary>command_batch256.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch256.json", "sha256": "d8a6f691138fca1c508d10fcb2d2dbfef8664b89ec2608d25c97adabbcc7f82c", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "256"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-39f580fc89b7
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch288.json` · SHA256: `83f8934843bc436360476cc945ee4e3cd5bc504fbe08f242474b0e9dfb34a7e6`
+
+<details>
+<summary>command_batch288.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch288.json", "sha256": "83f8934843bc436360476cc945ee4e3cd5bc504fbe08f242474b0e9dfb34a7e6", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "288"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-9540b74ce71e
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch32.json` · SHA256: `70c8a26886f3d241a99ca129bf301b51f94349660f4590add70abdd5024a3c73`
+
+<details>
+<summary>command_batch32.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch32.json", "sha256": "70c8a26886f3d241a99ca129bf301b51f94349660f4590add70abdd5024a3c73", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "32"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-eb1a5533eafe
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch320.json` · SHA256: `b2aa6570eb08f39501f1b294a66790b5ce42ef0c4f35e8e29bafc89854e8a448`
+
+<details>
+<summary>command_batch320.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch320.json", "sha256": "b2aa6570eb08f39501f1b294a66790b5ce42ef0c4f35e8e29bafc89854e8a448", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "320"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-5a81ce1435ad
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch384.json` · SHA256: `f92e6c3b61a974496b932187a33472a45dd85e0366ba1bab1adc5f5e6642c45b`
+
+<details>
+<summary>command_batch384.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch384.json", "sha256": "f92e6c3b61a974496b932187a33472a45dd85e0366ba1bab1adc5f5e6642c45b", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "384"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-ce3e158887b4
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch4.json` · SHA256: `e255a052d455c1fe6c454a73f231b444290c12282e5bbca8034a6352b5266b4d`
+
+<details>
+<summary>command_batch4.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch4.json", "sha256": "e255a052d455c1fe6c454a73f231b444290c12282e5bbca8034a6352b5266b4d", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "4"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-9ad516781bf1
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch64.json` · SHA256: `39ab190a390436b76f2c787243a9d33cbe990bad1c94ecbeaab5a68905be14cb`
+
+<details>
+<summary>command_batch64.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch64.json", "sha256": "39ab190a390436b76f2c787243a9d33cbe990bad1c94ecbeaab5a68905be14cb", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "64"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-4d7228063b5c
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch8.json` · SHA256: `ecf2e756275d0177bb9aa5d6d79e1204552d537e4b7519b55dd0a974560f20fa`
+
+<details>
+<summary>command_batch8.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch8.json", "sha256": "ecf2e756275d0177bb9aa5d6d79e1204552d537e4b7519b55dd0a974560f20fa", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "8"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-9d391cbfce0d
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/command_batch96.json` · SHA256: `5329a5ddee6993c627c8683700fbc228792703c0a51012ff0a9e81c912aa610b`
+
+<details>
+<summary>command_batch96.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/command_batch96.json", "sha256": "5329a5ddee6993c627c8683700fbc228792703c0a51012ff0a9e81c912aa610b", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+["/home/hyein/ai-benchmark/esm2/.venv/bin/python", "-u", "/home/hyein/ai-benchmark/esm2/scripts/batch_followup/worker.py", "/home/hyein/ai-benchmark/esm2/results/batch_inference_20261028_112900_601721", "96"]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-4f594120952e
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit.json` · SHA256: `d6bada1aa960e75a7030f14a2145316ea13e8bec339604e82f3e0d471a184e7f`
+
+<details>
+<summary>exit.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit.json", "sha256": "d6bada1aa960e75a7030f14a2145316ea13e8bec339604e82f3e0d471a184e7f", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "scope": "controller finished; individual failures separately recorded"}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-ac9c0bb5b9e2
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch1.json` · SHA256: `3727a0186c4fb569e9c6d9d24faba35d7a216e172a9eea510de6ac1a7e6df162`
+
+<details>
+<summary>exit_batch1.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch1.json", "sha256": "3727a0186c4fb569e9c6d9d24faba35d7a216e172a9eea510de6ac1a7e6df162", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 19.521626472473145, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-ee799dd5001c
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch128.json` · SHA256: `4c2a971109230fdc3f67af7de9278d7f09455196ef5d2fc1a248a16c3c254abf`
+
+<details>
+<summary>exit_batch128.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch128.json", "sha256": "4c2a971109230fdc3f67af7de9278d7f09455196ef5d2fc1a248a16c3c254abf", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 126.17465138435364, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-4dbc2e9fc3c2
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch16.json` · SHA256: `4038f0e87428eb7e60e532ebb599126d3d691f0263ca61e238fed4e262ee790b`
+
+<details>
+<summary>exit_batch16.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch16.json", "sha256": "4038f0e87428eb7e60e532ebb599126d3d691f0263ca61e238fed4e262ee790b", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 24.532562971115112, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-564720ddcae0
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch160.json` · SHA256: `9206af581c3f5520f082758f1037e822ca209a0bbf86aafe04d4c00c79dd3215`
+
+<details>
+<summary>exit_batch160.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch160.json", "sha256": "9206af581c3f5520f082758f1037e822ca209a0bbf86aafe04d4c00c79dd3215", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 156.72705698013306, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-db4e75f07d8d
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch192.json` · SHA256: `371684fc3d7a7eef3b2ea31243535ad46df28e02225b273809ad3bba08655448`
+
+<details>
+<summary>exit_batch192.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch192.json", "sha256": "371684fc3d7a7eef3b2ea31243535ad46df28e02225b273809ad3bba08655448", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 187.29760789871216, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-2dfd81378914
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch2.json` · SHA256: `b6d0d8b32dff560d84dddd59d47798a2b3ff11c82db1ee5270be829452a8c6bd`
+
+<details>
+<summary>exit_batch2.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch2.json", "sha256": "b6d0d8b32dff560d84dddd59d47798a2b3ff11c82db1ee5270be829452a8c6bd", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 20.52458882331848, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-b7c695100bfd
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch224.json` · SHA256: `9d98565039d3e2a1c94b126aba189019b9b4c9f581bae624aba00da216b4c338`
+
+<details>
+<summary>exit_batch224.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch224.json", "sha256": "9d98565039d3e2a1c94b126aba189019b9b4c9f581bae624aba00da216b4c338", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 202.79264855384827, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-07bcee4075a2
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch256.json` · SHA256: `d82db0796cad926c8e3e56ced185fd863a84b330da15f8d13da4da7d2399fa3a`
+
+<details>
+<summary>exit_batch256.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch256.json", "sha256": "d82db0796cad926c8e3e56ced185fd863a84b330da15f8d13da4da7d2399fa3a", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 224.84818267822266, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-138378fb4d5c
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch288.json` · SHA256: `4d28adcb735cda17c44c311c87853887413c8c5768ce6fe406f684395568fa76`
+
+<details>
+<summary>exit_batch288.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch288.json", "sha256": "4d28adcb735cda17c44c311c87853887413c8c5768ce6fe406f684395568fa76", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 252.45790457725525, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-aa8e3ac03d05
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch32.json` · SHA256: `8f29a73748a7fa1f3ddf7ccf131ecdfa1d42c68bc11d3f11d1c068682a4212cc`
+
+<details>
+<summary>exit_batch32.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch32.json", "sha256": "8f29a73748a7fa1f3ddf7ccf131ecdfa1d42c68bc11d3f11d1c068682a4212cc", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 34.542511224746704, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-93b77aa65499
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch320.json` · SHA256: `cef342951302998885e73caf90c6af7e7be579dee20cf97d8c1358f5b58e86dd`
+
+<details>
+<summary>exit_batch320.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch320.json", "sha256": "cef342951302998885e73caf90c6af7e7be579dee20cf97d8c1358f5b58e86dd", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 279.4510955810547, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-5df02b6dc3fe
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch384.json` · SHA256: `c4ec0e118ea6e18ef680cb20d983672e5efdb91df3d9a8763a07f5be9f3115f5`
+
+<details>
+<summary>exit_batch384.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch384.json", "sha256": "c4ec0e118ea6e18ef680cb20d983672e5efdb91df3d9a8763a07f5be9f3115f5", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 333.0272994041443, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-c1812403a230
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch4.json` · SHA256: `38d071e5436cf301073e6a888610f6fb00974d13ee000e086c39fa352b7bbeba`
+
+<details>
+<summary>exit_batch4.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch4.json", "sha256": "38d071e5436cf301073e6a888610f6fb00974d13ee000e086c39fa352b7bbeba", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 21.02697491645813, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-e48733cad8a8
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch64.json` · SHA256: `0ee2d455d61d723e933f12090f4e55c186b79952ebb495b8a1d98b9717e11b98`
+
+<details>
+<summary>exit_batch64.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch64.json", "sha256": "0ee2d455d61d723e933f12090f4e55c186b79952ebb495b8a1d98b9717e11b98", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 66.0966579914093, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-ae6b212509d5
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch8.json` · SHA256: `826ca275b8befad39f93279cbe892766edb3b3dd2ffe9ecc61e7fa6d00000736`
+
+<details>
+<summary>exit_batch8.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch8.json", "sha256": "826ca275b8befad39f93279cbe892766edb3b3dd2ffe9ecc61e7fa6d00000736", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 22.530413389205933, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-e791dca483d3
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/exit_batch96.json` · SHA256: `cab61000de387eef2a526b9dfe2c466ced17cbb6ec26b04e2026ab853776b507`
+
+<details>
+<summary>exit_batch96.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/exit_batch96.json", "sha256": "cab61000de387eef2a526b9dfe2c466ced17cbb6ec26b04e2026ab853776b507", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{"exit_code": 0, "wall_seconds": 97.13829779624939, "stop_reason": null}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-33fe03d0f1d5
+
+원래 경로: `esm2/results/batch_inference_20261028_112900_601721/summary.json` · SHA256: `672854a258afca4b7b6cbe77803333ec5b17e6a549e1a7505f2be0fbc3e1193c`
+
+<details>
+<summary>summary.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/results/batch_inference_20261028_112900_601721/summary.json", "sha256": "672854a258afca4b7b6cbe77803333ec5b17e6a549e1a7505f2be0fbc3e1193c", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{
+  "status": "complete",
+  "run_id": "batch_inference_20261028_112900_601721",
+  "conditions": [
+    {
+      "batch_size": 1,
+      "unique_inputs": 1,
+      "processed_inputs": 56,
+      "repeats": 56,
+      "input_shape": [
+        1,
+        952
+      ],
+      "seconds": 15.034850597381592,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.763885498046875,
+        "system_available_gib": 108.06350326538086,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.849609375,
+        "peak_allocated_gib": 2.7000656127929688,
+        "peak_reserved_gib": 2.849609375,
+        "rss_gib": 2.76495361328125,
+        "system_available_gib": 107.97367858886719,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.16404008865356445,
+      "samples": 28,
+      "gpu_util_avg": 92.25,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.764942169189453,
+      "available_sampled_min_gib": 107.81489562988281,
+      "sequences_per_second": 3.7246795129279655,
+      "allocated_fraction_shared_ram": 0.022188517918628078,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 2,
+      "unique_inputs": 2,
+      "processed_inputs": 48,
+      "repeats": 24,
+      "input_shape": [
+        2,
+        952
+      ],
+      "seconds": 15.537444114685059,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 1.3532752990722656,
+        "system_available_gib": 109.45378875732422,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.9765625,
+        "peak_allocated_gib": 2.8582897186279297,
+        "peak_reserved_gib": 2.9765625,
+        "rss_gib": 1.3543510437011719,
+        "system_available_gib": 109.59236145019531,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.3222641944885254,
+      "samples": 29,
+      "gpu_util_avg": 94.72413793103448,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.354339599609375,
+      "available_sampled_min_gib": 109.1034049987793,
+      "sequences_per_second": 3.089311192091966,
+      "allocated_fraction_shared_ram": 0.0234887672128837,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 4,
+      "unique_inputs": 4,
+      "processed_inputs": 48,
+      "repeats": 12,
+      "input_shape": [
+        4,
+        952
+      ],
+      "seconds": 15.543665409088135,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.604816436767578,
+        "system_available_gib": 108.48537063598633,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 3.326171875,
+        "peak_allocated_gib": 3.1805529594421387,
+        "peak_reserved_gib": 3.326171875,
+        "rss_gib": 2.605884552001953,
+        "system_available_gib": 107.96534729003906,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 0.6445274353027344,
+      "samples": 29,
+      "gpu_util_avg": 94.72413793103448,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.6058731079101562,
+      "available_sampled_min_gib": 107.75079727172852,
+      "sequences_per_second": 3.0880747067506458,
+      "allocated_fraction_shared_ram": 0.02613705237285974,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 8,
+      "unique_inputs": 8,
+      "processed_inputs": 48,
+      "repeats": 6,
+      "input_shape": [
+        8,
+        952
+      ],
+      "seconds": 15.487048864364624,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 1.3306770324707031,
+        "system_available_gib": 109.58882522583008,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 4.04296875,
+        "peak_allocated_gib": 3.8306784629821777,
+        "peak_reserved_gib": 4.04296875,
+        "rss_gib": 1.3318290710449219,
+        "system_available_gib": 108.54443359375,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 1.2946529388427734,
+      "samples": 28,
+      "gpu_util_avg": 94.89285714285714,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 1.3318138122558594,
+      "available_sampled_min_gib": 108.11409378051758,
+      "sequences_per_second": 3.0993638891685165,
+      "allocated_fraction_shared_ram": 0.031479634166542,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 16,
+      "unique_inputs": 16,
+      "processed_inputs": 48,
+      "repeats": 3,
+      "input_shape": [
+        16,
+        952
+      ],
+      "seconds": 15.252771615982056,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.6869239807128906,
+        "system_available_gib": 108.5886001586914,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 5.474609375,
+        "peak_allocated_gib": 5.11413049697876,
+        "peak_reserved_gib": 5.474609375,
+        "rss_gib": 2.6880760192871094,
+        "system_available_gib": 105.78279495239258,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 2.5781049728393555,
+      "samples": 29,
+      "gpu_util_avg": 94.6896551724138,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.6880531311035156,
+      "available_sampled_min_gib": 105.66500473022461,
+      "sequences_per_second": 3.1469690367424743,
+      "allocated_fraction_shared_ram": 0.0420267476585638,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 32,
+      "unique_inputs": 32,
+      "processed_inputs": 64,
+      "repeats": 2,
+      "input_shape": [
+        32,
+        952
+      ],
+      "seconds": 20.113224267959595,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.6054840087890625,
+        "system_available_gib": 108.67559432983398,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 8.322265625,
+        "peak_allocated_gib": 7.692234516143799,
+        "peak_reserved_gib": 8.322265625,
+        "rss_gib": 2.6067428588867188,
+        "system_available_gib": 102.9446029663086,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 5.1562089920043945,
+      "samples": 37,
+      "gpu_util_avg": 91.67567567567568,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.6065750122070312,
+      "available_sampled_min_gib": 102.85765838623047,
+      "sequences_per_second": 3.181986097671676,
+      "allocated_fraction_shared_ram": 0.06321301326421994,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 64,
+      "unique_inputs": 64,
+      "processed_inputs": 128,
+      "repeats": 2,
+      "input_shape": [
+        64,
+        952
+      ],
+      "seconds": 40.876195192337036,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.5799331665039062,
+        "system_available_gib": 108.80065155029297,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 14.017578125,
+        "peak_allocated_gib": 12.852226257324219,
+        "peak_reserved_gib": 14.017578125,
+        "rss_gib": 2.5825119018554688,
+        "system_available_gib": 97.20773696899414,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 10.316200733184814,
+      "samples": 74,
+      "gpu_util_avg": 94.33783783783784,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.5799522399902344,
+      "available_sampled_min_gib": 97.1748275756836,
+      "sequences_per_second": 3.131406908047935,
+      "allocated_fraction_shared_ram": 0.1056166380749232,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 96,
+      "unique_inputs": 96,
+      "processed_inputs": 192,
+      "repeats": 2,
+      "input_shape": [
+        96,
+        952
+      ],
+      "seconds": 61.54499316215515,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.5821456909179688,
+        "system_available_gib": 108.76040649414062,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 19.728515625,
+        "peak_allocated_gib": 18.004711627960205,
+        "peak_reserved_gib": 19.728515625,
+        "rss_gib": 2.5821762084960938,
+        "system_available_gib": 91.43783569335938,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 15.4686861038208,
+      "samples": 113,
+      "gpu_util_avg": 93.24778761061947,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.5821685791015625,
+      "available_sampled_min_gib": 91.43042755126953,
+      "sequences_per_second": 3.119668881823248,
+      "allocated_fraction_shared_ram": 0.1479585772597143,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 128,
+      "unique_inputs": 128,
+      "processed_inputs": 256,
+      "repeats": 2,
+      "input_shape": [
+        128,
+        952
+      ],
+      "seconds": 80.74387407302856,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.607421875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.607421875,
+        "rss_gib": 2.6913909912109375,
+        "system_available_gib": 108.73408889770508,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 25.42578125,
+        "peak_allocated_gib": 23.165740966796875,
+        "peak_reserved_gib": 25.42578125,
+        "rss_gib": 2.6933746337890625,
+        "system_available_gib": 85.61217880249023,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 20.62971544265747,
+      "samples": 147,
+      "gpu_util_avg": 94.15646258503402,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.6914138793945312,
+      "available_sampled_min_gib": 85.45404434204102,
+      "sequences_per_second": 3.1705191624625484,
+      "allocated_fraction_shared_ram": 0.19037072880920455,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 160,
+      "unique_inputs": 160,
+      "processed_inputs": 320,
+      "repeats": 2,
+      "input_shape": [
+        160,
+        952
+      ],
+      "seconds": 100.88722896575928,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.584606170654297,
+        "system_available_gib": 108.64028930664062,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 31.119140625,
+        "peak_allocated_gib": 28.319777488708496,
+        "peak_reserved_gib": 31.119140625,
+        "rss_gib": 2.584625244140625,
+        "system_available_gib": 79.9171028137207,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 25.783751964569092,
+      "samples": 185,
+      "gpu_util_avg": 93.57297297297298,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.5846176147460938,
+      "available_sampled_min_gib": 79.8022232055664,
+      "sequences_per_second": 3.1718583539310683,
+      "allocated_fraction_shared_ram": 0.23272541499825766,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 192,
+      "unique_inputs": 192,
+      "processed_inputs": 384,
+      "repeats": 2,
+      "input_shape": [
+        192,
+        952
+      ],
+      "seconds": 120.8541190624237,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.584880828857422,
+        "system_available_gib": 108.82414245605469,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 36.83203125,
+        "peak_allocated_gib": 33.47339677810669,
+        "peak_reserved_gib": 36.83203125,
+        "rss_gib": 2.58489990234375,
+        "system_available_gib": 74.06892395019531,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 30.937371253967285,
+      "samples": 221,
+      "gpu_util_avg": 94.01809954751131,
+      "gpu_util_max": 95.0,
+      "rss_sampled_peak_gib": 2.5848960876464844,
+      "available_sampled_min_gib": 73.92570114135742,
+      "sequences_per_second": 3.177384461357547,
+      "allocated_fraction_shared_ram": 0.27507667246652096,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 224,
+      "unique_inputs": 224,
+      "processed_inputs": 448,
+      "repeats": 2,
+      "input_shape": [
+        224,
+        952
+      ],
+      "seconds": 127.94693183898926,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.748760223388672,
+        "system_available_gib": 108.68917846679688,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 42.529296875,
+        "peak_allocated_gib": 38.633145332336426,
+        "peak_reserved_gib": 42.529296875,
+        "rss_gib": 2.7515335083007812,
+        "system_available_gib": 68.19535064697266,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 36.09711980819702,
+      "samples": 233,
+      "gpu_util_avg": 94.44635193133047,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.7487754821777344,
+      "available_sampled_min_gib": 68.06254196166992,
+      "sequences_per_second": 3.501451684388738,
+      "allocated_fraction_shared_ram": 0.317478298822821,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 256,
+      "unique_inputs": 256,
+      "processed_inputs": 512,
+      "repeats": 2,
+      "input_shape": [
+        256,
+        952
+      ],
+      "seconds": 145.69842529296875,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.6126365661621094,
+        "system_available_gib": 108.81959915161133,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 48.22265625,
+        "peak_allocated_gib": 43.787155628204346,
+        "peak_reserved_gib": 48.22265625,
+        "rss_gib": 2.6155357360839844,
+        "system_available_gib": 62.555809020996094,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 41.25113010406494,
+      "samples": 266,
+      "gpu_util_avg": 94.73308270676692,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.6126632690429688,
+      "available_sampled_min_gib": 62.3297004699707,
+      "sequences_per_second": 3.5141079868946847,
+      "allocated_fraction_shared_ram": 0.3598327694922816,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 288,
+      "unique_inputs": 288,
+      "processed_inputs": 576,
+      "repeats": 2,
+      "input_shape": [
+        288,
+        952
+      ],
+      "seconds": 163.8375210762024,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.6401824951171875,
+        "system_available_gib": 108.7613410949707,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 53.931640625,
+        "peak_allocated_gib": 48.94208288192749,
+        "peak_reserved_gib": 53.931640625,
+        "rss_gib": 2.6430740356445312,
+        "system_available_gib": 56.75264358520508,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 46.406057357788086,
+      "samples": 299,
+      "gpu_util_avg": 94.876254180602,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.6402244567871094,
+      "available_sampled_min_gib": 56.608734130859375,
+      "sequences_per_second": 3.5156781927388714,
+      "allocated_fraction_shared_ram": 0.40219477551040367,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 320,
+      "unique_inputs": 320,
+      "processed_inputs": 640,
+      "repeats": 2,
+      "input_shape": [
+        320,
+        952
+      ],
+      "seconds": 181.64417481422424,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.7517013549804688,
+        "system_available_gib": 108.7154541015625,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 59.62890625,
+        "peak_allocated_gib": 54.10054874420166,
+        "peak_reserved_gib": 59.62890625,
+        "rss_gib": 2.753692626953125,
+        "system_available_gib": 50.81222915649414,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 51.564523220062256,
+      "samples": 332,
+      "gpu_util_avg": 95.29518072289157,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.7517356872558594,
+      "available_sampled_min_gib": 50.745277404785156,
+      "sequences_per_second": 3.52337200273313,
+      "allocated_fraction_shared_ram": 0.44458586099936137,
+      "model_only_allocated_gib": 2.489795207977295
+    },
+    {
+      "batch_size": 384,
+      "unique_inputs": 384,
+      "processed_inputs": 768,
+      "repeats": 2,
+      "input_shape": [
+        384,
+        952
+      ],
+      "seconds": 216.95768117904663,
+      "baseline": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 2.60546875,
+        "peak_allocated_gib": 2.5360255241394043,
+        "peak_reserved_gib": 2.60546875,
+        "rss_gib": 2.615234375,
+        "system_available_gib": 108.82575988769531,
+        "system_total_gib": 121.68751525878906
+      },
+      "memory": {
+        "allocated_gib": 2.5360255241394043,
+        "reserved_gib": 71.03515625,
+        "peak_allocated_gib": 64.41565036773682,
+        "peak_reserved_gib": 71.03515625,
+        "rss_gib": 2.6172828674316406,
+        "system_available_gib": 39.44933319091797,
+        "system_total_gib": 121.68751525878906
+      },
+      "peak_delta_gib": 61.87962484359741,
+      "samples": 399,
+      "gpu_util_avg": 94.78947368421052,
+      "gpu_util_max": 96.0,
+      "rss_sampled_peak_gib": 2.6153297424316406,
+      "available_sampled_min_gib": 39.28464889526367,
+      "sequences_per_second": 3.539860842106806,
+      "allocated_fraction_shared_ram": 0.5293529926282582,
+      "model_only_allocated_gib": 2.489795207977295
+    }
+  ],
+  "failed": [],
+  "checkpoint": "esm2_t33_650M_UR50D",
+  "checkpoint_sha256": "ea9d0522b335a8778dea6535a65301f10208dece28cd5865482b0b1fc446168c",
+  "source": {
+    "url": "https://rest.uniprot.org/uniprotkb/search?query=reviewed%3Atrue%20AND%20length%3A%5B900%20TO%20950%5D&format=fasta&size=500",
+    "sha256": "d2a6773c09022e8ced6526fb8f38a0fab9bf344cdcc39bda42a58acb9fa16732",
+    "bytes": 521317,
+    "headers": {
+      "Vary": "accept,accept-encoding,x-uniprot-release,x-api-deployment-date, User-Agent",
+      "Cache-Control": "public, max-age=43200",
+      "x-cache": "miss cached",
+      "Content-Type": "text/plain;format=fasta",
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Expose-Headers": "Link, X-Total-Results, X-UniProt-Release, X-UniProt-Release-Date, X-API-Deployment-Date",
+      "X-API-Deployment-Date": "07-October-2026",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "Date": "Wed, 28 Oct 2026 02:27:02 GMT",
+      "Access-Control-Max-Age": "1728000",
+      "X-UniProt-Release": "2026_03",
+      "Link": "<https://rest.uniprot.org/uniprotkb/search?format=fasta&query=reviewed%3Atrue%20AND%20length%3A%5B900%20TO%20950%5D&cursor=c9bacmxsqhkqgdwa659orqyetr0ii434c477c&size=500>; rel=\"next\"",
+      "X-Total-Results": "4294",
+      "Transfer-Encoding": "chunked",
+      "Access-Control-Allow-Origin": "*",
+      "Connection": "close",
+      "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization",
+      "X-UniProt-Release-Date": "02-September-2026"
+    },
+    "retrieved_utc": "2026-10-28T02:27:03.871516+00:00"
+  },
+  "input_audit": {
+    "original_fasta_rows": 500,
+    "unique_sequences": 500,
+    "sequence_length_range": [
+      900,
+      950
+    ],
+    "sequence_1_length": 950,
+    "actual_padded_token_length_all_batches": 952,
+    "selection": "seed42 shuffle, longest sequence first to keep actual max length950 constant; nested unique prefixes, no within-batch copies",
+    "labels": null
+  },
+  "settings": {
+    "task": "embedding inference only; no training",
+    "precision": "FP32",
+    "tf32": false,
+    "seed": 42,
+    "guard_available_gib": 16,
+    "guard_swap_increase_gib": 2,
+    "minimum_repeats": 2,
+    "minimum_measured_seconds": 15,
+    "time_includes": "cached CPU tokens to GPU, full official forward including unused logits, mean pooling toCPU; excludes tokenization/load/warmup/filesave",
+    "framework_note": "native fair-esm2.0.0, existing host venv unchanged, not comparable to scGPT framework memory as model-only effect"
+  },
+  "largest_successful_batch": 384,
+  "stop_reason": "predicted_reservation_exceeds_available_budget",
+  "skipped_next_batch": {
+    "batch": 448,
+    "estimated_reserved_gib": 105.45178006092709,
+    "available_gib": 114.09315490722656
+  },
+  "reached80": false,
+  "reached90": false
+}
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>

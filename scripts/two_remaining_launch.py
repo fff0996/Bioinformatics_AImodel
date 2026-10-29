@@ -1,5 +1,0 @@
-from pathlib import Path
-import sys,subprocess,datetime,shlex,json,time
-ROOT=Path('/home/hyein/ai-benchmark');run='candidate_batch_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f');D=ROOT/'clair3/results'/run;D.mkdir();(D.parent/'BATCH_LATEST').write_text(run+'\n');print(run,flush=True);assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip();cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(ROOT/'clair3')+':/work','-v',str(ROOT/'scripts')+':/support:ro','-e','RUN_ID='+run,'-e','PYTHONPATH=/work/scripts:/work/source','-e','MPLCONFIGDIR=/work/.cache/matplotlib','local/clair3-spark:9d1dd3f','/work/.venv/bin/python','-u','/work/scripts/batch_followup/capture.py'];(D/'host_capture_command.json').write_text(json.dumps(cmd,indent=2))
-with (D/'capture.log').open('w') as f:code=subprocess.call(['sg','docker','-c',shlex.join(cmd)],stdout=f,stderr=subprocess.STDOUT)
-print('CAPTURE_EXIT',code,flush=True);assert code==0

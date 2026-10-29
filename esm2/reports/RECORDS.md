@@ -1,0 +1,547 @@
+# 원본 설정·측정 기록
+
+파일 내용을 Markdown 코드 블록에 그대로 보존했다. 본문 결과 해석은 모델별 `reports/FINAL.md`를 우선한다. CSV/JSON 원본 파일이 필요하면 `docs/RESTORE_FILES.md`의 복원 코드를 사용한다. PNG는 base64로 보관하며 본문 그림은 이전 커밋의 고정 원본 URL로 표시한다.
+
+## file-b910ed19595f
+
+원래 경로: `esm2/reports/artifacts_20261027_164300_125163.json` · SHA256: `7529bbb3eaa63b4bd4d7a4506f800dc88bece0458db0e1f15d301020f0967250`
+
+<details>
+<summary>artifacts_20261027_164300_125163.json — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/reports/artifacts_20261027_164300_125163.json", "sha256": "7529bbb3eaa63b4bd4d7a4506f800dc88bece0458db0e1f15d301020f0967250", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  {
+    "path": "/home/hyein/ai-benchmark/STATUS.md",
+    "bytes": 1867,
+    "sha256": "dfb5c73ca1cfff4face5191a0f5cec9926022cff985ea57c00919b03960c7c68"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/USAGE.md",
+    "bytes": 846,
+    "sha256": "15e38c8b3caed8dd8b6d91c230ddba0183beacb726c9765458eb2be40d60219b"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/checkpoint.pt",
+    "bytes": 236209653,
+    "sha256": "d69db775b7cba8ad3e86f6f1947847d3580d6bcb9b5dd18ba8cb028c626301ac"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/metadata.json",
+    "bytes": 362,
+    "sha256": "d05d1be4796a26a411c91a0491ceca0b48e0f488cc52646249fbe9bd0e53a78d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/pip_freeze.txt",
+    "bytes": 1678,
+    "sha256": "e98aad249434c5f10cb3f48cd2fa6ddbc996d34e3f4c179e0c60eff1716fa803"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/predict.py",
+    "bytes": 2224,
+    "sha256": "1ff266dbfc0eebeb26c4e8f9b6995529c8c75b59b25c43c70e1ba10bd19bda9b"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/preprocessing.json",
+    "bytes": 569,
+    "sha256": "56a6c2288bd2b753f8b7ba30650efbca8666c114a9aa38a77686a01dff861d6d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/training_config.json",
+    "bytes": 498,
+    "sha256": "8108b77c4416fb5129d9c62da99ff076ea9b0903c53ad2901bc585310378279b"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/models/finetuned/20261027_164300_125163/training_inputs.json",
+    "bytes": 123523,
+    "sha256": "2480e8ef3490e16cfca602060687f4168b8acad77facf1b1da687c5197142751"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/reports/ESM2_20261027_164300_125163.md",
+    "bytes": 16943,
+    "sha256": "176fd16a9450c7214732fd2132d7de44930e6fbce5927cd11990f62130860dc2"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/reports/comparison_20261027_164300_125163.csv",
+    "bytes": 3689,
+    "sha256": "826fb95a4d445c8b8b103d7c4cdb937eb42bd0f2ae409418e45c8e6b4c8e9e27"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/baseline_validation.json",
+    "bytes": 4334,
+    "sha256": "8e47602d7eecc5f4ce5618e6adbc6515eaf8fe4ca1a8ae91196bddff4a4f04da"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/benchmark.py",
+    "bytes": 15891,
+    "sha256": "20863f34231101de503f46b8b5ef61c1ea1c775eb0ff7ebb49320c5548f9e94d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_batches.json",
+    "bytes": 4350,
+    "sha256": "f91903ef38d37d25966fa53e67728039abc66b132f6e545d577b41dfe7e55d0c"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_inputs.json",
+    "bytes": 77617,
+    "sha256": "884723e627ea9552e7e23d0eaa3d3ac35b3721b74241df28b160d216c23db68d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_metrics.json",
+    "bytes": 807,
+    "sha256": "538b6d3e71331c078be2215c4d834458a888f7d617c547bc90bd52ddee6bd337"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_r0.pt",
+    "bytes": 825228,
+    "sha256": "bd17e6772513b03218fb158b679ed8bf4b6a9d9fdaec5c366c4527da58236bf0"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_r1.pt",
+    "bytes": 825228,
+    "sha256": "538dda60ada705567868d382c017b63509e7893eb7cda95bd1e11cbbf70e59f2"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_160_r2.pt",
+    "bytes": 825228,
+    "sha256": "67493f60d8c86fc5b8bd2421140871278569f232219b08201f4b25776dc86ba6"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_batches.json",
+    "bytes": 1002,
+    "sha256": "283c7e1b821e555a1d48e2430b786dd7fb366a9a3bf6e1e55c793a35c0df4f88"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_inputs.json",
+    "bytes": 15124,
+    "sha256": "884ea5a6b9992faf8aeeaf13e8168d3f8f63a7824cb636b09e913ba4b513a59d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_metrics.json",
+    "bytes": 805,
+    "sha256": "a21367a2e07e029e80f135bef755c4bb3946edf1edd5443ca0a6ee3431495fcf"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_r0.pt",
+    "bytes": 166341,
+    "sha256": "36bc1c002d212755646986a7aa43d20b089518127d07c2704384da6035cfabe1"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_r1.pt",
+    "bytes": 166341,
+    "sha256": "6494cffd3f511765138ce27fa2ff81ad4159fc6ed4425e995284a5dcff7bcaaf"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_32_r2.pt",
+    "bytes": 166341,
+    "sha256": "999bd645cb56e470afdea334e42eea53a17bd4282f8b82f0015558956675519f"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_batches.json",
+    "bytes": 2675,
+    "sha256": "0e28e2e4c8d955cac5268b6b8797ee1d4c92b54640bfc55c43e3f3263a477cae"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_inputs.json",
+    "bytes": 46656,
+    "sha256": "581ef68745e738b3e727bea0f76f6bb9528402012710364cf29aa227cf0e559c"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_metrics.json",
+    "bytes": 810,
+    "sha256": "70f55b7a2b275c736b47892cf2b9ff416883b19f2cf4f4d7fee5bf8cff6a619f"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_r0.pt",
+    "bytes": 495813,
+    "sha256": "4a06fec74d2eb260b156eb842d5b717b5d34e3b4ec63336393c12249537402c5"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_r1.pt",
+    "bytes": 495813,
+    "sha256": "15c654ad434d4d71b2f7c1ea58d8a160e20aa59d061a7b6aaccac4aa12b6e16e"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/count_96_r2.pt",
+    "bytes": 495813,
+    "sha256": "74d6664e24827c7d65cd4a561c2e6d0c59eaefa0b14eb25c6f208b30ca3ac95c"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/environment.json",
+    "bytes": 2408,
+    "sha256": "674c9c318509d61bf417ad6423fbc7c4873b24fbab2f9e4befd70aed032ecad9"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/input_report.json",
+    "bytes": 2154,
+    "sha256": "1e54d6180f5ead2157742cb5bb7f2b209828d4180c4c3c3bc419cbddde54279c"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_batches.json",
+    "bytes": 342,
+    "sha256": "badae81c1c7a533be70e7edb4dd7efd97751330a95b65c9dec4feb4aacdf4743"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_inputs.json",
+    "bytes": 5358,
+    "sha256": "3200b3303e6625fb6d3ab4f4a948558322df6c146f35eb65c6fcd37c1c890c2b"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_metrics.json",
+    "bytes": 794,
+    "sha256": "1370778d7050d07709a799f18158c096ba5088edf8f19a9b49deb4f8eeec2023"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_r0.pt",
+    "bytes": 84079,
+    "sha256": "dbe7352c6f99b54c80e2a7a58f15b9eec6ffbb023ad656a8c626badcec8845e0"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_r1.pt",
+    "bytes": 84079,
+    "sha256": "319972d8e3fc1ff853665905e6fbe9f2dbbb97d50931a07ddda9c6394a6ce23e"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_129_256_r2.pt",
+    "bytes": 84079,
+    "sha256": "517ab34143dde1f787652a91aedb380ebb147524ee83889a69533d5b5846257d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_batches.json",
+    "bytes": 504,
+    "sha256": "df121115b017f5bc688270a89b10b0e42b6e84727104b2921959a8ea3f6c9ab2"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_inputs.json",
+    "bytes": 8303,
+    "sha256": "295b49a7b9dab5e2e23bf9eecbae9fbaa6c77fb4178996622c0d60e70b51d023"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_metrics.json",
+    "bytes": 794,
+    "sha256": "e6558a0e568f427172305704dbe65188fff483e63317310c90f2560edfe8960e"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_r0.pt",
+    "bytes": 84079,
+    "sha256": "98ce2f1d2c361e07bf51cbeb9e78613ab5d23199d3da23791931a49305d789fd"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_r1.pt",
+    "bytes": 84079,
+    "sha256": "ce233a2e1113eb6287024e31b1db9cd82a582821f95409268be9a0b358353d62"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_257_512_r2.pt",
+    "bytes": 84079,
+    "sha256": "737950e3a7a622560e48c98977c9ba4f00287a86cf099f38cbe3be490cf50f82"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_batches.json",
+    "bytes": 336,
+    "sha256": "5572005bc294c9f0b7aa658be66ec560003ecd8362f48e35a9228b5d36d0c897"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_inputs.json",
+    "bytes": 3930,
+    "sha256": "89adf1a6bf4fd2a444dfe1dab923471af91e7d2259efec40568cace1e0051e9a"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_metrics.json",
+    "bytes": 814,
+    "sha256": "c7a85039494889077d7ae0eaecebfa4251c3811b76e8d2fd2ecd70cbda1cd323"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_r0.pt",
+    "bytes": 84072,
+    "sha256": "5a7718da463a60209223927a66f1211e6d99e171bc188b0d773f7cbb28ab6ac5"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_r1.pt",
+    "bytes": 84072,
+    "sha256": "6bab18c34aafe9b368b5ddf2b95e8d781ab7b85949346d5621faf86161cee2ea"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_50_128_r2.pt",
+    "bytes": 84072,
+    "sha256": "8a0f58ba44458cbf5c40158e3a41a254cb302b0db23f82d75df92ac19e6aede6"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_batches.json",
+    "bytes": 664,
+    "sha256": "2fd7e51440719dc7a6404c61409261341b6cabd7e2106139dabe3b9a4a2d6ef8"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_inputs.json",
+    "bytes": 13359,
+    "sha256": "7066e7dacebe190f3e528ee85cbafd9df7504a1cce01f14bc02012dcfe08e655"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_metrics.json",
+    "bytes": 813,
+    "sha256": "40e166d9a4ec29cc0fff5dbe2c40db2d971c3475abad0b94d4cdf14f990d38e7"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_r0.pt",
+    "bytes": 84086,
+    "sha256": "ff8b215283aa53e46b3d51e63717d843e8783c410631fe2c6d6a472c7277747f"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_r1.pt",
+    "bytes": 84086,
+    "sha256": "08b86b2133fce6998a529475489070e4bd0ead48bf0569f93ff4a1d39053aed3"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/length_513_1022_r2.pt",
+    "bytes": 84086,
+    "sha256": "60b6141681a0104faba390c8d7ea0ee6dec9083c8cea7ca594c592e7deccb147"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/pip_freeze.txt",
+    "bytes": 1678,
+    "sha256": "e98aad249434c5f10cb3f48cd2fa6ddbc996d34e3f4c179e0c60eff1716fa803"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/process_recovery.json",
+    "bytes": 463,
+    "sha256": "94a10a85722404e73a02959723246f4e17e31c6f91ee13ddc39896513f069160"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/resources.csv",
+    "bytes": 18236,
+    "sha256": "27621acc770e18c283bb94b6f2ee01352506f4f8a9da0ecefa6392c5560682b6"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/run_command.sh",
+    "bytes": 162,
+    "sha256": "064f5db52caa7cd874b9524da1f696b1ed9632fdfafdd570a2ae3699fa3c3b76"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/smoke.json",
+    "bytes": 150,
+    "sha256": "2964a6f77b001ee3873541c3bee1b2f0adca52e939d6cf1ad429fa0d967515f7"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/smoke.pt",
+    "bytes": 11803,
+    "sha256": "c1c66eaf1cd26e94f99185fc489971484abce3bc0e074cbf260fddece89dcefd"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/sources.json",
+    "bytes": 6137,
+    "sha256": "e7ebd5ffacbf41ccbd2decc584223c4ce9cd442ef1feef7559022c9c52a80f71"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/summary.json",
+    "bytes": 8788,
+    "sha256": "a50738734670647de052692c129ff7a92832af344d49fe878df5f060e50f68f5"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/test_for_cli.fasta",
+    "bytes": 498,
+    "sha256": "68fdcbb9cedd02664dc285daa50bfcf99ebaace7f53f8173a02085efcf5c826a"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/test_original.json",
+    "bytes": 8477,
+    "sha256": "d49d26a5edf8a03e0de7bf8936ef26cced1c4b26c3bd02e9151314a27701afcb"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/test_reloaded.json",
+    "bytes": 8477,
+    "sha256": "d49d26a5edf8a03e0de7bf8936ef26cced1c4b26c3bd02e9151314a27701afcb"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/training_inputs.json",
+    "bytes": 123523,
+    "sha256": "2480e8ef3490e16cfca602060687f4168b8acad77facf1b1da687c5197142751"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/training_metrics.json",
+    "bytes": 1589,
+    "sha256": "1caac58d7aeb800795a255c5b0288ed027fe1a88b9112002d11023fbb172de95"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/20261027_164300_125163/validation.json",
+    "bytes": 4331,
+    "sha256": "5503291ac5b4ca8eef57185637bd77c3160dc89e2836cfa47fe38477f5697d42"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/cli_predictions.csv",
+    "bytes": 160,
+    "sha256": "e302ba885de9eef2437f975ee3b0f7f42b3bccf88d0d8f72fa5f8a9d205d0999"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/cli_validation.json",
+    "bytes": 82,
+    "sha256": "8d3a618af244b0879728ab85071c839d1a1440207cd169d211494d1ff7ad221d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/command.json",
+    "bytes": 196,
+    "sha256": "e50a382b05f7e96e148491848a8612d5470041ec85be1bca28aa542c438ca0b8"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/console.log",
+    "bytes": 649,
+    "sha256": "2cca0814fd76ef8cbc8f4b1a58729cb0f5ceea444a37d7fe197dbe4aaeb9277e"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/exit_code.json",
+    "bytes": 74,
+    "sha256": "a127ea8a6baf0af1477db62f67524492e25db703318367f945a4b6aae5f0ca9f"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/fresh_reload_predictions.json",
+    "bytes": 5299,
+    "sha256": "82217bee01b0704c8301d057c7a4b9304e5f1d8e919b00df5ab02ce3425bfdac"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_129_256_inputs.json",
+    "bytes": 5358,
+    "sha256": "3200b3303e6625fb6d3ab4f4a948558322df6c146f35eb65c6fcd37c1c890c2b"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_129_256_last_repeat.pt",
+    "bytes": 84206,
+    "sha256": "6a795c173167e86a04aff1651fd5ed1f3d64a2da5bb0c70f8d2810607e57e212"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_129_256_metrics.json",
+    "bytes": 1854,
+    "sha256": "49d9ad59f53034143a2919a8a7e9874535cfb2856468b94c6026ad2791aa4cdb"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_257_512_inputs.json",
+    "bytes": 8303,
+    "sha256": "295b49a7b9dab5e2e23bf9eecbae9fbaa6c77fb4178996622c0d60e70b51d023"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_257_512_last_repeat.pt",
+    "bytes": 84206,
+    "sha256": "2da091bf8fe5ae95718358a959da068863d132b7947ec1e17a9bbad4b7c3c6cd"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_257_512_metrics.json",
+    "bytes": 1874,
+    "sha256": "0f77ee8ff6bca918e571c204d020f46997d7f0afa8065e91eced0de3c520dc83"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_50_128_inputs.json",
+    "bytes": 3930,
+    "sha256": "89adf1a6bf4fd2a444dfe1dab923471af91e7d2259efec40568cace1e0051e9a"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_50_128_last_repeat.pt",
+    "bytes": 84199,
+    "sha256": "46a50d5a9be3596cf3bc4f44d036b2ea1b2653eb52b284c233c6d69cc3f0037f"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_50_128_metrics.json",
+    "bytes": 1879,
+    "sha256": "58ccdc862a8c1d9e9716e736c898636a047ceb1908ed1349352ba1bfd8ae9a0d"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_513_1022_inputs.json",
+    "bytes": 13359,
+    "sha256": "7066e7dacebe190f3e528ee85cbafd9df7504a1cce01f14bc02012dcfe08e655"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_513_1022_last_repeat.pt",
+    "bytes": 84213,
+    "sha256": "4ca4fa00a8be0c900bb1ae82fd5bf2a78d52338210974a0934e30c74e9166813"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/length_513_1022_metrics.json",
+    "bytes": 1872,
+    "sha256": "0e58e4ca9f6f927654a7eb087157ad2cdf68a2d8a986ce39cd2e8e0360d65d17"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/original_artifact_validation.json",
+    "bytes": 545,
+    "sha256": "91f57c500bf846efed47869369e5fb2f8b9c83046d38c8b5a7d9a9b0a0d3ffad"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/resources.csv",
+    "bytes": 56396,
+    "sha256": "83595746dc5e94271a9884e59e614713571ecaf55578af89c547a7d7f8b37af6"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/summary.json",
+    "bytes": 9341,
+    "sha256": "bb2fd6c024b34a42b2f6c209045c383b1fe98586e784b3b685d956a3c8d88812"
+  },
+  {
+    "path": "/home/hyein/ai-benchmark/esm2/results/supplement_20261027_165443_595867/supplement.py",
+    "bytes": 8873,
+    "sha256": "ceac1a1593c7aaa06e2ded3fff60a8b930858d9c5ef8a4508baec89a324ae266"
+  }
+]
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-7431ac73bbe3
+
+원래 경로: `esm2/reports/batch_memory_comparison.csv` · SHA256: `53f042d142f3993e0c838bf29541d8823ff8d6f6c06702afbc8358f21a6ed793`
+
+<details>
+<summary>batch_memory_comparison.csv — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/reports/batch_memory_comparison.csv", "sha256": "53f042d142f3993e0c838bf29541d8823ff8d6f6c06702afbc8358f21a6ed793", "encoding": "utf-8", "added_final_newline": false} -->
+```csv
+batch,repeats,processed_inputs,seconds,sequences_per_second,model_loaded_allocated_gib,peak_allocated_gib,additional_from_same_run_load_gib,peak_reserved_gib,fraction_shared_ram_percent,gpu_util_mean,gpu_util_max,rss_sampled_peak_gib,available_sampled_min_gib
+1,56,56,15.034850597381592,3.7246795129279655,2.489795207977295,2.7000656127929688,0.21027040481567383,2.849609375,2.2188517918628077,92.25,95.0,2.764942169189453,107.81489562988281
+2,24,48,15.537444114685059,3.089311192091966,2.489795207977295,2.8582897186279297,0.36849451065063477,2.9765625,2.34887672128837,94.72413793103448,95.0,1.354339599609375,109.1034049987793
+4,12,48,15.543665409088135,3.0880747067506458,2.489795207977295,3.1805529594421387,0.6907577514648438,3.326171875,2.613705237285974,94.72413793103448,95.0,2.6058731079101562,107.75079727172852
+8,6,48,15.487048864364624,3.0993638891685165,2.489795207977295,3.8306784629821777,1.3408832550048828,4.04296875,3.1479634166542003,94.89285714285714,95.0,1.3318138122558594,108.11409378051758
+16,3,48,15.252771615982056,3.1469690367424743,2.489795207977295,5.11413049697876,2.624335289001465,5.474609375,4.20267476585638,94.6896551724138,95.0,2.6880531311035156,105.66500473022461
+32,2,64,20.113224267959595,3.181986097671676,2.489795207977295,7.692234516143799,5.202439308166504,8.322265625,6.3213013264219935,91.67567567567568,95.0,2.6065750122070312,102.85765838623047
+64,2,128,40.876195192337036,3.131406908047935,2.489795207977295,12.852226257324219,10.362431049346924,14.017578125,10.561663807492321,94.33783783783784,95.0,2.5799522399902344,97.1748275756836
+96,2,192,61.54499316215515,3.119668881823248,2.489795207977295,18.004711627960205,15.51491641998291,19.728515625,14.795857725971432,93.24778761061947,95.0,2.5821685791015625,91.43042755126953
+128,2,256,80.74387407302856,3.1705191624625484,2.489795207977295,23.165740966796875,20.67594575881958,25.42578125,19.037072880920455,94.15646258503402,95.0,2.6914138793945312,85.45404434204102
+160,2,320,100.88722896575928,3.1718583539310683,2.489795207977295,28.319777488708496,25.8299822807312,31.119140625,23.272541499825767,93.57297297297298,95.0,2.5846176147460938,79.8022232055664
+192,2,384,120.8541190624237,3.177384461357547,2.489795207977295,33.47339677810669,30.983601570129395,36.83203125,27.507667246652094,94.01809954751131,95.0,2.5848960876464844,73.92570114135742
+224,2,448,127.94693183898926,3.501451684388738,2.489795207977295,38.633145332336426,36.14335012435913,42.529296875,31.7478298822821,94.44635193133047,96.0,2.7487754821777344,68.06254196166992
+256,2,512,145.69842529296875,3.5141079868946847,2.489795207977295,43.787155628204346,41.29736042022705,48.22265625,35.98327694922816,94.73308270676692,96.0,2.6126632690429688,62.3297004699707
+288,2,576,163.8375210762024,3.5156781927388714,2.489795207977295,48.94208288192749,46.452287673950195,53.931640625,40.21947755104037,94.876254180602,96.0,2.6402244567871094,56.608734130859375
+320,2,640,181.64417481422424,3.52337200273313,2.489795207977295,54.10054874420166,51.610753536224365,59.62890625,44.458586099936134,95.29518072289157,96.0,2.7517356872558594,50.745277404785156
+384,2,768,216.95768117904663,3.539860842106806,2.489795207977295,64.41565036773682,61.92585515975952,71.03515625,52.93529926282582,94.78947368421052,96.0,2.6153297424316406,39.28464889526367
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>
+
+## file-26d0a1f2b636
+
+원래 경로: `esm2/reports/comparison_20261027_164300_125163.csv` · SHA256: `61ab3ba1b81b8c0e2e194220d28279ec67d2318ed90d233d440feb1516825d4d`
+
+<details>
+<summary>comparison_20261027_164300_125163.csv — 원문 전문</summary>
+
+
+<!-- RESTORE_FILE {"path": "esm2/reports/comparison_20261027_164300_125163.csv", "sha256": "61ab3ba1b81b8c0e2e194220d28279ec67d2318ed90d233d440feb1516825d4d", "encoding": "utf-8", "added_final_newline": false} -->
+```csv
+source_run,condition,mode,unique_inputs,processed_inputs,repeats,length_min,length_max,length_mean,preprocess_seconds,execution_seconds,save_seconds,wall_seconds,throughput_per_second,cuda_peak_allocated_gib,cuda_peak_reserved_gib,sample_count,gpu_util_mean_percent,gpu_util_max_percent,rss_sampled_peak_gib,system_available_min_gib,swap_max_bytes,warmup_processed_inputs_excluded,warmup_seconds,start_unix,end_unix,gpu_util_steady_mean_percent
+20261027_164300_125163,count_32,inference,32,96,3,82,882,328.28125,3.8608000068052206e-05,11.205480042999625,0.021143117000065104,11.828266100000292,8.567236712002702,2.9707107543945312,3.67578125,22,89.77272727272727,95.0,1.4554672241210938,108.8600845336914,0,,,,,
+20261027_164300_125163,count_96,inference,96,288,3,56,976,341.7291666666667,8.846399941830896e-05,29.959597646000475,0.01192132500000298,30.57410479600003,9.6129461884962,3.1279187202453613,5.205078125,60,89.36666666666666,95.0,1.2934799194335938,108.22518920898438,0,,,,,
+20261027_164300_125163,count_160,inference,160,480,3,56,976,340.81875,0.00013371099976211553,46.72091196299971,0.016007793999960995,47.33979576799993,10.273772061216025,3.1619272232055664,6.6640625,94,92.48936170212765,95.0,1.2962493896484375,106.81876754760742,0,,,,,
+20261027_164300_125163,length_50_128,inference,16,48,3,56,127,101.6875,4.5279000005393755e-05,1.3249328900001274,0.0015357080001194845,1.9286001030004627,36.22825002102211,2.7250828742980957,2.916015625,3,59.666666666666664,95.0,1.2929420471191406,110.7005386352539,0,,,,,
+20261027_164300_125163,length_129_256,inference,16,48,3,140,254,190.3125,2.433600002405001e-05,2.827822986000683,0.0015259959991453798,3.431386846999885,16.97418835536278,2.9040913581848145,3.09375,6,92.0,95.0,1.2929496765136719,110.51581192016602,0,,,,,
+20261027_164300_125163,length_257_512,inference,16,48,3,280,461,374.3125,3.591999939089874e-05,5.197873166998761,0.001749834000293049,5.80192793400056,9.234546218778762,2.910801410675049,3.1796875,10,85.9,95.0,1.2929458618164062,110.19292449951172,0,,,,,
+20261027_164300_125163,length_513_1022,inference,16,48,3,516,976,690.3125,2.9055999220872764e-05,10.936799915999472,0.0016570680008953786,11.540012006000325,4.388852348828351,3.214327812194824,4.20703125,21,89.80952380952381,96.0,1.2929458618164062,109.27872085571289,0,,,,,
+supplement_20261027_165443_595867,length_50_128,,16,640,40,56,127,101.6875,2.1456000467878766e-05,18.272624883999924,0.01051900799939176,18.989624247000393,35.02507188008899,2.712547779083252,2.900390625,36,93.55555555555556,95.0,2.9608612060546875,108.5966911315918,0,16,0.7018442979997417,1793087688.5050936,1793087706.7777197,93.375
+supplement_20261027_165443_595867,length_129_256,,16,640,40,140,254,190.3125,3.115199979220051e-05,39.685354104,0.0005904629997530719,40.688132433000646,16.12685622818955,2.904015064239502,3.08203125,79,92.62025316455696,95.0,2.9598312377929688,108.49358749389648,0,16,0.9875697120005498,1793087707.791398,1793087747.476754,92.52
+supplement_20261027_165443_595867,length_257_512,,16,640,40,280,461,374.3125,2.023999968514545e-05,71.06791400300062,0.0007539830003224779,72.94234706599946,9.00547045707544,2.9107728004455566,3.181640625,142,93.50704225352112,95.0,2.9587669372558594,108.261962890625,0,16,1.863492855000004,1793087749.3518374,1793087820.4197533,93.47826086956522
+supplement_20261027_165443_595867,length_513_1022,,16,640,40,516,976,690.3125,1.8624000404088292e-05,151.4294736689999,0.0005427360001704074,155.10540495900023,4.2263899126991324,3.214303970336914,4.208984375,303,94.1023102310231,95.0,2.9590415954589844,107.30615615844727,0,16,3.650796461999562,1793087824.0966692,1793087975.5261452,94.09030100334448
+```
+<!-- END_RESTORE_FILE -->
+
+
+</details>

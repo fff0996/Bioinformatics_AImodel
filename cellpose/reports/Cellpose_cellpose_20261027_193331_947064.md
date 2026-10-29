@@ -2,7 +2,7 @@
 
 > 최신 통합판: [기본·모든 후속 실험을 합친 최종 보고서](FINAL.md). 입력·추론·학습별 메모리와 80% 목표 상태는 최종 보고서 첫 표를 확인한다.
 
-실행: `cellpose_20261027_193331_947064`. 상태: **complete**. 원본 측정: [summary.json](../results/cellpose_20261027_193331_947064/summary.json), 로그 (로컬 보관: `../results/cellpose_20261027_193331_947064/run.log`), [자원 시계열](../results/cellpose_20261027_193331_947064/resources.csv), [실제 forward 입력](../results/cellpose_20261027_193331_947064/forward_calls.json).
+실행: `cellpose_20261027_193331_947064`. 상태: **complete**. 원본 측정: [summary.json](../results/cellpose_20261027_193331_947064/RECORDS.md#file-2e96f1dc76e2), 로그 (로컬 보관: `../results/cellpose_20261027_193331_947064/run.log`), [자원 시계열](../results/cellpose_20261027_193331_947064/RECORDS.md#file-7e3493105ec7), [실제 forward 입력](../results/cellpose_20261027_193331_947064/RECORDS.md#file-51657b33486d).
 
 ## 모델과 환경
 
@@ -26,7 +26,7 @@ Broad BBBC039v1 공개 CC0 데이터: U2OS 세포의 Hoechst DNA 채널, 200장,
 
 정답은 사람이 표시한 핵 instance PNG의 첫 채널을 공식 예제처럼 connected-component label로 변환했다. 0은 배경, 양의 정수는 개별 핵 ID이며 연속값 회귀 라벨이 아니다. 원본 영상·마스크 shape 일치, 유한값, 이미지 식별자 중복 및 split 분리를 확인했다. 전체200장에는 핵이 적은 영상도 있으나 선택한 학습16장은 모두 최소5개 기준을 충족한다.
 
-![실제 학습 영상과 정답](input_example.png)
+![실제 학습 영상과 정답](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/cellpose/reports/input_example.png)
 
 | split | 선택 장수 | 첫 원본 ID | shape | dtype | 핵 수 | 픽셀 범위 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Broad BBBC039v1 공개 CC0 데이터: U2OS 세포의 Hoechst DNA 채널, 200장,
 
 원본 2D grayscale은 실제 추론 forward에서 1채널로 유지된다(아래 실측 NCHW). 학습 API에서는 첫 채널 + 두 zero 채널로 변환된다. 1/99 percentile 정규화 후 float32 전처리, 추론 forward에서 BF16으로 변환한다. 학습은 영상과 flow label을 함께 random rotate/resize하여 실제 1×3×256×256 FP32 입력을 사용한다. 각 epoch마다 각 학습 이미지에서 crop을 하나 뽑는 정책이다.
 
-실제 전체 선택 목록·파일 해시·마스크 경로: [input_audit.json](../data/input_audit.json). BBBC039는 DSB2018과 일부 겹치며 사전학습 Cellpose 데이터와의 중복 여부를 확정하지 못했다. 본 test는 이번 파인튜닝에서만 분리한 평가이며, 사전학습까지 완전히 독립적인 외부 성능이라고 주장하지 않는다.
+실제 전체 선택 목록·파일 해시·마스크 경로: [input_audit.json](../data/RECORDS.md#file-4c66cd9b8b0d). BBBC039는 DSB2018과 일부 겹치며 사전학습 Cellpose 데이터와의 중복 여부를 확정하지 못했다. 본 test는 이번 파인튜닝에서만 분리한 평가이며, 사전학습까지 완전히 독립적인 외부 성능이라고 주장하지 않는다.
 
 ## 입력 규모에 따른 GPU 사용률과 메모리
 
@@ -82,9 +82,9 @@ AP는 Cellpose instance matching의 TP/(TP+FP+FN)을 이미지별 계산한 평�
 
 독립 새 프로세스 재로드 결과: {"checkpoint_sha256": "3acb3f69377a915bcd523e0eb5889b73674b8575a77d7c1e3c4a76c6ebfec360", "load_seconds": 1.168588638305664, "cellprob_max_abs_difference": 0.0, "flow_max_abs_difference": 0.0, "mask_exact_match": true, "independent_process": true, "shape": [520, 696], "passed": true}
 
-![평가 원본과 예측](prediction_example.png)
+![평가 원본과 예측](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/cellpose/reports/prediction_example.png)
 
-![학습과 검증 loss](training_loss.png)
+![학습과 검증 loss](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/cellpose/reports/training_loss.png)
 
 ## 재현과 한계
 

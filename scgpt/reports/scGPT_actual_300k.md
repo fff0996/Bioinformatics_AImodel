@@ -37,7 +37,7 @@ GPU에는 유전자 ID 배열과 대응 발현값 배열이 들어간다. batch2
 
 GPU 연산 사용률(예:95%)은 GPU 커널이 활동한 시간 비율이다. 메모리 비율은 여기서 CUDA allocated peak를 CPU/GPU 공유RAM121.688GiB로 나눈 참고값이다. 둘은 다른 지표이며 별도 전용VRAM 점유율로 해석하지 않는다. reserved는 allocator가 확보한 예약 공간으로 allocated와 구분한다.
 
-상태: **complete**. 실행 `actual_300k_resume_20261028_093701_696230`. [원본 summary](../results/actual_300k_resume_20261028_093701_696230/summary.json) · 입력 검사 (로컬 보관: `../data_external/tabula_sapiens/prepared_300k_seed42/input_audit.json`)
+상태: **complete**. 실행 `actual_300k_resume_20261028_093701_696230`. [원본 summary](../results/actual_300k_resume_20261028_093701_696230/RECORDS.md#file-7ffcf339190d) · 입력 검사 (로컬 보관: `../data_external/tabula_sapiens/prepared_300k_seed42/input_audit.json`)
 
 ## 실제 입력과 전처리
 
@@ -94,4 +94,4 @@ batch8은 전날10만+재개20만의 유효 처리시간 합이며 야간 중단
 |8|300000|2663.19|112.65|0.389|0.404|94.89/96|2|
 |256|300000|2628.60|114.13|5.477|21.475|95.10/96|1|
 
-[전체30만세포 출력 검증](../results/actual_300k_resume_20261028_093701_696230/final_output_verification.json): 각 조건300000×512, 전체finite·단위norm·세포별batch간cosine 검사 및 전날10만출력의 정확한 보존 확인. 새로운 GPU실험은 이어서 시작하지 않는다.
+[전체30만세포 출력 검증](../results/actual_300k_resume_20261028_093701_696230/RECORDS.md#file-ae261a5d4f78): 각 조건300000×512, 전체finite·단위norm·세포별batch간cosine 검사 및 전날10만출력의 정확한 보존 확인. 새로운 GPU실험은 이어서 시작하지 않는다.

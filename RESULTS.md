@@ -50,7 +50,7 @@ DNABERT-2의 기존 4,000bp 파인튜닝에서는 10.571 GiB(공유 RAM 대비 �
 
 JAX 메모리는 각 프로세스 시작 이후의 **누적 allocator peak**이며 입력별로 초기화하지 않았다. 단일체 3 recycles, 복합체 20 recycles의 별도 preset이며 BF16 계산·FP32 가중치 경로다.
 
-[상세 보고서](colabfold/reports/AlphaFold2_ColabFold.md) · [비교 CSV](colabfold/reports/comparison.csv)
+[상세 보고서](colabfold/reports/AlphaFold2_ColabFold.md) · [비교 CSV](colabfold/reports/RECORDS.md#file-2e1e35330a6c)
 
 ## DNABERT-2 기존 기록
 
@@ -90,7 +90,7 @@ JAX 메모리는 각 프로세스 시작 이후의 **누적 allocator peak**이�
 
 Status: complete. BF16 inference / official FP32 fine-tuning, fixed tile policy. Unique image counts exclude measurement repeats. Training utilization includes label preprocessing and validation.
 
-[Cellpose 상세 보고서](cellpose/reports/Cellpose.md) · [입력·정답 예시](cellpose/reports/input_example.png) · [비교 CSV](cellpose/reports/comparison.csv)
+[Cellpose 상세 보고서](cellpose/reports/Cellpose.md) · [입력·정답 예시](https://raw.githubusercontent.com/fff0996/Bioinformatics_AImodel/49661373a7b790bbbbcce0d7ef8bf96b8ce83dbd/cellpose/reports/input_example.png) · [비교 CSV](cellpose/reports/RECORDS.md#file-d8da379c30cc)
 
 ## DNABERT-2 GPU 사용률 보완
 
@@ -109,13 +109,13 @@ Status: complete. BF16 inference / official FP32 fine-tuning, fixed tile policy.
 
 기존 학습 모델은 보존했다. 새 학습 행은128개16step 자원 probe이며, 원본1000개 학습 결과에 사용률을 소급해 붙인 값이 아니다.
 
-[DNABERT-2 보완 보고서](dnabert2/reports/DNABERT2.md) · [비교 CSV](dnabert2/reports/comparison.csv)
+[DNABERT-2 보완 보고서](dnabert2/reports/DNABERT2.md) · [비교 CSV](dnabert2/reports/RECORDS.md#file-acbefee1f605)
 
 ## scGPT 기존 완료 결과
 
 기본 추론·파인튜닝·저장·재로드·test·길이 비교 완료. test4,218세포 중 알려진 라벨4,213세포 기준 Accuracy 0.938, 학습13클래스 macroF1 0.535. GPU 개수/사용률 보완은 별도 후속 순서다.
 
-[저장 모델 test summary](scgpt/results/finetuned_test_20261023_034345_99523/summary.json) · [길이 비교 CSV](scgpt/results/length_compare_20261023_040313_501423/comparison.csv)
+[저장 모델 test summary](scgpt/results/finetuned_test_20261023_034345_99523/RECORDS.md#file-9cd02c9a4f70) · [길이 비교 CSV](scgpt/results/length_compare_20261023_040313_501423/RECORDS.md#file-d50c252c8230)
 
 ## Nucleotide Transformer V2
 
@@ -213,13 +213,13 @@ Status: complete. BF16 inference / official FP32 fine-tuning, fixed tile policy.
 
 새 프로세스 추론모델 적재 allocated 0.193183GiB; reserved 0.199GiB; RSS 1.153GiB. 기존기본/길이/test결과와분리해보완했다.
 
-[scGPT 상세 보고서](scgpt/reports/scGPT.md) · [보완 비교 CSV](scgpt/reports/comparison_supplement.csv)
+[scGPT 상세 보고서](scgpt/reports/scGPT.md) · [보완 비교 CSV](scgpt/reports/RECORDS.md#file-2388700259bf)
 
 ## 후속 메모리 확대 실험
 
 사용자가 batch를단계적으로늘려메모리80~90% 도달가능성과처리량을확인하는후속실험을추가했다. **후속 범위는 scGPT만이며, 실제 세포 실험은10만세포 완료 지점에서 사용자 승인으로 일시중단했다.** 위표는기본고정batch 실험/보완결과이며최대지원batch/최대점유한계가아니다. [후속메모리실험](MEMORY_RESULTS.md)
 
-[scVI 상세 보고서](scvi/reports/scVI.md) · [실제 학습 입력 예](scvi/reports/training_input_example.csv)
+[scVI 상세 보고서](scvi/reports/scVI.md) · [실제 학습 입력 예](scvi/reports/RECORDS.md#file-e9267afe1b49)
 
 [전체 진행 상태](STATUS.md)
 
