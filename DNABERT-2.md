@@ -25,6 +25,15 @@
 
 **용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
+### 모델 적재 직후 — 첫 입력 forward 이전
+
+|적재 조건|allocated GiB(JAX는별도표기)|reserved GiB|프로세스 RSS GiB|원본 근거|
+|---|---|---|---|---|
+|추론/기본 모델 적재 기준|0.436118|0.478515625|1.1075057983398438|dnabert2/results/real_input_capacity_20261102_151134_286605/batch_512/summary.json|
+|파인튜닝 적재 기준|0.436170|0.478515625|1.3778266906738281|dnabert2/results/real_input_capacity_20261102_151134_286605/full_training_b8/summary.json|
+
+위 값은 **가중치를 GPU에 적재하고 첫 입력을 계산하기 전의 프레임워크 할당량**이다. CUDA/JAX context·driver·시스템 전체 GPU사용량과 같지 않으며 CPU입력 준비 포함 여부는 해당 실행 코드를 따른다. **실행 peak와 모델 적재 기준값의 차이는 같은 run에서만 계산**한다. 파인튜닝 중 추가량에는 입력뿐 아니라 중간값·gradient·optimizer 상태가 포함된다. 서로 다른 조건/정밀도의 기준값을 하나의 모델 고유 메모리로 단정하지 않는다.
+
 ## 2. 실행 조건과 측정 기준
 
 표의실제batch·입력shape·정밀도·epoch/step를먼저확인한다. GPU-Util은연산활동시간비율이고,메모리목표80%는약97.35GiB allocated다. 모델별학습범위(전체/부분/head-only/처음부터학습/용량probe)를같은학습으로가정하지않는다. 같은run의시간·메모리를사용하고예측정확도가미평가이면그대로표시한다.
@@ -50,10 +59,14 @@
 |batch_640|추론(가중치 갱신 없음)|complete|640|640|N/A|N/A|58.0581|22.0469|74.8814|79.3848|61.5359|93.9320|96.0000|N/A|N/A|
 |batch_768|추론(가중치 갱신 없음)|complete|768|768|N/A|N/A|69.3502|22.1485|89.7596|95.1758|73.7624|92.8226|96.0000|N/A|N/A|
 |batch_8|추론(가중치 갱신 없음)|complete|8|8|N/A|N/A|15.1869|23.1779|1.4328|1.5137|1.1774|96.0000|96.0000|N/A|N/A|
+|full_training_b8|전체backbone·과제head 파인튜닝|complete|800|8|2|200|192.8934|8.2947|10.5546|11.6172|8.6735|95.5212|96.0000|{'micro_f1': 0.0}|True|
+|full_training_b80|전체backbone·과제head 파인튜닝|complete|800|80|2|20|185.9703|8.6035|91.7283|98.8477|75.3802|94.6149|96.0000|{'micro_f1': 0.0}|True|
 |probe_training_b32|전체backbone·과제head 파인튜닝 /용량측정|complete|96|32|0|3|12.5914|7.6243|37.4713|38.8203|30.7930|84.7727|96.0000|N/A|N/A|
 |probe_training_b48|전체backbone·과제head 파인튜닝 /용량측정|complete|144|48|0|3|18.8271|7.6485|55.5144|64.5625|45.6205|82.5294|96.0000|N/A|N/A|
 |probe_training_b64|전체backbone·과제head 파인튜닝 /용량측정|complete|192|64|0|3|24.5141|7.8322|73.4086|77.1094|60.3255|85.8605|96.0000|N/A|N/A|
+|probe_training_b72|전체backbone·과제head 파인튜닝 /용량측정|complete|216|72|0|3|27.5430|7.8423|82.5223|96.6543|67.8149|84.4082|96.0000|N/A|N/A|
 |probe_training_b8|전체backbone·과제head 파인튜닝 /용량측정|complete|24|8|0|3|3.7625|6.3787|10.4784|11.0977|8.6109|61.4286|96.0000|N/A|N/A|
+|probe_training_b80|전체backbone·과제head 파인튜닝 /용량측정|complete|240|80|0|3|29.8416|8.0425|91.6481|98.8477|75.3143|86.3654|96.0000|N/A|N/A|
 
 이 run의 추론 capacity 실험과 지도학습 실험은 입력 과제·길이·학습 헤드가 다를 수 있어 각각 비교한다. 3step probe는 전체 학습이 아니다. full_training은 동일한 공개 초기 backbone와 seed42,FP32,AdamW(lr1e-5,weight_decay0.01),고정 전체 split pool padding으로2epoch 수행한다. 각 학습 조건의 원본 summary에 split ID,실제 길이·padding 모양,사용 헤드·학습 범위,라벨,gradient가 관측된 파라미터 수,검증/test지표,저장 모델 재로드 차이를 기록한다. scVI는 아래 설명이 적용되지 않는 별도 처음부터 학습 모델이며 AF2·Clair3에는 이 공통 학습 절차를 적용하지 않는다.
 
@@ -67,12 +80,16 @@
 |batch_640|{'input_ids': [640, 851], 'attention_mask': [640, 851]}|0.4361|0.4997|74.3817|1.5708|32.9207|
 |batch_768|{'input_ids': [768, 851], 'attention_mask': [768, 851]}|0.4361|0.4997|89.2599|1.5745|16.8811|
 |batch_8|{'input_ids': [8, 851], 'attention_mask': [8, 851]}|0.4361|0.5006|0.9322|1.8365|111.0657|
+|full_training_b8|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|10.1184|1.7937|100.9417|
+|full_training_b80|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|91.2921|1.7790|12.9846|
 |probe_training_b32|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|37.0351|1.7619|73.2936|
 |probe_training_b48|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|55.0783|1.7637|47.3940|
 |probe_training_b64|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|72.9724|1.7665|34.4675|
+|probe_training_b72|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|82.0862|1.7840|14.7178|
 |probe_training_b8|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|10.0422|1.7878|101.3891|
+|probe_training_b80|{'input_ids': [1000, 851], 'attention_mask': [1000, 851]}|0.4362|0.4362|91.2120|1.7827|12.6833|
 
-실행 상태: `running`; 중단/관측 범위: `해당 조건별 상태 참조`.
+실행 상태: `stopped`; 중단/관측 범위: `actual_worker_error_or_guard`.
 
 실행 코드 블록의 파일은 원문SHA256으로 검증하며, 명령JSON에 기록된 실행 경로로 해당 snapshot을 복사하면 복원할 수 있다. 대용량 원본 데이터·가중치는 아래 전처리/다운로드 코드와 출처를 사용하고 로컬 원본도 보존한다.
 
@@ -86,7 +103,7 @@
 
 - **학습 방식:** 공개encoder+linear 다중라벨head 전체 파인튜닝. 사용하지 않는pooler 등 분기와 실제gradient 수는 별도 기록.
 - **입력 구분:** 추가800/100/100은 기존train 내부 분할이며 원래 독립test 결과를 대체하지 않음. 염색체독립 검증 아님.
-- **최신 추가 run 최대 성공 메모리:** `batch_768` **89.760GiB /73.76%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
+- **최신 추가 run 최대 성공 메모리:** `full_training_b80` **91.728GiB /75.38%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
 - **시간·정확도 해석:** 결과는 같은 행의 입력·배치·학습범위에만 연결한다. 메모리 상승 자체가 처리량·정확도 상승을 보장하지 않는다.
 <!-- MODEL_SUMMARY_END -->
 
@@ -3653,6 +3670,210 @@ for model,filename in mapping.items():
 # Keep the model/input/learning-scope overview consistent as every new run finishes.
 import subprocess,sys
 subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/standardize_overview.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: full_training_b80_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "dnabert2/results/real_input_capacity_20261102_151134_286605/full_training_b80_command.json", "sha256": "70737b02761e468c88d3e0d12b1d1ca582742166a2781e40405928c7b3c3509e", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/dnabert2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-v",
+  "/home/hyein/dnabert2-benchmark:/workspace:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_151134_286605",
+  "-e",
+  "MODEL_KIND=dnabert2",
+  "-e",
+  "BATCH=80",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/workspace/miniforge/envs/dnabert2/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: full_training_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "dnabert2/results/real_input_capacity_20261102_151134_286605/full_training_b8_command.json", "sha256": "b94c087512eaad300fe1ede818899a7843fbabaf422dcd3dacbc66d6a26c58ce", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/dnabert2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-v",
+  "/home/hyein/dnabert2-benchmark:/workspace:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_151134_286605",
+  "-e",
+  "MODEL_KIND=dnabert2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/workspace/miniforge/envs/dnabert2/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b80_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "dnabert2/results/real_input_capacity_20261102_151134_286605/training_probe_b80_command.json", "sha256": "04f3e1470a9ab46956f703bf3dca7e7c3c4f138766231ceeaf0e893bc2a85554", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/dnabert2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-v",
+  "/home/hyein/dnabert2-benchmark:/workspace:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_151134_286605",
+  "-e",
+  "MODEL_KIND=dnabert2",
+  "-e",
+  "BATCH=80",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/workspace/miniforge/envs/dnabert2/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b88_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "dnabert2/results/real_input_capacity_20261102_151134_286605/training_probe_b88_command.json", "sha256": "61aed6d90fa5fdeb87ed2853c76d3a26174ffdf5c95fa48b14f497823946aee2", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/dnabert2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-v",
+  "/home/hyein/dnabert2-benchmark:/workspace:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_151134_286605",
+  "-e",
+  "MODEL_KIND=dnabert2",
+  "-e",
+  "BATCH=88",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/workspace/miniforge/envs/dnabert2/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
 ```
 <!-- END_RESTORE_FILE -->
 
