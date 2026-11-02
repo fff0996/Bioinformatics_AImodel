@@ -2,9 +2,28 @@
 
 ## 1. 모델과 실제 입력
 
-이미지 → 핵/세포별 instance mask. cpsam_v2(약304.6M),영상개수와동시GPU타일개수를구분한다.
+|항목|이번 실험에서 사용한 모델|
+|---|---|
+|체크포인트·버전|Cellpose4.2.1,cpsam_v2（Cellpose-SAM）|
+|구조|SAM ViT-L 기반 이미지 분할|
+|전체·구성별 파라미터 수|304,628,930개(304.63M)|
+|정밀도|추론BF16;파인튜닝FP32|
+|모델 입력 → 출력|흑백 이미지 →핵/세포별 서로 다른ID의 instance mask|
+|가중치와 실행 메모리의 차이|파라미터 수×dtype bytes는 이론 가중치 용량이다. 실행 peak에는 입력·중간 활성값이 더해지고,파인튜닝에는 gradient/optimizer 상태도 추가된다.|
+|메모리% 정의|CUDA allocated peak / CPU·GPU 공유 RAM121.6875GiB ×100; GPU-Util과 별개. AlphaFold2는 JAX 계측을 별도로 표시|
 
-실제파일·입력/정답예시·전처리와모델구조설명은이문서5절에전문을포함했다. 추론데이터와지도학습label을구분하며,세포/유전자·서열/토큰·이미지/타일의단위를섞지않는다.
+### 실제 데이터와 학습 방식 구분
+
+|구분|데이터·실제 처리 내용|
+|---|---|
+|추론 데이터|BBBC039200장520×696 uint16 핵 형광 이미지. 뇌 추가 입력은 NucMM-M192³ micro-CT patch4개|
+|학습·검증·test 데이터|BBBC039 공식100/50/50;기본부분집합16/8/16. 추가 학습은 빈mask2장 제외 후 train98/validation50/test50|
+|학습 입력 X / 정답 y|X:원본520×696에서 공식 무작위crop[B,3,256,256](흑백+0채널2개). y:같은 crop에 맞춰 변환한 instance mask·cell probability·flow. 세포유형 정답 아님|
+|가중치 갱신 방식|cpsam_v2 사전학습 가중치에서 backbone·분할출력층 파인튜닝. 실제 일부 파라미터는 gradient가 관측되지 않아 수를 별도 기록|
+|원본·변환 입력 저장 위치|`data/input_audit.json;data/images/images/*.tif;data/masks/masks/*.png;추가run/prepared/*_mask.npy`|
+|해석 범위|batch26은2epoch 파인튜닝 용량 측정;전체10epoch 독립test·재로드 완료는batch1. 뇌patch는zero-shot 추론만 수행|
+
+**용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
 ## 2. 실행 조건과 측정 기준
 
@@ -24,13 +43,73 @@ BBBC039는실제U2OS핵형광이미지이고,NucMM-M은생쥐뇌조직micro-CT�
 |뇌 micro-CT 2D 전체분할|4개val volume의중앙단면4장,각192×192|요청tilebatch8; 실제tilebatch1,1×1×256×256,BF16|59회반복/총236장|15.18초|15.54장/초|0.705 GiB / 0.58%|동일4단면 AP50 0.4407; 80%미도달|
 |뇌 micro-CT 3D 전체분할|4개실제val patch,각192×192×192복셀; 원본총768슬라이스|tilebatch8,8×1×256×256,BF16|각volume1회|114.89초(4개합)|0.0348volume/초|1.491 GiB / 1.23%|동일4volume 3D AP50 0.4222; 80%미도달|
 
-## 4. 결과 해석
+|학습 용량probe(추가)|실제학습98장;256×256 crop|**26×3×256×256,FP32**|**2epoch/8steps**,196crop|**92.34초**|**2.12crop/초**|**90.520GiB / 74.39%**|짧은용량측정 성공; 이 조건의독립test미평가;80%미도달|
+|전체 파인튜닝(추가)|train98/validation50/test50장|**1×3×256×256,FP32**|**10epoch/980steps**,980crop|**474.47초**|**2.07crop/초**|**7.985GiB / 6.56%**|독립test50장 AP50 **0.9278**; 저장모델재로드 동일|
+|학습 용량probe 실패(추가)|같은 실제학습 이미지|28×3×256×256,FP32|2epoch예정,도중중단|완료시간/처리량N/A|N/A|성공peak로집계하지않음|**100GiB allocator 예산에서 OOM**;80% 성공을뜻하지않음|
 
-- 동일256타일·BF16 network경로에서batch8→384는1.491→43.397GiB로메모리가늘었지만처리량은18.53→18.55타일/초로거의같았다.
-- 원본520×696이미지1장은12타일이다. batch384는원본384장이아니라32장분량의384타일을동시에계산한조건이다.
-- 학습은FP32·gradient/optimizer·증강을포함해추론과다르다. 기존batch1 학습7.985GiB만으로큰batch의학습한계를판정할수없고,학습batch확대는아직완료하지않았다.
-- 뇌영상은192³의작은조직patch4개이지5000건의뇌MRI나전체뇌가아니다. 3D AP50평균0.422로추가학습·검증없이자동라벨의정확성을보장하지않는다.
-- 80%목표조건은현재미확인이다. 이전batch576은예상guard로건너뛴것이고실제실패나불가능증명이아니다.
+<!-- REAL_TRAINING_V3_START -->
+### 실제 데이터 추가 실험 — real_training_20261029_174605_142266
+
+진행 중인 실행의 완료 조건만 아래에 갱신한다. probe는 짧은 용량 측정이며 전체 학습이나 평가 완료가 아니다. 메모리%는 CUDA allocated peak / 시스템 공유 RAM ×100이며 GPU-Util과 다르다. 독립 실행 1회 기준.
+
+|조건|가중치 갱신 방식·실험 목적|상태|고유 입력|배치|epoch|optimizer steps|실측 시간(s)|입력/s|allocated peak GiB|reserved peak GiB|공유 RAM 대비 allocated %|GPU-Util 평균%|최대%|독립 test 지표|저장 모델 재로드|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|probe_b12_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|12|2|18|90.5178|2.1653|44.1138|46.0586|36.2517|82.6727|96.0000|N/A|N/A|
+|probe_b16_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|16|2|14|91.7579|2.1361|57.2769|58.9902|47.0688|81.2695|96.0000|N/A|N/A|
+|probe_b18_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|18|2|12|92.5409|2.1180|63.8616|67.4062|52.4800|80.9042|96.0000|N/A|N/A|
+|probe_b1_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|1|2|196|108.6468|1.8040|7.9846|8.0938|6.5616|84.7107|96.0000|N/A|N/A|
+|probe_b20_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|20|2|10|92.4709|2.1196|70.4477|73.4473|57.8923|79.7048|96.0000|N/A|N/A|
+|probe_b22_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|22|2|10|92.3895|2.1215|77.1343|80.6719|63.3872|80.6121|96.0000|N/A|N/A|
+|probe_b24_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|24|2|10|92.0595|2.1291|83.8269|87.8906|68.8870|79.8659|96.0000|N/A|N/A|
+|probe_b26_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|26|2|8|92.3424|2.1225|90.5200|93.4883|74.3873|79.4606|96.0000|N/A|N/A|
+|probe_b4_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|4|2|50|93.9772|2.0856|17.7814|18.3145|14.6123|82.2339|96.0000|N/A|N/A|
+|probe_b8_e2|본체·분할출력층 파인튜닝 /용량측정|complete|98|8|2|26|92.4495|2.1201|30.9439|32.0840|25.4290|82.8988|96.0000|N/A|N/A|
+|train_b1_e10|본체·분할출력층 파인튜닝|complete|98|1|10|980|474.4733|2.0654|7.9846|8.0938|6.5616|93.3083|96.0000|{'AP50_AP75_AP90': [0.9277853965759277, 0.8650861382484436, 0.6368995904922485]}|True|
+
+BBBC039 원본 이미지 단위 공식 분리100train/50validation/50test를 확인했다. 학습100장 중 정답 객체가 없는2장은 공식 min_train_masks5 정책으로 제외하여 실제 학습98장이다. 검증50장에는 빈 마스크1장이 있으며 test는50장이다. 원본520×696 uint16 grayscale와 정답 instance mask를 공식256×256 무작위 crop/회전/크기 증강으로 학습한다. FP32,AdamW,lr1e-5,weight_decay0.1,seed42 고정. 네트워크 입력은[B,3,256,256]이며 grayscale 외 두 채널은0이다. 공식 warmup의 epoch0 학습률0이므로 probe도2epoch 실행하고 실제 가중치 변화를 확인한다. 전체 학습 비교는10epoch이고 독립 test50장의 AP50/AP75/AP90이다. CUDA allocator budget100GiB로 캐시 예약이 공유 RAM을 잠식하는 것을 제한한 별도 정책이며 모든 배치에서 동일하다. 학습 시간에는 전처리/검증/체크포인트 저장이 포함된다. flow 준비는 별도 실행으로 재사용한다.
+
+입력 및 메모리 기준값(같은 실행에서 측정):
+
+|조건|실제 모델 입력 모양/정책|모델 적재 직후 allocated GiB|실행 시작 allocated GiB|peak 추가 allocated GiB|프로세스 RSS sampled peak GiB|시스템 가용 RAM sampled 최소 GiB|
+|---|---|---|---|---|---|---|
+|probe_b12_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|42.9790|4.7813|62.9792|
+|probe_b16_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|56.1420|4.8624|49.7959|
+|probe_b18_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|62.7267|4.7822|41.1127|
+|probe_b1_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|6.8498|4.7811|101.5013|
+|probe_b20_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|69.3129|4.7827|35.0286|
+|probe_b22_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|75.9994|4.7826|27.7193|
+|probe_b24_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|82.6921|4.7808|20.4540|
+|probe_b26_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|89.3852|4.7793|14.8376|
+|probe_b4_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|16.6465|4.7825|91.0841|
+|probe_b8_e2|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|29.8091|4.7824|77.1176|
+|train_b1_e10|[batch,3,256,256] official grayscale+two zero channels, original images520x696|1.1348|1.1348|6.8498|4.7627|101.3434|
+
+이 Cellpose run은 학습·test 평가·저장 모델 재로드가 완료됐다. 용량probe는 배치26까지90.5200GiB(공유 RAM74.39%) 성공,배치28은100GiB allocator budget에서OOM이 발생해 종료했다. 전체10epoch 학습은 배치1만 수행했으며 80% 학습 조건은 확인되지 않았다.
+
+실행 코드 블록의 파일은 원문SHA256으로 검증하며, 명령JSON에 기록된 실행 경로로 해당 snapshot을 복사하면 복원할 수 있다. 대용량 원본 데이터·가중치는 아래 전처리/다운로드 코드와 출처를 사용하고 로컬 원본도 보존한다.
+
+로컬 원시 결과: `/home/hyein/ai-benchmark/cellpose/results/real_training_20261029_174605_142266`. 메모리 부족/guard 실패는 성공 조건으로 기재하지 않는다.
+<!-- REAL_TRAINING_V3_END -->
+
+## 4. 결과 해석 — 요약 결론
+
+<!-- MODEL_SUMMARY_START -->
+### 요약 결론
+
+- **학습 방식:** cpsam_v2 사전학습 가중치에서 backbone·분할출력층 파인튜닝. 실제 일부 파라미터는 gradient가 관측되지 않아 수를 별도 기록.
+- **입력 구분:** batch26은2epoch 파인튜닝 용량 측정;전체10epoch 독립test·재로드 완료는batch1. 뇌patch는zero-shot 추론만 수행.
+- **최신 추가 run 최대 성공 메모리:** `probe_b26_e2` **90.520GiB /74.39%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
+- **전체 실험 구분:** 추론 타일batch384는43.397GiB/35.66%;FP32 파인튜닝 용량probe batch26은90.520GiB/74.39%. 전체10epoch·test평가·재로드는batch1에서 완료(AP50=0.9278). batch28은100GiB allocator 예산에서OOM;80% 성공은 미확인.
+- **시간·정확도 해석:** 결과는 같은 행의 입력·배치·학습범위에만 연결한다. 메모리 상승 자체가 처리량·정확도 상승을 보장하지 않는다.
+<!-- MODEL_SUMMARY_END -->
+
+**이번 Cellpose 전체 실험의 최대 성공 allocated는90.520GiB(공유 RAM의74.39%)다.35.66%는 추론 타일배치384 조건의 값이며 전체 실험의 최대가 아니다.**
+
+- **추론:** BF16,256×256 tile **batch384**에서 **43.397GiB /35.66%**. 원본520×696 이미지32장분량의384타일을 함께 처리했다. batch8→384에서 메모리는 크게 늘었지만 처리량은 **18.53→18.55타일/초**로 거의 같았다.
+- **학습 용량:** FP32,256×256 crop **batch26**,실제98장으로 **2epoch/8steps**를 수행해 **90.520GiB /74.39%**까지 확인했다. batch28은 **100GiB allocator 예산에서 OOM**이 발생했다. 이는 이 설정에서의 결과이며 Cellpose의 절대적인 최대 배치나 물리 메모리 한계를 뜻하지 않는다. **80% 성공 조건은 미확인**이다.
+- **전체 학습·정확도:** 같은 실제98장으로 **batch1,10epoch** 학습은 **474.47초**,최대 **7.985GiB /6.56%**였고,독립test50장 **AP50=0.9278**과 저장모델 재로드를 검증했다. **batch26으로 전체10epoch 학습·test평가를 마친 것은 아니다.**
+- **메모리 증가 요인:** 모델 가중치 자체는 FP32 약1.135GiB다. 학습 시 동시 crop 수가 늘면서 중간 활성값과 역전파용 저장값이 커져 메모리가 증가했다. 원본 이미지 총수를 늘리는 것과 동시에GPU에 올리는 tile/crop 배치를 늘리는 것은 다르다.
+- **뇌 데이터 범위:**192³ micro-CT patch4개에 대한 zero-shot 추론이며 전체뇌/MRI5000건 학습이 아니다. 해당3D AP50평균은0.4222로,뇌 데이터의 추가학습 성능을 입증하지 않는다.
 
 ### 시간·성능 표를 읽는 주의점
 
@@ -4516,3 +4595,701 @@ if args.write:
 print(json.dumps({'verified_embedded_blocks':blocks,'restorable_original_paths':len(files),'restored':args.write},ensure_ascii=False))
 
 ```
+
+<details><summary>추가 실험 실행 원문: prepare_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174107_876164/prepare_executed_source.py", "sha256": "9f012fb1ecb5472bcf7b2814da8c87de8d03d1cb4a9d852e21e03bfc9951215f", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,time,json,random,gc,hashlib
+import numpy as np, torch,tifffile
+from skimage.measure import label
+from skimage.io import imread
+from cellpose import models,train,dynamics,metrics
+sys.path.insert(0,'/shared');from gpu_support import Meter,write_json
+R=Path('/work');D=R/'results'/os.environ['RUN_ID'];B=int(os.environ.get('BATCH','1'));E=int(os.environ.get('EPOCHS','2'));mode=os.environ.get('MODE','train');C=D/(mode if mode=='prepare' else f'{mode}_b{B}_e{E}');C.mkdir();meter=Meter(C);S={'status':'running','batch':B,'epochs':E,'mode':mode,'seed':42,'split':'original BBBC039 100train/50validation/50test, whole original images','allocator_budget_gib':100,'sample_interval_seconds':.5}
+def dump():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.cuda.manual_seed_all(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
+ torch.cuda.init();fraction=min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory);torch.cuda.set_per_process_memory_fraction(fraction);S['allocator_fraction_device_total']=fraction
+ rows=json.loads((R/'data/input_audit.json').read_text())['all'];groups={s:[r for r in rows if r['split']==s] for s in ['training','validation','test']};S['split_ids']={s:[r['id'] for r in rs] for s,rs in groups.items()};S['source_count']={s:len(rs) for s,rs in groups.items()};assert [len(groups[s]) for s in groups]==[100,50,50]
+ F=D/'prepared';F.mkdir(exist_ok=True)
+ if mode=='prepare':
+  t,base=meter.begin('label_flow_preparation');audit=[]
+  for r in rows:
+   im=tifffile.imread(R/r['image']);raw=imread(R/r['source_mask']);mask=label(raw[:,:,0],background=0).astype('int32');assert im.shape==mask.shape==(520,696);assert mask.max()>=5
+   np.save(F/(r['id']+'_mask.npy'),mask)
+   if r['split']!='test':flow=dynamics.labels_to_flows([mask],device=torch.device('cuda'))[0];np.save(F/(r['id']+'_flow.npy'),flow)
+   audit.append({'id':r['id'],'split':r['split'],'image_shape':list(im.shape),'image_dtype':str(im.dtype),'mask_instances':int(mask.max()),'mask_source':r['source_mask']})
+  S['preparation']=meter.end(t,base);write_json(F/'audit.json',audit);S['status']='complete';dump();sys.exit(0)
+ data={s:[tifffile.imread(R/r['image']) for r in rs] for s,rs in groups.items()};gt={s:[np.load(F/(r['id']+'_mask.npy')) for r in rs] for s,rs in groups.items()};flow={s:[np.load(F/(r['id']+'_flow.npy')) for r in groups[s]] for s in ['training','validation']}
+ model=models.CellposeModel(gpu=True,pretrained_model=str(R/'models/cpsam_v2'),use_bfloat16=False);torch.cuda.synchronize();S['model_postload']=meter.memory();S['parameters']=sum(p.numel() for p in model.net.parameters());S['precision']='FP32 weights/training/evaluation';S['training_input']='[batch,3,256,256] official grayscale+two zero channels, original images520x696'
+ name='encoder.blocks.0.attn.qkv.weight';before=dict(model.net.named_parameters())[name].detach().cpu().clone();shapes=[];step_times=[];starts=[];oldforward=model.net.forward;oldstep=torch.optim.AdamW.step
+ def forward(x,*a,**kw):
+  if model.net.training:torch.cuda.synchronize();starts.append(time.time());shapes.append(list(x.shape))
+  return oldforward(x,*a,**kw)
+ def step(opt,*a,**kw):
+  y=oldstep(opt,*a,**kw);torch.cuda.synchronize();step_times.append(time.time()-starts[-1]);print('STEP',len(step_times),'shape',shapes[-1],'sec',step_times[-1],flush=True);return y
+ model.net.forward=forward;torch.optim.AdamW.step=step
+ t,base=meter.begin('actual_training');path,loss,vloss=train.train_seg(model.net,train_data=data['training'],train_labels=flow['training'],test_data=data['validation'],test_labels=flow['validation'],batch_size=B,learning_rate=1e-5,n_epochs=E,weight_decay=.1,save_path=str(C),save_every=E,rescale=False,scale_range=.5,bsize=256,min_train_masks=5,model_name='cpsam_v2_full_bbbc039');S['training']=meter.end(t,base);S['training'].update(steps=len(step_times),unique_train_images=100,processed_training_crops=sum(s[0] for s in shapes),forward_backward_optimizer_seconds=sum(step_times),step_shapes=shapes,losses=loss.tolist(),validation_losses=vloss.tolist(),allocated_fraction_shared_ram=S['training']['memory']['peak_allocated_gib']/S['training']['memory']['system_total_gib']);S['training']['crops_per_second_trainer_scope']=sum(s[0] for s in shapes)/S['training']['seconds'];S['checkpoint']=str(path);S['checkpoint_sha256']=hashlib.file_digest(open(path,'rb'),'sha256').hexdigest();S['weight_change_max_abs']=float((dict(model.net.named_parameters())[name].detach().cpu()-before).abs().max());assert S['weight_change_max_abs']>0 and np.isfinite(loss).all();model.net.forward=oldforward;torch.optim.AdamW.step=oldstep;dump();gc.collect();torch.cuda.empty_cache()
+ if mode=='train':
+  t,base=meter.begin('heldout_original_test_50');pred,flows,styles=model.eval(data['test'],batch_size=8,bsize=256,tile_overlap=.1,augment=False,normalize=True,flow_threshold=.4,cellprob_threshold=0.,min_size=15,max_size_fraction=.4);S['test']=meter.end(t,base);ap,tp,fp,fn=metrics.average_precision(gt['test'],pred,threshold=[.5,.75,.9]);S['test']['AP50_AP75_AP90']=ap.mean(0).tolist();S['test']['unique_images']=50;np.savez_compressed(C/'test_masks.npz',**{str(i):m for i,m in enumerate(pred)});ref=np.asarray(flows[0][2]);del model;gc.collect();torch.cuda.empty_cache();model=models.CellposeModel(gpu=True,pretrained_model=str(path),use_bfloat16=False);pr,fl,st=model.eval(data['test'][:1],batch_size=8,bsize=256,tile_overlap=.1,augment=False,normalize=True,flow_threshold=.4,cellprob_threshold=0.,min_size=15,max_size_fraction=.4);S['reload_max_abs_cellprob']=float(np.max(np.abs(fl[0][2]-ref)));S['reload_mask_equal']=bool(np.array_equal(pr[0],pred[0]));assert S['reload_mask_equal'] and S['reload_max_abs_cellprob']<1e-5
+ S['status']='complete';dump();print('COMPLETE',json.dumps(S['training']),flush=True)
+except BaseException as e:
+ if not isinstance(e,SystemExit):S['status']='failed';S['error']=repr(e);dump()
+ raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: prepare_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174107_876164/prepare_command.json", "sha256": "8b4e44cfb907d7e361df30e82d6e883707e8da03db8f848a19b7e7d454af5387", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174107_876164",
+  "-e",
+  "BATCH=1",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=prepare",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: prepare_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/prepare_executed_source.py", "sha256": "e97c35d8f27555cfe23a92069fa5d787fdcc512f418416f9dd4706e85ff47ebb", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,time,json,random,gc,hashlib
+import numpy as np, torch,tifffile
+from skimage.measure import label
+from skimage.io import imread
+from cellpose import models,train,dynamics,metrics
+sys.path.insert(0,'/shared');from gpu_support import Meter,write_json
+R=Path('/work');D=R/'results'/os.environ['RUN_ID'];B=int(os.environ.get('BATCH','1'));E=int(os.environ.get('EPOCHS','2'));mode=os.environ.get('MODE','train');C=D/(mode if mode=='prepare' else f'{mode}_b{B}_e{E}');C.mkdir();meter=Meter(C);S={'status':'running','batch':B,'epochs':E,'mode':mode,'seed':42,'split':'original BBBC039 100train/50validation/50test; official min_train_masks5 excludes2 empty training images; actual train98, validation50 incl1empty, test50','allocator_budget_gib':100,'sample_interval_seconds':.5}
+def dump():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.cuda.manual_seed_all(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
+ torch.cuda.init();fraction=min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory);torch.cuda.set_per_process_memory_fraction(fraction);S['allocator_fraction_device_total']=fraction
+ rows=json.loads((R/'data/input_audit.json').read_text())['all'];groups={s:[r for r in rows if r['split']==s] for s in ['training','validation','test']};S['split_ids']={s:[r['id'] for r in rs] for s,rs in groups.items()};S['source_count']={s:len(rs) for s,rs in groups.items()};assert [len(groups[s]) for s in groups]==[100,50,50]
+ F=D/'prepared';F.mkdir(exist_ok=True)
+ if mode=='prepare':
+  t,base=meter.begin('label_flow_preparation');audit=[]
+  for r in rows:
+   im=tifffile.imread(R/r['image']);raw=imread(R/r['source_mask']);mask=label(raw[:,:,0],background=0).astype('int32');assert im.shape==mask.shape==(520,696)
+   np.save(F/(r['id']+'_mask.npy'),mask)
+   if r['split']!='test':flow=dynamics.labels_to_flows([mask],device=torch.device('cuda'))[0] if mask.max()>0 else np.zeros((4,*mask.shape),dtype=np.float32);np.save(F/(r['id']+'_flow.npy'),flow)
+   audit.append({'id':r['id'],'split':r['split'],'image_shape':list(im.shape),'image_dtype':str(im.dtype),'mask_instances':int(mask.max()),'mask_source':r['source_mask']})
+  S['preparation']=meter.end(t,base);write_json(F/'audit.json',audit);S['status']='complete';dump();sys.exit(0)
+ data={s:[tifffile.imread(R/r['image']) for r in rs] for s,rs in groups.items()};gt={s:[np.load(F/(r['id']+'_mask.npy')) for r in rs] for s,rs in groups.items()};flow={s:[np.load(F/(r['id']+'_flow.npy')) for r in groups[s]] for s in ['training','validation']}
+ model=models.CellposeModel(gpu=True,pretrained_model=str(R/'models/cpsam_v2'),use_bfloat16=False);torch.cuda.synchronize();S['model_postload']=meter.memory();S['parameters']=sum(p.numel() for p in model.net.parameters());S['precision']='FP32 weights/training/evaluation';S['training_input']='[batch,3,256,256] official grayscale+two zero channels, original images520x696'
+ name='encoder.blocks.0.attn.qkv.weight';before=dict(model.net.named_parameters())[name].detach().cpu().clone();shapes=[];step_times=[];starts=[];oldforward=model.net.forward;oldstep=torch.optim.AdamW.step
+ def forward(x,*a,**kw):
+  if model.net.training:torch.cuda.synchronize();starts.append(time.time());shapes.append(list(x.shape))
+  return oldforward(x,*a,**kw)
+ def step(opt,*a,**kw):
+  y=oldstep(opt,*a,**kw);torch.cuda.synchronize();step_times.append(time.time()-starts[-1]);print('STEP',len(step_times),'shape',shapes[-1],'sec',step_times[-1],flush=True);return y
+ model.net.forward=forward;torch.optim.AdamW.step=step
+ t,base=meter.begin('actual_training');path,loss,vloss=train.train_seg(model.net,train_data=data['training'],train_labels=flow['training'],test_data=data['validation'],test_labels=flow['validation'],batch_size=B,learning_rate=1e-5,n_epochs=E,weight_decay=.1,save_path=str(C),save_every=E,rescale=False,scale_range=.5,bsize=256,min_train_masks=5,model_name='cpsam_v2_full_bbbc039');S['training']=meter.end(t,base);S['training'].update(steps=len(step_times),unique_train_images=sum(r['instances']>=5 for r in groups['training']),processed_training_crops=sum(s[0] for s in shapes),forward_backward_optimizer_seconds=sum(step_times),step_shapes=shapes,losses=loss.tolist(),validation_losses=vloss.tolist(),allocated_fraction_shared_ram=S['training']['memory']['peak_allocated_gib']/S['training']['memory']['system_total_gib']);S['training']['crops_per_second_trainer_scope']=sum(s[0] for s in shapes)/S['training']['seconds'];S['checkpoint']=str(path);S['checkpoint_sha256']=hashlib.file_digest(open(path,'rb'),'sha256').hexdigest();S['weight_change_max_abs']=float((dict(model.net.named_parameters())[name].detach().cpu()-before).abs().max());assert S['weight_change_max_abs']>0 and np.isfinite(loss).all();model.net.forward=oldforward;torch.optim.AdamW.step=oldstep;dump();gc.collect();torch.cuda.empty_cache()
+ if mode=='train':
+  t,base=meter.begin('heldout_original_test_50');pred,flows,styles=model.eval(data['test'],batch_size=8,bsize=256,tile_overlap=.1,augment=False,normalize=True,flow_threshold=.4,cellprob_threshold=0.,min_size=15,max_size_fraction=.4);S['test']=meter.end(t,base);ap,tp,fp,fn=metrics.average_precision(gt['test'],pred,threshold=[.5,.75,.9]);S['test']['AP50_AP75_AP90']=ap.mean(0).tolist();S['test']['unique_images']=50;np.savez_compressed(C/'test_masks.npz',**{str(i):m for i,m in enumerate(pred)});ref=np.asarray(flows[0][2]);del model;gc.collect();torch.cuda.empty_cache();model=models.CellposeModel(gpu=True,pretrained_model=str(path),use_bfloat16=False);pr,fl,st=model.eval(data['test'][:1],batch_size=8,bsize=256,tile_overlap=.1,augment=False,normalize=True,flow_threshold=.4,cellprob_threshold=0.,min_size=15,max_size_fraction=.4);S['reload_max_abs_cellprob']=float(np.max(np.abs(fl[0][2]-ref)));S['reload_mask_equal']=bool(np.array_equal(pr[0],pred[0]));assert S['reload_mask_equal'] and S['reload_max_abs_cellprob']<1e-5
+ S['status']='complete';dump();print('COMPLETE',json.dumps(S['training']),flush=True)
+except BaseException as e:
+ if not isinstance(e,SystemExit):S['status']='failed';S['error']=repr(e);dump()
+ raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: prepare_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/prepare_command.json", "sha256": "fbe1299739c8bc59c8e8cc761a18e3189b7878d0945fd96f53da24f66c90e64e", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=1",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=prepare",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b12_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b12_command.json", "sha256": "4e59e2895e5b27940a4f02ebc755d9bcaa4b6d16db3257c9dc4d1231b8db9835", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=12",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b16_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b16_command.json", "sha256": "e8ab9ef732d3d8a684173a8e8e30e877fe6b503a9f577658db10ef4d680ab1d7", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=16",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b18_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b18_command.json", "sha256": "5cfbdfb851e67f5c2a87c87e75b11c4492b3bfcb13de9100396bab6c27a25d90", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=18",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b1_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b1_command.json", "sha256": "1d8f3a8830b475b81a22c81b9d342b60627593d322788911aac0e655b1b2ba92", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=1",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b20_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b20_command.json", "sha256": "bc42749dee363717393b99d3a13beae5157840d8d928332aa14ab0e0f923a119", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=20",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b22_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b22_command.json", "sha256": "6e3c30092a9beaeffb5e8b5251681226fe32ef6fd789ee7ec1007205f582f6b6", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=22",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b24_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b24_command.json", "sha256": "736211e2eb549e236a90547f199b9a715ca05b02075c63552ce14ea438cb8564", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=24",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b26_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b26_command.json", "sha256": "618630ed959af43ca38b1aa4f65d4d33a97716282b0f73887f25e66d5d32b2f8", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=26",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b28_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b28_command.json", "sha256": "8727505abb76bb0d9e83254d4a2cf2880e607b6d5feb80e926f23e79b07b9e88", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=28",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b4_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b4_command.json", "sha256": "0a20f06477ed3448f56b427be37b8bbad5a617a60182b81230c619e94f4d0c06", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=4",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/probe_b8_command.json", "sha256": "84d0baf357aa04228b55c2daaa65c44e72994885a042cc7a708316bff47d5809", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: train_b1_e10_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "cellpose/results/real_training_20261029_174605_142266/train_b1_e10_command.json", "sha256": "4e1492e30cb623ab1ac7cd58da5d56ccb7d9a775ba1fd40c51adf7ebb0a5550e", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/cellpose:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/shared:ro",
+  "-e",
+  "RUN_ID=real_training_20261029_174605_142266",
+  "-e",
+  "BATCH=1",
+  "-e",
+  "EPOCHS=10",
+  "-e",
+  "MODE=train",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "CELLPOSE_LOCAL_MODELS_PATH=/work/models",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/work/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>

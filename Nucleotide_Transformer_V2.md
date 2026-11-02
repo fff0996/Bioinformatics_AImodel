@@ -2,9 +2,28 @@
 
 ## 1. 모델과 실제 입력
 
-DNA서열 → 주로6-mer 토큰 → 임베딩 또는enhancer 분류. 공개500M checkpoint.
+|항목|이번 실험에서 사용한 모델|
+|---|---|
+|체크포인트·버전|InstaDeepAI/nucleotide-transformer-v2-500m-multi-species|
+|구조|DNA6-mer 중심 tokenizer+ESM 구현 Transformer|
+|전체·구성별 파라미터 수|MLM498,345,436개(498.35M);embedding backbone493,084,113개;기본CLS분류구성494,135,763개|
+|정밀도|FP32|
+|모델 입력 → 출력|DNA →token 임베딩 /enhancer 이진분류|
+|가중치와 실행 메모리의 차이|파라미터 수×dtype bytes는 이론 가중치 용량이다. 실행 peak에는 입력·중간 활성값이 더해지고,파인튜닝에는 gradient/optimizer 상태도 추가된다.|
+|메모리% 정의|CUDA allocated peak / CPU·GPU 공유 RAM121.6875GiB ×100; GPU-Util과 별개. AlphaFold2는 JAX 계측을 별도로 표시|
 
-실제파일·입력/정답예시·전처리와모델구조설명은이문서5절에전문을포함했다. 추론데이터와지도학습label을구분하며,세포/유전자·서열/토큰·이미지/타일의단위를섞지않는다.
+### 실제 데이터와 학습 방식 구분
+
+|구분|데이터·실제 처리 내용|
+|---|---|
+|추론 데이터|GRCh38 실제긴구간. 추가추론:서로 겹치지 않는6000nt window1024개,약1001tokens|
+|학습·검증·test 데이터|실제enhancer 라벨 서열199–200nt. train512/validation128/test400|
+|학습 입력 X / 정답 y|X:token_ids/attention_mask[B,실제token길이]. y:[B]정수0/1. 긴6000nt 추론 window에는 이 enhancer 정답이 없음|
+|가중치 갱신 방식|기본:전체backbone+원생CLS MLP 파인튜닝. 추가:전체backbone+masked-mean linear head 파인튜닝,별도 조건|
+|원본·변환 입력 저장 위치|`data/inputs.json의 train/validation/test;data/real_training_v3/inference_inputs.json추론전용`|
+|해석 범위|긴 유전체 추론window와 짧은enhancer 학습 서열을 구분. 정확도는 해당 라벨·split에서만 평가|
+
+**용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
 ## 2. 실행 조건과 측정 기준
 
@@ -21,6 +40,14 @@ DNA서열 → 주로6-mer 토큰 → 임베딩 또는enhancer 분류. 공개500M
 |전체backbone 파인튜닝|실제enhancer train512/val128/test400;199~200nt|batch8,FP32|2epoch/128step|38.13초(학습구간합)|26.86서열/초|9.252 GiB / 7.60%|동일저장모델test 지표본문;80%미도달|
 
 ## 4. 결과 해석
+
+<!-- MODEL_SUMMARY_START -->
+### 요약 결론
+
+- **학습 방식:** 기본:전체backbone+원생CLS MLP 파인튜닝. 추가:전체backbone+masked-mean linear head 파인튜닝,별도 조건.
+- **입력 구분:** 긴 유전체 추론window와 짧은enhancer 학습 서열을 구분. 정확도는 해당 라벨·split에서만 평가.
+- **시간·정확도 해석:** 결과는 같은 행의 입력·배치·학습범위에만 연결한다. 메모리 상승 자체가 처리량·정확도 상승을 보장하지 않는다.
+<!-- MODEL_SUMMARY_END -->
 
 같은실행경로에서batch를늘린행끼리메모리와처리량을비교한다. 전체고유데이터수와반복처리건수는다르다. 추론·학습·후처리의측정시간범위가다르면단순속도순위로해석하지않는다. 현재80%에도달한조건을이모델에서확인한것은아니며데이터pool한계·예상guard와실제실패를구분해본문에남겼다. 위주표에는동일조건의시간·메모리만연결했고미실시평가를성능성공으로표현하지않는다.
 

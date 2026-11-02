@@ -2,9 +2,28 @@
 
 ## 1. 모델과 실제 입력
 
-세포×유전자발현 행렬 → 세포별유전자ID·발현bin값 → 임베딩/세포유형. batch는세포행수. 최대1200토큰은CLS+유전자+padding자리.
+|항목|이번 실험에서 사용한 모델|
+|---|---|
+|체크포인트·버전|scGPT whole-human,best_model.pt|
+|구조|Transformer12층,hidden512;geneID+expression bin embedding|
+|전체·구성별 파라미터 수|encoder50,278,400개(50.28M);기본추론구성51,856,898개;13클래스구성51,338,254개;161클래스구성은run참조|
+|정밀도|FP32|
+|모델 입력 → 출력|세포×유전자발현 →유전자token/bin →512차원임베딩 /세포유형분류|
+|가중치와 실행 메모리의 차이|파라미터 수×dtype bytes는 이론 가중치 용량이다. 실행 peak에는 입력·중간 활성값이 더해지고,파인튜닝에는 gradient/optimizer 상태도 추가된다.|
+|메모리% 정의|CUDA allocated peak / CPU·GPU 공유 RAM121.6875GiB ×100; GPU-Util과 별개. AlphaFold2는 JAX 계측을 별도로 표시|
 
-실제파일·입력/정답예시·전처리와모델구조설명은이문서5절에전문을포함했다. 추론데이터와지도학습label을구분하며,세포/유전자·서열/토큰·이미지/타일의단위를섞지않는다.
+### 실제 데이터와 학습 방식 구분
+
+|구분|데이터·실제 처리 내용|
+|---|---|
+|추론 데이터|pancreas테스트세포;Tabula Sapiens 실제고유30만세포embedding 추론. 전부미세조정한 것은 아님|
+|학습·검증·test 데이터|pancreas기본 train1000/val2120/test4218;전체8480/2120/4218. Tabula donor분리238868/35738/25394 중 실제train10000/val2000/test5000 사용|
+|학습 입력 X / 정답 y|X:gene_ids[B,L]int64와expression_bins[B,L]float32,L≤1200(CLS포함). y:[B]Celltype/cell_type유형ID. 유전자가 분류정답인 것은 아님|
+|가중치 갱신 방식|공개encoder/value encoder/Transformer+분류기 파인튜닝. pancreas13종과Tabula161종은 별도분류설정. 미사용분기와실제trainable/gradient수를 구분|
+|원본·변환 입력 저장 위치|`data/pancreas_demo/*.h5ad;data_external/tabula_sapiens/prepared_300k_seed42/{gene_ids,expression_bins}.npy;추가run/labels.npy및*_rows.npy`|
+|해석 범위|batch는동시에처리하는세포수,각세포는표현행렬1행.1200은CLS+유전자token자리이며 세포수가아님|
+
+**용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
 ## 2. 실행 조건과 측정 기준
 
@@ -14,7 +33,7 @@
 
 아래시간은각원본조건의실측값이다. 조건별포함/제외범위는4~5절과원본기록에서확인한다. 대부분PyTorch CUDAallocated peak이나AlphaFold2는컴파일/warmup포함JAX프로세스누적peak다. RSS와CUDA를독립메모리처럼더하지않는다.
 
-**실제 공개 데이터로 실행했다.** 실제30만세포추론,실제전체pancreas학습,작은실제세포cache를반복한고정padding용량probe는서로다른과제/입력조건이다. **82.8%는용량probe에서만확인했고전체실데이터학습조건의성공으로표현하지않는다.**
+**실제 공개 데이터로 실행했다.** 실제30만세포추론,실제전체pancreas학습,작은실제세포cache를반복한고정padding용량probe는서로다른과제/입력조건이다. **고정padding probe의82.79%와 별도로,Tabula Sapiens 실제1만세포·1epoch 파인튜닝에서도batch284의80.54%와test평가·저장모델재로드를 확인했다. 두 조건은 구분한다.**
 
 |작업|실제 입력·고유 데이터 수|동시 GPU batch·모양|학습량/반복|측정시간|처리량|최대 allocated / 공유RAM대비|성능·80% 상태|
 |---|---|---|---|---|---|---|---|
@@ -25,7 +44,57 @@
 |고정padding 학습 **용량 probe**|고유284세포; 같은batch반복총852건|284×1200자리,FP32; 평균nonpad 307.0|3step; 전체epoch학습아님|42.03초|20.27세포/초|98.002 GiB / 80.54%|독립정확도미평가; 80%도달|
 |고정padding 학습 **용량 probe**|고유292세포; 같은batch반복총876건|292×1200자리,FP32; 평균nonpad 306.5|3step; 전체epoch학습아님|42.92초|20.41세포/초|100.750 GiB / 82.79%|독립정확도미평가; 80%도달|
 
+<!-- REAL_TRAINING_V3_START -->
+### 실제 데이터 추가 실험 — actual_training_20261029_171903_668783
+
+진행 중인 실행의 완료 조건만 아래에 갱신한다. probe는 짧은 용량 측정이며 전체 학습이나 평가 완료가 아니다. 메모리%는 CUDA allocated peak / 시스템 공유 RAM ×100이며 GPU-Util과 다르다. 독립 실행 1회 기준.
+
+|조건|가중치 갱신 방식·실험 목적|상태|고유 입력|배치|epoch|optimizer steps|실측 시간(s)|입력/s|allocated peak GiB|reserved peak GiB|공유 RAM 대비 allocated %|GPU-Util 평균%|최대%|독립 test 지표|저장 모델 재로드|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|probe_b128_n10000|본체·분류기 파인튜닝 /용량측정|complete|384|128|0|3|17.4609|21.9920|44.5140|44.8594|36.5806|86.9394|96.0000|N/A|N/A|
+|probe_b192_n10000|본체·분류기 파인튜닝 /용량측정|complete|576|192|0|3|26.1307|22.0430|66.4368|66.6660|54.5963|90.9583|96.0000|N/A|N/A|
+|probe_b224_n10000|본체·분류기 파인튜닝 /용량측정|complete|672|224|0|3|30.6206|21.9460|77.5113|77.7988|63.6970|92.6481|96.0000|N/A|N/A|
+|probe_b256_n10000|본체·분류기 파인튜닝 /용량측정|complete|768|256|0|3|34.6325|22.1757|88.3783|88.7539|72.6273|91.1803|96.0000|N/A|N/A|
+|probe_b272_n10000|본체·분류기 파인튜닝 /용량측정|complete|816|272|0|3|37.3306|21.8588|93.9072|94.3340|77.1708|90.1765|96.0000|N/A|N/A|
+|probe_b280_n10000|본체·분류기 파인튜닝 /용량측정|complete|840|280|0|3|37.7372|22.2592|96.6211|97.2031|79.4010|92.2029|96.0000|N/A|N/A|
+|probe_b284_n10000|본체·분류기 파인튜닝 /용량측정|complete|852|284|0|3|38.8859|21.9102|98.0028|98.4668|80.5364|93.0857|96.0000|N/A|N/A|
+|probe_b8_n10000|본체·분류기 파인튜닝 /용량측정|complete|24|8|0|3|1.6246|14.7729|3.3754|3.8066|2.7738|46.3333|69.0000|N/A|N/A|
+|train_b284_n10000|본체·분류기 파인튜닝|complete|10000|284|1|36|442.3679|22.6056|98.0028|98.4727|80.5364|95.5545|96.0000|{'accuracy': 0.4674, 'macro_f1_present_known_classes': 0.17666544199430004}|True|
+|train_b8_n10000|본체·분류기 파인튜닝|complete|10000|8|1|1250|486.5427|20.5532|3.3754|3.8066|2.7738|92.3524|96.0000|{'accuracy': 0.3632, 'macro_f1_present_known_classes': 0.13278148150863597}|True|
+
+입력은 Tabula Sapiens 실제 고유 30만 세포에서 donor 단위로 분리한 학습238,868 / 검증35,738 / test25,394세포이다. 학습 donor의 실제 cell_type161종을 정답으로 사용한다. 새 분류 헤드161개는 기존 pancreas13클래스 실험과 별도 조건이다. 이 실행의 전체 학습 비교는 동일한 고유1만 세포,1epoch,FP32,최대1200토큰(CLS 포함),실제 배치 최장 길이 padding,동일 초기 backbone/seed42/AdamW에서 배치만 바꾼다. 검증2,000 / test5,000세포 고정 부분집합을 평가하며 미등장 라벨은 제외 수를 별도 저장한다. 같은 epoch에서도 배치별 optimizer step수가 달라 정확도 차이를 순수 배치 성능으로 단정하지 않는다. 학습 시간은 주기적 체크포인트 저장 포함이며 순수 step 시간은 원본 summary에 따로 기록한다.
+
+입력 및 메모리 기준값(같은 실행에서 측정):
+
+|조건|실제 모델 입력 모양/정책|모델 적재 직후 allocated GiB|실행 시작 allocated GiB|peak 추가 allocated GiB|프로세스 RSS sampled peak GiB|시스템 가용 RAM sampled 최소 GiB|
+|---|---|---|---|---|---|---|
+|probe_b128_n10000|상세 전처리 정책 참조|0.1915|0.1915|44.3225|2.5502|65.5623|
+|probe_b192_n10000|상세 전처리 정책 참조|0.1915|0.1915|66.2453|2.5923|44.3847|
+|probe_b224_n10000|상세 전처리 정책 참조|0.1915|0.1915|77.3197|2.6127|33.0711|
+|probe_b256_n10000|상세 전처리 정책 참조|0.1915|0.1915|88.1868|2.6324|22.1618|
+|probe_b272_n10000|상세 전처리 정책 참조|0.1915|0.1915|93.7157|2.6436|16.5226|
+|probe_b280_n10000|상세 전처리 정책 참조|0.1915|0.1915|96.4296|2.6474|13.6298|
+|probe_b284_n10000|상세 전처리 정책 참조|0.1915|0.1915|97.8112|2.6510|12.3702|
+|probe_b8_n10000|상세 전처리 정책 참조|0.1915|0.1915|3.1838|2.4656|107.5165|
+|train_b284_n10000|상세 전처리 정책 참조|0.1915|0.1915|97.8112|3.5983|11.8017|
+|train_b8_n10000|상세 전처리 정책 참조|0.1915|0.1915|3.1838|3.3602|108.3778|
+
+실행 코드 블록의 파일은 원문SHA256으로 검증하며, 명령JSON에 기록된 실행 경로로 해당 snapshot을 복사하면 복원할 수 있다. 대용량 원본 데이터·가중치는 아래 전처리/다운로드 코드와 출처를 사용하고 로컬 원본도 보존한다.
+
+로컬 원시 결과: `/home/hyein/ai-benchmark/scgpt/results/actual_training_20261029_171903_668783`. 메모리 부족/guard 실패는 성공 조건으로 기재하지 않는다.
+<!-- REAL_TRAINING_V3_END -->
+
 ## 4. 결과 해석
+
+<!-- MODEL_SUMMARY_START -->
+### 요약 결론
+
+- **학습 방식:** 공개encoder/value encoder/Transformer+분류기 파인튜닝. pancreas13종과Tabula161종은 별도분류설정. 미사용분기와실제trainable/gradient수를 구분.
+- **입력 구분:** batch는동시에처리하는세포수,각세포는표현행렬1행.1200은CLS+유전자token자리이며 세포수가아님.
+- **최신 추가 run 최대 성공 메모리:** `probe_b284_n10000` **98.003GiB /80.54%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
+- **실제1만세포 파인튜닝 완료:** batch284는98.003GiB/80.54%,1epoch442.37초,test5000세포Accuracy0.4674,재로드검증 완료. 이전고정padding batch292의82.79%는 별도 짧은probe이며 실제1만세포 조건과 다르다.
+- **시간·정확도 해석:** 결과는 같은 행의 입력·배치·학습범위에만 연결한다. 메모리 상승 자체가 처리량·정확도 상승을 보장하지 않는다.
+<!-- MODEL_SUMMARY_END -->
 
 - 같은30만세포입력에서batch8→256은메모리를0.389→5.477GiB로늘렸지만처리량은112.65→114.13세포/초로거의같았다. 메모리를더할당한다고학습/추론이그만큼빨라지는것은아니다.
 - 고정1200자리학습probe의batch8→284→292에서3.390→98.002→100.750GiB로늘어80%를넘었다. 다만실제평균유효토큰은약306~404로padding을많이포함한다.
@@ -8408,3 +8477,405 @@ if args.write:
 print(json.dumps({'verified_embedded_blocks':blocks,'restorable_original_paths':len(files),'restored':args.write},ensure_ascii=False))
 
 ```
+
+<details><summary>추가 실험 실행 원문: prepare_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/prepare_executed_source.py", "sha256": "fd1760d4506142d743a2f4533109bba7c91bcc1e7e8048f87cec23f99390ebfb", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,json,hashlib
+import numpy as np,pandas as pd
+R=Path('/workspace/scgpt');P=R/'data_external/tabula_sapiens/prepared_300k_seed42';D=R/'results'/os.environ['RUN_ID'];D.mkdir(exist_ok=True);obs=pd.read_csv(P/'cells.tsv',sep='\t',index_col=0);assert len(obs)==300000 and obs.index.is_unique;assert obs['cell_type'].notna().all() and obs['donor_id'].notna().all();rng=np.random.default_rng(42);donors=np.array(sorted(obs['donor_id'].astype(str).unique()));rng.shuffle(donors);nt=max(1,int(len(donors)*.7));nv=max(1,int(len(donors)*.15));assert nt+nv<len(donors);groups={'train':donors[:nt],'validation':donors[nt:nt+nv],'test':donors[nt+nv:]};splits={k:np.flatnonzero(obs['donor_id'].astype(str).isin(v)) for k,v in groups.items()};labels=sorted(obs.iloc[splits['train']]['cell_type'].unique());mapping={v:i for i,v in enumerate(labels)};y=obs['cell_type'].map(mapping).fillna(-1).to_numpy(np.int64);np.save(D/'labels.npy',y)
+for k,rows in splits.items():rng.shuffle(rows);np.save(D/(k+'_rows.npy'),rows)
+val=splits['validation'][:2000];test=splits['test'][:5000];np.save(D/'validation_eval_rows.npy',val);np.save(D/'test_eval_rows.npy',test);S={'dataset':'Tabula Sapiens Census2024-07-01 actual300000unique primary human cells','input_cache':str(P),'total_unique_cells':len(obs),'split_by':'whole donor_id groups, seed42; no cell or donor overlap','donors':{k:list(v) for k,v in groups.items()},'split_cells':{k:len(v) for k,v in splits.items()},'validation_evaluated_cells':len(val),'test_evaluated_cells':len(test),'labels':labels,'known_train_classes':len(labels),'unknown_class_validation':int((y[val]<0).sum()),'unknown_class_test':int((y[test]<0).sum()),'preprocessing':'same cached51-bin original real-gene tokens; CLS-inclusive max1200; actual per-batch max nonpad padding, no forced fill to1200','inference_data_note':'previous300k embedding study only; this run actually uses cell_type supervision and updates encoder+classifier','class_counts_train':{str(k):int(v) for k,v in obs.iloc[splits['train']]['cell_type'].value_counts().items()},'limitations':'all donors in one atlas, pretraining overlap not known, one epoch resource/quality check not converged maximum biological performance'};(D/'input_audit.json').write_text(json.dumps(S,ensure_ascii=False,indent=2));print(json.dumps({'split_cells':S['split_cells'],'classes':len(labels),'donors':len(donors)},ensure_ascii=False),flush=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b128_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b128_executed_source.py", "sha256": "18d76fd32e1fcdb84c96576ba7e6d361e05dd27e22d01cce222e18d85b21cc5d", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,time,json,gc,re,random,hashlib
+import numpy as np,torch
+from sklearn.metrics import accuracy_score,f1_score
+from scgpt.model import TransformerModel
+sys.path.insert(0,'/workspace/scgpt/scripts');from gpu_support import Meter,write_json
+R=Path('/workspace/scgpt');P=R/'data_external/tabula_sapiens/prepared_300k_seed42';D=R/'results'/os.environ['RUN_ID'];B=int(os.environ['BATCH']);MODE=os.environ.get('TASK_MODE','probe');N=int(os.environ.get('TRAIN_CELLS','10000'));C=D/(MODE+'_b'+str(B)+'_n'+str(N));C.mkdir(exist_ok=True);meter=Meter(C);audit=json.loads((D/'input_audit.json').read_text());torch.set_num_threads(8);torch.manual_seed(42);np.random.seed(42);random.seed(42);torch.set_float32_matmul_precision('highest');torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False;S={'status':'running','task_mode':MODE,'batch':B,'train_cells_requested':N,'dataset':'real Tabula Sapiens cells, actual labels, donor-heldout split','settings':{'precision':'FP32','max_length':1200,'padding':'actual batch max nonpad length','optimizer':'AdamW lr1e-4 wd0.01 clip1.0','seed':42,'epochs':1 if MODE=='train' else 0,'probe_only':MODE=='probe'},'training_steps':[]}
+def save():write_json(C/'summary.json',S)
+source=R/'results'/(R/'results/SUPPLEMENT_LATEST').read_text().strip();bundle=R/'models/finetuned'/source.name/'epoch_001';config=json.loads((bundle/'model_config.json').read_text());vocab=json.loads((bundle/'vocab.json').read_text());config['n_cls']=len(audit['labels']);pad=vocab[config['pad_token']];g=np.load(P/'gene_ids.npy',mmap_mode='r');v=np.load(P/'expression_bins.npy',mmap_mode='r');lens=np.load(P/'lengths.npy',mmap_mode='r');targets=np.load(D/'labels.npy');train=np.load(D/'train_rows.npy')[:N];assert len(train)==N and len(set(train.tolist()))==N;val=np.load(D/'validation_eval_rows.npy');test=np.load(D/'test_eval_rows.npy');S['train_unique_cells']=N;S['classes']=len(audit['labels']);S['actual_nonpad_tokens_mean']=float(lens[train].mean());S['actual_tokens_min_max']=[int(lens[train].min()),int(lens[train].max())];S['constructor']=config;S['label_mapping']=audit['labels'];save()
+def create():
+ model=TransformerModel(**config,vocab=vocab);raw=torch.load(R/'models/whole-human/best_model.pt',map_location='cpu',weights_only=True);mapped={}
+ for key,value in raw.items():
+  for a,b in [(r'self_attn\._impl\.Wqkv\.','self_attn.in_proj_'),(r'self_attn\.Wqkv\.','self_attn.in_proj_'),(r'self_attn\._impl\.out_proj\.','self_attn.out_proj.')]:key=re.sub(a,b,key)
+  mapped[key]=value
+ state=model.state_dict();core=('encoder.','value_encoder.','transformer_encoder.');needed=[k for k in state if k.startswith(core)];loaded={k:mapped[k] for k in needed if k in mapped and mapped[k].shape==state[k].shape};assert len(loaded)==len(needed);model.load_state_dict(loaded,strict=False)
+ for name,p in model.named_parameters():p.requires_grad_(name.startswith(core+('cls_decoder.',)))
+ return model.float().cuda()
+def batch(rows):
+ width=int(lens[rows].max());gg=torch.from_numpy(np.array(g[rows,:width],np.int64)).cuda();vv=torch.from_numpy(np.array(v[rows,:width],np.float32)).cuda();yy=torch.from_numpy(targets[rows]).cuda();return gg,vv,yy,width
+def logits(model,gg,vv):return model.cls_decoder(model._encode(gg,vv,src_key_padding_mask=gg.eq(pad))[:,0,:])
+def evaluate(model,rows):
+ model.eval();pred=[];truth=[];allout=[]
+ with torch.no_grad():
+  for i in range(0,len(rows),32):
+   sub=rows[i:i+32];gg,vv,yy,width=batch(sub);out=logits(model,gg,vv);assert torch.isfinite(out).all();pred.extend(out.argmax(1).cpu().tolist());truth.extend(targets[sub].tolist());allout.append(out.cpu().numpy());del gg,vv,yy,out
+ known=np.asarray(truth)>=0;y=np.asarray(truth)[known];p=np.asarray(pred)[known];return {'total_cells':len(rows),'known_cells':int(known.sum()),'unknown_excluded':int((~known).sum()),'accuracy':float(accuracy_score(y,p)) if len(y) else None,'macro_f1_present_known_classes':float(f1_score(y,p,average='macro',zero_division=0)) if len(y) else None},np.concatenate(allout)
+try:
+ meter.phase='load';t=time.time();model=create();torch.cuda.synchronize();S['load_seconds']=time.time()-t;S['model_only_postload']=meter.memory();S['parameters_total']=sum(p.numel() for p in model.parameters());S['trainable_parameters']=sum(p.numel() for p in model.parameters() if p.requires_grad);params=[p for p in model.parameters() if p.requires_grad];opt=torch.optim.AdamW(params,lr=1e-4,weight_decay=.01);before=model.cls_decoder.out_layer.weight.detach().cpu().clone();start_at=0;checkpoint=C/'latest.pt'
+ if checkpoint.exists():
+  ck=torch.load(checkpoint,map_location='cpu',weights_only=False);model.load_state_dict(ck['model'],strict=True);opt.load_state_dict(ck['optimizer']);torch.set_rng_state(ck['torch_rng']);torch.cuda.set_rng_state_all(ck['cuda_rng']);start_at=ck['next_train_offset'];S['resume_from_offset']=start_at;del ck
+ meter.phase='train';model.train();t,base=meter.begin('real_training_'+MODE);limit=min(N,B*3) if MODE=='probe' else N
+ for offset in range(start_at,limit,B):
+  sub=train[offset:min(offset+B,limit)];torch.cuda.synchronize();step0=time.time();gg,vv,yy,width=batch(sub);opt.zero_grad(set_to_none=True);out=logits(model,gg,vv);loss=torch.nn.functional.cross_entropy(out,yy);assert torch.isfinite(loss);loss.backward();torch.nn.utils.clip_grad_norm_(params,1.);opt.step();torch.cuda.synchronize();step={'offset':offset,'cells':len(sub),'width':width,'loss':float(loss.detach()),'seconds':time.time()-step0};S['training_steps'].append(step);print('TRAIN_STEP',MODE,B,offset+len(sub),'/',limit,'loss',step['loss'],'seconds',step['seconds'],flush=True);del gg,vv,yy,out,loss
+  if MODE=='train' and ((len(S['training_steps'])%100)==0 or offset+len(sub)==limit):
+   opt.zero_grad(set_to_none=True);save0=time.time();state={'model':model.state_dict(),'optimizer':opt.state_dict(),'next_train_offset':offset+len(sub),'torch_rng':torch.get_rng_state(),'cuda_rng':torch.cuda.get_rng_state_all(),'config':config,'label_mapping':audit['labels'],'vocab':vocab};tmp=C/'latest.partial.pt';torch.save(state,tmp);tmp.replace(checkpoint);del state;S.setdefault('checkpoint_save_seconds',[]).append(time.time()-save0);save()
+ r=meter.end(t,base,batch_size=B,unique_training_cells=N if MODE=='train' else limit,processed_cells=sum(s['cells'] for s in S['training_steps']),optimizer_steps=len(S['training_steps']),epochs=1 if MODE=='train' else 0);r['includes_periodic_checkpoint_save']=MODE=='train';r['training_steps_seconds_total']=sum(s['seconds'] for s in S['training_steps']);r['cells_per_second_steps_scope']=r['processed_cells']/r['training_steps_seconds_total'];r['cells_per_second']=r['processed_cells']/r['seconds'];r['mean_step_seconds']=float(np.mean([s['seconds'] for s in S['training_steps']]));r['allocated_fraction_shared_ram']=r['memory']['peak_allocated_gib']/r['memory']['system_total_gib'];S['training']=r;S['weights_updated']=not torch.equal(before,model.cls_decoder.out_layer.weight.detach().cpu());assert S['weights_updated'];opt.zero_grad(set_to_none=True);del opt;gc.collect();torch.cuda.empty_cache();save()
+ if MODE=='train':
+  meter.phase='validation';S['validation'],ref=evaluate(model,val);meter.phase='test';S['test'],testlogits=evaluate(model,test);np.save(C/'validation_logits.npy',ref);np.save(C/'test_logits.npy',testlogits);np.save(C/'test_rows.npy',test);temp=C/'final_model.pt';torch.save({'model':model.state_dict(),'config':config,'vocab':vocab,'labels':audit['labels'],'source_pretrained':str(R/'models/whole-human/best_model.pt'),'data_audit':str(D/'input_audit.json')},temp);meter.phase='reload';ck=torch.load(temp,map_location='cpu',weights_only=True);model.load_state_dict(ck['model'],strict=True);_,recheck=evaluate(model,val[:32]);difference=float(np.abs(ref[:32]-recheck).max());assert difference<1e-4;S['saved_model_reload_verified']=True;S['reload_max_abs_logits_difference']=difference
+ S['status']='complete';save();print('COMPLETE',MODE,B,'peak',r['memory']['peak_allocated_gib'],'fraction',r['allocated_fraction_shared_ram'],flush=True)
+except BaseException as e:S['status']='failed';S['error']=repr(e);save();raise
+finally:meter.close();save()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: prepare_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/prepare_command.json", "sha256": "27d3a3c085a9160aa216ff0abe39056d15f567412419a7a881c1eb045f809f81", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "CUDA_VISIBLE_DEVICES=",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/prepare.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b128_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b128_command.json", "sha256": "9e7ea4fe2fe8d62533682e741fb19ad420cb8e540e7e2b7c9295a6697028f181", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=128",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b192_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b192_command.json", "sha256": "e3dddd466f5a879624ebb1ede657c5d667432b2512654ae7020206f4642a338f", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=192",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b224_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b224_command.json", "sha256": "176bc95f0553e3156023aaabfbb1c478f6551e8af1986b686b6289348a17da35", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=224",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b256_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b256_command.json", "sha256": "d965aa859b6cb941362b5af15c417f7eda7fd0fe0e0f7035a0034dae3bed4074", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=256",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b272_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b272_command.json", "sha256": "9df0bd7d905de04212d91d63f8f0508c0945a72a08f2bdad30444d75126f5563", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=272",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b280_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b280_command.json", "sha256": "89b89867ec19c89f53e3ad5618d2a5b4723e39563232175f2f1cf801dec0a5e8", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=280",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b284_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b284_command.json", "sha256": "81cfce81b7701abfec2168b31b36706e36ccb64889ae778cb1423abeffbfcbaf", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=284",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: probe_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/probe_b8_command.json", "sha256": "aadff13d55988fe31948a222d5d94adc5e3b87a88440fa895a5a45ab370dfc46", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=probe",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: train_n10000_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/train_n10000_b8_command.json", "sha256": "66afb1e4e8d3a02688dc3a7d2a75b92f670ff3a0edd7921f046744da2c8036ef", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=train",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: train_n10000_b284_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "scgpt/results/actual_training_20261029_171903_668783/train_n10000_b284_command.json", "sha256": "2b2af581147166d17786044ca5059ada54a05ad9467960a4f85fbc4d28c54923", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "exec",
+  "--user",
+  "1000:1000",
+  "-e",
+  "RUN_ID=actual_training_20261029_171903_668783",
+  "-e",
+  "MPLCONFIGDIR=/workspace/scgpt/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/workspace/scgpt/.cache/numba",
+  "-e",
+  "TASK_MODE=train",
+  "-e",
+  "BATCH=284",
+  "-e",
+  "TRAIN_CELLS=10000",
+  "scgpt-spark",
+  "python",
+  "-u",
+  "/workspace/scgpt/scripts/real_training_v3/worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
