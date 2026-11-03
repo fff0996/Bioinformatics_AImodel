@@ -25,6 +25,57 @@
 
 **용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
+### 실제 입력 파일은 이렇게 생겼다
+
+**추론용 UniProt와 파인튜닝용 GFP 데이터는 서로 다른 파일·과제다.** 표의 한 레코드는 단백질 한 개다.
+
+|단계|실제 파일 형식·경로(esm2/기준)|레코드 한 개의 내용|정답 유무|
+|---|---|---|---|
+|추론 원본|FASTA: `data/uniprot_reviewed_900_950_20261028.fasta` 및 추가 UniProt 페이지|`>`로 시작하는 단백질ID 헤더 + 아미노산 문자열|GFP 형광 정답 없음|
+|추론 실제 실행 입력|JSON 배열: `results/real_input_capacity_20261102_143107_778283/inputs.json`|`{"id": "단백질ID", "sequence": "아미노산 문자열"}`; 실제 고유 서열의 선택·순서 저장|없음; 출력은 임베딩|
+|파인튜닝 원본|LMDB: `data/fluorescence/fluorescence_train.lmdb`; 별도 valid/test LMDB|숫자 key로 저장한 pickle dictionary: `primary`, `protein_length`, `log_fluorescence`, `num_mutations`|서열마다 실수 형광값1개|
+|GPU 모델 입력|원본 파일을 토큰화해 만든 PyTorch int64 tensor|`tokens[B,L+2]`: B개 단백질 × BOS/아미노산/EOS 및 padding|파인튜닝 정답은 별도 float32 `[B]`|
+
+#### 파인튜닝 LMDB에서 직접 읽은 실제 레코드
+
+원본 train에는 **21446개 레코드**가 있다. 추가 실험은 그중 seed42로 고른 **1,024개**를 사용하며, 아래는 그 선택의 첫 레코드(key `20952`, 실행ID `train_20952`)다. 아래 JSON은 **이해를 위해 LMDB dictionary를 펼쳐 표시한 것**이며, 원본 파일이 JSON이라는 뜻은 아니다.
+
+```json
+{
+  "primary": "SKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIRVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGVDELYK",
+  "protein_length": 237,
+  "log_fluorescence": [
+    3.7892184257507324
+  ],
+  "num_mutations": 2
+}
+```
+
+|필드|실제 모양·자료형|실험에서의 역할|
+|---|---|---|
+|`primary`|아미노산 문자237개|**학습 입력 X**|
+|`protein_length`|정수237|길이 확인용 metadata|
+|`log_fluorescence`|float32 배열 `[1]`, 값 **3.7892184257507324**|**정답 y**; 단백질 전체의 형광값1개를 예측하는 회귀|
+|`num_mutations`|정수2|metadata; 이번 회귀 정답으로 사용하지 않음|
+
+#### 파일에서 GPU까지: 실제 shape
+
+```text
+파인튜닝: LMDB의 primary(237 AA) + log_fluorescence(실수1개)
+        → 토큰화 [B,239] int64 + 정답 [B] float32
+        → ESM-2의 토큰별 표현 [B,239,1280]
+        → 실제 아미노산 부분 평균 [B,1280]
+        → 회귀 head [B,1] → 형광값 예측
+
+긴 서열 추론: 실제 JSON의 sequence(900–950 AA), 전체pool 최대950AA
+        → padding 포함 tokens [B,952] int64
+        → 단백질별 임베딩 [B,1280]
+```
+
+따라서 **배치8의 파인튜닝은 `[8,239]`이고, 같은 배치8의 긴 서열 추론은 `[8,952]`**다. 파인튜닝 서열237AA와 추론 서열950AA를 같은 입력으로 생각하면 안 된다. epoch는 같은 학습 서열들을 몇 번 반복했는지이며,토큰 길이를 뜻하지 않는다.
+
+실제 GFP 예제의 첫16개 token ID: `[0, 8, 15, 6, 9, 9, 4, 18, 11, 6, 7, 7, 14, 12, 4, 7]`. 숫자는 vocabulary ID이며 아미노산 개수나 형광값이 아니다. 평균·표준편차를 이용한 정답 표준화는 train 기준으로만 계산하며 평가값은 원래 형광 스케일로 복원한다.
+
 ### 모델 적재 직후 — 첫 입력 forward 이전
 
 |적재 조건|allocated GiB(JAX는별도표기)|reserved GiB|프로세스 RSS GiB|원본 근거|
@@ -2449,6 +2500,29 @@ STATE.update(status='finished_review_required',active_model=None,active_conditio
   "-u",
   "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
 ]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>실제 입력 레코드 확인 코드(CPU 전용)</summary>
+
+실행 명령:
+```bash
+CUDA_VISIBLE_DEVICES='' esm2/.venv/bin/python esm2/scripts/report_inputs/inspect_example.py > esm2/data/report_input_example.json
+```
+
+<!-- RESTORE_FILE {"path": "esm2/scripts/report_inputs/inspect_example.py", "sha256": "2ca14cd2ed930de9e481fc6033ffc6df1a235dc967d0a4400f3903addad42805", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import json,pickle,random,hashlib
+import lmdb
+from esm.data import Alphabet
+R=Path('/home/hyein/ai-benchmark/esm2');alphabet=Alphabet.from_architecture('ESM-1b');converter=alphabet.get_batch_converter();source=R/'data/fluorescence/fluorescence_train.lmdb';env=lmdb.open(str(source),readonly=True,lock=False)
+with env.begin() as txn:
+ total=pickle.loads(txn.get(b'num_examples'));index=random.Random(42).sample(range(total),1024)[0];row=pickle.loads(txn.get(str(index).encode()))
+env.close();seq=row['primary'];_,_,tok=converter([(f'train_{index}',seq)]);D=R/'results'/(R/'results/REAL_TRAINING_LATEST').read_text().strip();inference=json.loads((D/'inputs.json').read_text())[0];_,_,itok=converter([(inference['id'],inference['sequence'])]);out={'train_file':str(source.relative_to(R)),'train_total_records':total,'record_key':str(index),'selected_id':f'train_{index}','stored_keys':list(row),'primary':seq,'protein_length':int(row['protein_length']),'log_fluorescence':row['log_fluorescence'].tolist(),'label_dtype':str(row['log_fluorescence'].dtype),'label_shape':list(row['log_fluorescence'].shape),'num_mutations':int(row['num_mutations']),'training_token_shape_one':list(tok.shape),'training_first16_token_ids':tok[0,:16].tolist(),'inference_file':str((D/'inputs.json').relative_to(R)),'inference_record':inference,'inference_token_shape_one':list(itok.shape),'inference_first16_token_ids':itok[0,:16].tolist(),'token_dtype':str(tok.dtype),'note':'CPU-only data/token inspection; no GPU experiment rerun'}
+print(json.dumps(out,ensure_ascii=False,indent=2))
 ```
 <!-- END_RESTORE_FILE -->
 
