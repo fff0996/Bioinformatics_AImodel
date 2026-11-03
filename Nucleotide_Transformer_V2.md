@@ -30,6 +30,7 @@
 |적재 조건|allocated GiB(JAX는별도표기)|reserved GiB|프로세스 RSS GiB|원본 근거|
 |---|---|---|---|---|
 |추론/기본 모델 적재 기준|1.856512|1.873046875|0.9985618591308594|ntv2/results/real_input_capacity_20261102_152621_008750/batch_128/summary.json|
+|파인튜닝 적재 기준|1.836920|1.85546875|0.9943008422851562|ntv2/results/real_input_capacity_20261102_152621_008750/full_training_b512/summary.json|
 
 위 값은 **가중치를 GPU에 적재하고 첫 입력을 계산하기 전의 프레임워크 할당량**이다. CUDA/JAX context·driver·시스템 전체 GPU사용량과 같지 않으며 CPU입력 준비 포함 여부는 해당 실행 코드를 따른다. **실행 peak와 모델 적재 기준값의 차이는 같은 run에서만 계산**한다. 파인튜닝 중 추가량에는 입력뿐 아니라 중간값·gradient·optimizer 상태가 포함된다. 서로 다른 조건/정밀도의 기준값을 하나의 모델 고유 메모리로 단정하지 않는다.
 
@@ -47,14 +48,27 @@
 |배치|한step은 길어질 수 있고step수는 줄어든다. 처리량 상승/포화는 실측으로 판단|같은입력길이·정밀도에서 동시중간값 증가가 주된영향|긴6000nt 추론batch확대 진행;짧은enhancer 훈련은 별도|
 |샘플당 실제입력 크기|GPU에들어간실제token/타일 크기가 커졌을때 계산량 변화 비교|토큰길이·패치/타일크기·attention구조에 따라 증가;원본크기와 다를수있음|기본길이600/3000/6000/12276nt 및개수 비교 있음|
 |고유 데이터수|같은batch·epoch에서 총처리step가늘어 총시간이늘어나는지 비교|고정batch의동시입력이같으면 데이터총수만으로peak가크게늘지않을수있음|입력개수비교는본문참조;새지도학습데이터수비교는아래결과가생긴조건만완료|
-|epoch|같은train입력을 반복하므로 누적시간 증가;검증성능개선은 보장안됨|동일batch·입력에서epoch자체가peak를선형증가시키는요인은아님|같은enhancer train512의epoch1/2/4 및 train128/256/512 비교 대기|
+|epoch|같은train입력을 반복하므로 누적시간 증가;검증성능개선은 보장안됨|동일batch·입력에서epoch자체가peak를선형증가시키는요인은아님|같은enhancer train512의epoch1/2/4 및 train128/256/512 비교 완료 → 실제완료 5/5조건(test·재로드확인)|
 |학습방식·갱신범위|추론/본체동결head학습/부분·전체미세조정/처음부터학습은 계산범위가다름|gradient·optimizer·역전파용중간값의유무가다름|1절의가중치갱신방식과X/y를참조;다른데이터·목적의시간을단순배수비교하지않음|
 |모델·정밀도·전처리|구조·dtype·토큰화·타일화·컴파일·후처리도영향|모델적재기준값과실행중추가량을분리|원인후보/고정조건으로기록;모델크기나dtype의단독영향sweep은미실험|
 
 추가 통제 비교에서는 **batch8·FP32·공개초기weight·seed42·optimizer·원래전체pool의padding폭·검증/test를고정**하고,(1)같은train의epoch1/2/4,(2)epoch2의중첩train1/4·1/2·전체를각각실행한다. 전체데이터를바꾸면서epoch도함께바꾼행끼리는단독효과로해석하지않는다. 단일실행이며데이터부분집합의label분포변화는정확도해석의제약이다. 이비교는해당지도학습지원모델에만적용한다.
 
+통제실험run:`factor_control_20261103_093231_014557`
 
-추가epoch/데이터수통제비교 수치: **아직미실험/대기**. 기존측정을추정해서채우지않는다.
+|조건|고유train수|batch|epoch|optimizersteps|훈련시간s|처리입력/s|allocatedpeakGiB|reservedpeakGiB|GPU-Util평균%|독립test지표|재로드|
+|---|---|---|---|---|---|---|---|---|---|---|---|
+|full_training_b8_e1_n512|512|8|1|64|18.5851|27.5490|9.2280|9.3340|89.6061|{'mean_loss': 0.6200778299570083, 'accuracy': 0.715, 'macro_f1': 0.7148859543817527}|True|
+|full_training_b8_e2_n128|128|8|2|32|9.7094|26.3663|9.2280|9.3340|83.1176|{'mean_loss': 0.5596214205026626, 'accuracy': 0.72, 'macro_f1': 0.7198248905565978}|True|
+|full_training_b8_e2_n256|256|8|2|64|18.7907|27.2475|9.2280|9.3340|91.4545|{'mean_loss': 0.7668325234949589, 'accuracy': 0.6775, 'macro_f1': 0.6629895957834513}|True|
+|full_training_b8_e2_n512|512|8|2|128|36.5120|28.0456|9.2280|9.3340|92.3538|{'mean_loss': 0.6576204341650009, 'accuracy': 0.7125, 'macro_f1': 0.7117053879756078}|True|
+|full_training_b8_e4_n512|512|8|4|256|73.9990|27.6761|9.2280|9.3340|93.2946|{'mean_loss': 0.8709892931208014, 'accuracy': 0.7175, 'macro_f1': 0.7169888110399409}|True|
+
+**현재계획한5조건의학습·test평가·저장모델재로드완료.**
+
+- 고정train512개,epoch1/2/4의훈련시간: 18.59초 / 36.51초 / 74.00초. 같은순서의allocated peak: 9.228GiB / 9.228GiB / 9.228GiB.
+- 고정epoch2,train128/256/512개의훈련시간: 9.71초 / 18.79초 / 36.51초.
+- 이번관측에서는epoch·처리데이터수증가에따라총훈련시간이늘었고,batch·padding폭이같아최대allocated는거의유지됐다. 정확도는단조증가하지않아개별test지표를확인해야한다.
 
 <!-- FACTOR_EFFECTS_END -->
 
@@ -68,6 +82,70 @@
 |배치 추론|고유128개; GRCh38 실제6000nt DNA|batch128, input_ids:[128, 1001] / attention_mask:[128, 1001],FP32|2회/총256건|56.80초|4.51입력/초|21.592 GiB / 17.74%|출력finite·저장재로드·첫입력일치검증;80%미도달|
 |전체backbone 파인튜닝|실제enhancer train512/val128/test400;199~200nt|batch8,FP32|2epoch/128step|38.13초(학습구간합)|26.86서열/초|9.252 GiB / 7.60%|동일저장모델test 지표본문;80%미도달|
 
+<!-- REAL_TRAINING_V3_START -->
+### 실제 데이터 추가 실험 — real_input_capacity_20261102_152621_008750
+
+진행 중인 실행의 완료 조건만 아래에 갱신한다. probe는 짧은 용량 측정이며 전체 학습이나 평가 완료가 아니다. 메모리%는 CUDA allocated peak / 시스템 공유 RAM ×100이며 GPU-Util과 다르다. 독립 실행 1회 기준.
+
+|조건|가중치 갱신 방식·실험 목적|상태|고유 입력|배치|epoch|optimizer steps|실측 시간(s)|입력/s|allocated peak GiB|reserved peak GiB|공유 RAM 대비 allocated %|GPU-Util 평균%|최대%|독립 test 지표|저장 모델 재로드|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|batch_128|추론(가중치 갱신 없음)|complete|128|128|N/A|N/A|55.4481|4.6169|21.5923|22.3652|17.7440|95.3168|96.0000|N/A|N/A|
+|batch_256|추론(가중치 갱신 없음)|complete|256|256|N/A|N/A|110.3050|4.6417|41.2917|42.7793|33.9326|95.6684|96.0000|N/A|N/A|
+|batch_384|추론(가중치 갱신 없음)|complete|384|384|N/A|N/A|126.8018|6.0567|60.9779|63.2109|50.1102|95.1459|96.0000|N/A|N/A|
+|batch_448|추론(가중치 갱신 없음)|complete|448|448|N/A|N/A|149.7532|5.9832|70.8216|73.4199|58.1996|95.4176|96.0000|N/A|N/A|
+|batch_512|추론(가중치 갱신 없음)|complete|512|512|N/A|N/A|177.5420|5.7676|80.6642|83.6289|66.2880|95.4554|96.0000|N/A|N/A|
+|batch_544|추론(가중치 갱신 없음)|complete|544|544|N/A|N/A|235.5105|4.6198|85.5954|88.7402|70.3403|95.6434|96.0000|N/A|N/A|
+|batch_560|추론(가중치 갱신 없음)|complete|560|560|N/A|N/A|240.5824|4.6554|88.0509|91.2910|72.3582|95.8027|96.0000|N/A|N/A|
+|batch_576|추론(가중치 갱신 없음)|complete|576|576|N/A|N/A|245.6093|4.6904|90.5095|93.8574|74.3786|95.7111|96.0000|N/A|N/A|
+|batch_592|추론(가중치 갱신 없음)|complete|592|592|N/A|N/A|255.4055|4.6358|92.9725|96.4023|76.4027|95.5978|96.0000|N/A|N/A|
+|batch_608|추론(가중치 갱신 없음)|complete|608|608|N/A|N/A|259.3899|4.6879|95.4383|98.9492|78.4290|95.7957|96.0000|N/A|N/A|
+|batch_8|추론(가중치 갱신 없음)|complete|8|8|N/A|N/A|15.6182|4.6100|3.1400|3.2051|2.5804|96.0000|96.0000|N/A|N/A|
+|full_training_b512|전체backbone·과제head 파인튜닝|complete|512|512|2|2|13.5239|75.7178|56.3002|57.5508|46.2662|83.8000|96.0000|{'accuracy': 0.635, 'macro_f1': 0.5918937805730258}|True|
+|full_training_b8|전체backbone·과제head 파인튜닝|complete|512|8|2|128|36.4871|28.0647|9.2280|9.3340|7.5834|92.4615|96.0000|{'accuracy': 0.7125, 'macro_f1': 0.7117053879756078}|True|
+|probe_training_b128|전체backbone·과제head 파인튜닝 /용량측정|complete|384|128|0|3|5.7473|66.8139|18.2551|18.7324|15.0016|74.1818|96.0000|N/A|N/A|
+|probe_training_b256|전체backbone·과제head 파인튜닝 /용량측정|complete|512|256|0|2|7.1731|71.3781|30.9369|31.5840|25.4233|64.7692|96.0000|N/A|N/A|
+|probe_training_b384|전체backbone·과제head 파인튜닝 /용량측정|complete|512|384|0|2|7.3745|69.4287|39.9597|40.7871|32.8380|76.2143|96.0000|N/A|N/A|
+|probe_training_b448|전체backbone·과제head 파인튜닝 /용량측정|complete|512|448|0|2|7.4502|68.7230|46.5279|47.5273|38.2356|70.8571|96.0000|N/A|N/A|
+|probe_training_b512|전체backbone·과제head 파인튜닝 /용량측정|complete|512|512|0|1|7.3393|69.7617|52.6411|53.7520|43.2592|79.8462|96.0000|N/A|N/A|
+|probe_training_b64|전체backbone·과제head 파인튜닝 /용량측정|complete|192|64|0|3|3.2823|58.4959|11.9243|12.2891|9.7991|64.1667|96.0000|N/A|N/A|
+|probe_training_b8|전체backbone·과제head 파인튜닝 /용량측정|complete|24|8|0|3|1.5871|15.1220|9.2280|9.3340|7.5834|0.0000|0.0000|N/A|N/A|
+
+이 run의 추론 capacity 실험과 지도학습 실험은 입력 과제·길이·학습 헤드가 다를 수 있어 각각 비교한다. 3step probe는 전체 학습이 아니다. full_training은 동일한 공개 초기 backbone와 seed42,FP32,AdamW(lr1e-5,weight_decay0.01),고정 전체 split pool padding으로2epoch 수행한다. 각 학습 조건의 원본 summary에 split ID,실제 길이·padding 모양,사용 헤드·학습 범위,라벨,gradient가 관측된 파라미터 수,검증/test지표,저장 모델 재로드 차이를 기록한다. scVI는 아래 설명이 적용되지 않는 별도 처음부터 학습 모델이며 AF2·Clair3에는 이 공통 학습 절차를 적용하지 않는다.
+
+새 학습은 기존 enhancer train512/validation128/test400,199–200nt 정답을 사용한다. 새 masked-mean+linear head는 이전 native CLS MLP head와 다른 별도 조건이며 이번 배치 비교 내에서는 고정한다. 추론은 실제 GRCh38 비중첩6000nt window1024개를 별도로 사용한다.
+
+입력 및 메모리 기준값(같은 실행에서 측정):
+
+|조건|실제 모델 입력 모양/정책|모델 적재 직후 allocated GiB|실행 시작 allocated GiB|peak 추가 allocated GiB|프로세스 RSS sampled peak GiB|시스템 가용 RAM sampled 최소 GiB|
+|---|---|---|---|---|---|---|
+|batch_128|{'input_ids': [128, 1001], 'attention_mask': [128, 1001]}|1.8565|1.9016|19.6906|1.3871|90.8226|
+|batch_256|{'input_ids': [256, 1001], 'attention_mask': [256, 1001]}|1.8565|1.9016|39.3901|1.3893|70.1442|
+|batch_384|{'input_ids': [384, 1001], 'attention_mask': [384, 1001]}|1.8565|1.9016|59.0763|1.3907|49.4144|
+|batch_448|{'input_ids': [448, 1001], 'attention_mask': [448, 1001]}|1.8565|1.9016|68.9200|1.3913|39.0663|
+|batch_512|{'input_ids': [512, 1001], 'attention_mask': [512, 1001]}|1.8565|1.9016|78.7626|1.3839|28.7434|
+|batch_544|{'input_ids': [544, 1001], 'attention_mask': [544, 1001]}|1.8565|1.9016|83.6937|1.3842|23.4627|
+|batch_560|{'input_ids': [560, 1001], 'attention_mask': [560, 1001]}|1.8565|1.9016|86.1493|1.3842|20.8860|
+|batch_576|{'input_ids': [576, 1001], 'attention_mask': [576, 1001]}|1.8565|1.9016|88.6079|1.3842|18.1728|
+|batch_592|{'input_ids': [592, 1001], 'attention_mask': [592, 1001]}|1.8565|1.9016|91.0709|1.3855|15.4026|
+|batch_608|{'input_ids': [608, 1001], 'attention_mask': [608, 1001]}|1.8565|1.9016|93.5367|1.3815|13.0359|
+|batch_8|{'input_ids': [8, 1001], 'attention_mask': [8, 1001]}|1.8565|1.9016|1.2384|1.4043|109.7493|
+|full_training_b512|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|54.4632|1.7312|53.6212|
+|full_training_b8|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|7.3911|1.6948|102.5719|
+|probe_training_b128|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|16.4182|1.7311|92.8043|
+|probe_training_b256|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|29.1000|1.7309|79.8491|
+|probe_training_b384|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|38.1228|1.7311|70.6711|
+|probe_training_b448|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|44.6910|1.7336|63.7909|
+|probe_training_b512|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|50.8042|1.6596|57.5020|
+|probe_training_b64|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|10.0874|1.7146|99.4670|
+|probe_training_b8|{'input_ids': [1040, 36], 'attention_mask': [1040, 36]}|1.8369|1.8369|7.3911|1.6942|102.8477|
+
+실행 상태: `stopped`; 중단/관측 범위: `actual_worker_error_or_guard`.
+
+실행 코드 블록의 파일은 원문SHA256으로 검증하며, 명령JSON에 기록된 실행 경로로 해당 snapshot을 복사하면 복원할 수 있다. 대용량 원본 데이터·가중치는 아래 전처리/다운로드 코드와 출처를 사용하고 로컬 원본도 보존한다.
+
+로컬 원시 결과: `/home/hyein/ai-benchmark/ntv2/results/real_input_capacity_20261102_152621_008750`. 메모리 부족/guard 실패는 성공 조건으로 기재하지 않는다.
+<!-- REAL_TRAINING_V3_END -->
+
 ## 4. 결과 해석
 
 <!-- MODEL_SUMMARY_START -->
@@ -75,7 +153,7 @@
 
 - **학습 방식:** 기본:전체backbone+원생CLS MLP 파인튜닝. 추가:전체backbone+masked-mean linear head 파인튜닝,별도 조건.
 - **입력 구분:** 긴 유전체 추론window와 짧은enhancer 학습 서열을 구분. 정확도는 해당 라벨·split에서만 평가.
-- **최신 추가 run 최대 성공 메모리:** `batch_384` **60.978GiB /50.11%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
+- **최신 추가 run 최대 성공 메모리:** `batch_608` **95.438GiB /78.43%**. 이 값은 해당 최신run의 성공 조건에서의 최대이며,다른 run의 최대와 구분한다. probe이면 전체 epoch·독립test 평가 완료를 뜻하지 않는다.
 - **시간·정확도 해석:** 결과는 같은 행의 입력·배치·학습범위에만 연결한다. 메모리 상승 자체가 처리량·정확도 상승을 보장하지 않는다.
 <!-- MODEL_SUMMARY_END -->
 
@@ -1570,3 +1648,1912 @@ if args.write:
 print(json.dumps({'verified_embedded_blocks':blocks,'restorable_original_paths':len(files),'restored':args.write},ensure_ascii=False))
 
 ```
+
+<details><summary>추가 실험 실행 원문: full_training_b512_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/full_training_b512_executed_source.py", "sha256": "dc1c9a02d54e9a816169e1fa0e2bbd51d8c40db6895fc12a6ec36141f4246f3f", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import sys,os,json,time,csv,gc,argparse,random,pickle
+import numpy as np,torch
+sys.path.insert(0,os.environ.get('SUPPORT_PATH','/support'));from gpu_support import Meter,write_json
+kind=os.environ['MODEL_KIND'];R=Path(os.environ.get('MODEL_ROOT','/work'));D=R/'results'/os.environ['RUN_ID'];B=int(os.environ['BATCH']);mode=os.environ['TRAIN_MODE'];E=2;C=D/f'{mode}_training_b{B}';C.mkdir();meter=Meter(C);S={'status':'running','model':kind,'mode':mode,'batch':B,'epochs':E if mode=='full' else 0,'seed':42,'precision':'FP32','training_scope':'all backbone parameters plus task head; new separate comparison from earlier partial/frozen-head runs','conditions':[],'allocator_budget_gib':100}
+def save():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.cuda.manual_seed_all(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False;torch.cuda.init();torch.cuda.set_per_process_memory_fraction(min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory));tokenizer=None;alphabet=None
+ if kind=='dnabert2':
+  from transformers import AutoModel,AutoTokenizer,BertConfig
+  P=Path('/workspace/dnabert2_eval/model');tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=AutoModel.from_pretrained(P,config=BertConfig.from_pretrained(P),trust_remote_code=True,local_files_only=True);rows=list(csv.DictReader(Path('/workspace/dnabert2_eval/external_data/BEND/prepared/20261012_001503_n1000_seed42/train_n1000_bp4000.csv').open()));order=np.random.default_rng(42).permutation(len(rows));data={s:[rows[i] for i in idx] for s,idx in [('train',order[:800]),('validation',order[800:900]),('test',order[900:])]};head=torch.nn.Linear(net.config.hidden_size,18);task='multilabel';S['split_note']='new seed42 800/100/100 within BEND originaltrain1000; prior independent originaltest metrics retained; no donor/chromosome independent validation claimed'
+ elif kind=='ntv2':
+  from transformers import AutoModelForMaskedLM,AutoTokenizer
+  P=R/'models/checkpoint';tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);base=AutoModelForMaskedLM.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=base.esm;del base;data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(net.config.hidden_size,2);task='classification';S['head_note']='masked-mean pooled new linear head, distinct from earlier native CLS MLP head; fixed within this batch comparison'
+ elif kind=='rnafm':
+  import fm
+  torch.serialization.add_safe_globals([argparse.Namespace]);net,alphabet=fm.pretrained.rna_fm_t12(R/'models/RNA-FM_pretrained.pth');data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(640,max(r['label'] for r in data['train'])+1);task='classification';S['head_note']='all backbone plus linear RNA-type classifier trained; unlike previous frozen embeddings+linear-only training'
+ elif kind=='esm2':
+  import esm,lmdb
+  raw=torch.load(R/'models/esm2_t33_650M_UR50D.pt',map_location='cpu',weights_only=False);reg=torch.load(R/'models/esm2_t33_650M_UR50D-contact-regression.pt',map_location='cpu',weights_only=True);net,alphabet=esm.pretrained.load_model_and_alphabet_core('esm2_t33_650M_UR50D',raw,reg);del raw,reg;data={}
+  for split,n in [('train',1024),('valid',128),('test',512)]:
+   env=lmdb.open(str(R/'data/fluorescence'/f'fluorescence_{split}.lmdb'),readonly=True,lock=False)
+   with env.begin() as txn:
+    size=pickle.loads(txn.get(b'num_examples'));indices=random.Random(42).sample(range(size),n);rs=[pickle.loads(txn.get(str(i).encode())) for i in indices]
+   env.close();data['validation' if split=='valid' else split]=[{'id':split+'_'+str(i),'sequence':r['primary'],'label':float(r['log_fluorescence'][0])} for i,r in zip(indices,rs)]
+  head=torch.nn.Linear(1280,1);task='regression';S['training_scope']='full backbone+linear GFP regression, distinct from earlier partial adapter/head training';mu=float(np.mean([r['label'] for r in data['train']]));sd=float(np.std([r['label'] for r in data['train']]));S['target_standardization']={'mean':mu,'std':sd}
+ elif kind=='openspliceai':
+  from openspliceai.train_base.openspliceai import SpliceAI
+  W=np.array([11]*8+[21]*4+[41]*4);AR=np.array([1]*4+[4]*4+[10]*4+[25]*4);net=SpliceAI(32,W,AR);net.load_state_dict(torch.load(R/'source/models/openspliceai-mane/10000nt/model_10000nt_rs10.pt',map_location='cpu',weights_only=True));head=torch.nn.Identity();data=json.loads((R/'data/inputs.json').read_text());task='splice';S['training_scope']='one seed10model full training, not five-model inference ensemble'
+ else:raise ValueError(kind)
+ data={s:data[s] for s in ['train','validation','test']};S['split_ids']={s:[r['id'] for r in rs] for s,rs in data.items()};S['split_counts']={s:len(rs) for s,rs in data.items()};assert B<=len(data['train']);allrows=[r for rs in data.values() for r in rs];offsets={};encoded={};ys={};pos=0
+ if tokenizer is not None:
+  z=tokenizer([r['sequence'] for r in allrows],padding=True,truncation=False,return_tensors='pt');encoded={k:z[k] for k in ['input_ids','attention_mask']}
+ elif alphabet is not None:
+  _,_,z=alphabet.get_batch_converter()([(r['id'],r['sequence']) for r in allrows]);encoded={'input_ids':z,'attention_mask':z.ne(alphabet.padding_idx).long()}
+ else:
+  tab=np.zeros((256,4),np.float32)
+  for j,c in enumerate('ACGT'):tab[ord(c),j]=1
+  encoded={'onehot':torch.from_numpy(np.stack([tab[np.frombuffer(r['sequence'][2500:17500].encode(),np.uint8)].T for r in allrows]))}
+ S['fixed_pool_padded_shapes']={k:list(v.shape) for k,v in encoded.items()};S['raw_training_lengths']={'min':min(len(r['sequence']) for r in data['train']),'max':max(len(r['sequence']) for r in data['train']),'mean':float(np.mean([len(r['sequence']) for r in data['train']]))};S['padding_policy']='one fixed full split pool width across all batch sizes, no truncation; valid lengths separately reported'
+ for split,rs in data.items():
+  offsets[split]=np.arange(pos,pos+len(rs));pos+=len(rs)
+  if task=='multilabel':
+   y=torch.zeros(len(rs),18)
+   for i,r in enumerate(rs):y[i,json.loads(r['labels'])]=1
+  elif task=='splice':y=torch.tensor([r['labels_10000'][2500:7500] for r in rs])
+  else:y=torch.tensor([r['label'] for r in rs],dtype=torch.float32 if task=='regression' else torch.long)
+  ys[split]=y
+ net=net.float().cuda();head=head.float().cuda();torch.cuda.synchronize();S['model_only_postload']=meter.memory();S['parameters_total']=sum(p.numel() for p in net.parameters())+sum(p.numel() for p in head.parameters());params=list(net.parameters())+list(head.parameters());opt=torch.optim.AdamW(params,lr=1e-5,weight_decay=.01);before=next(head.parameters()).detach().cpu().clone() if task!='splice' else net.initial_conv.weight.detach().cpu().clone()
+ def output(ix):
+  x={k:v[ix].cuda() for k,v in encoded.items()}
+  if task=='splice':return net(x['onehot'])
+  if kind=='dnabert2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'])[0];mask=x['attention_mask'].unsqueeze(-1)
+  elif kind=='ntv2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'],return_dict=True).last_hidden_state;mask=x['attention_mask'].unsqueeze(-1)
+  else:
+   layer=33 if kind=='esm2' else 12;h=net(x['input_ids'],repr_layers=[layer],return_contacts=False)['representations'][layer];mask=x['attention_mask'].clone();mask[:,0]=0;last=mask.sum(1);mask[torch.arange(len(mask),device='cuda'),last]=0;mask=mask.unsqueeze(-1)
+  mask=mask.to(h.dtype);return head((h*mask).sum(1)/mask.sum(1).clamp_min(1))
+ def lossfn(z,y):
+  if task=='regression':return torch.nn.functional.mse_loss(z.squeeze(-1),(y-mu)/sd)
+  if task=='multilabel':return torch.nn.functional.binary_cross_entropy_with_logits(z,y)
+  if task=='splice':return torch.nn.functional.nll_loss(torch.log(z.clamp_min(1e-10)),y,ignore_index=-1)
+  return torch.nn.functional.cross_entropy(z,y)
+ def evaluate(split):
+  net.eval();head.eval();outs=[];losses=[]
+  with torch.no_grad():
+   for start in range(0,len(data[split]),8):
+    idx=offsets[split][start:start+8];z=output(idx);y=ys[split][start:start+8].cuda();losses.append(float(lossfn(z,y))*len(idx));outs.append(z.cpu().numpy())
+  z=np.concatenate(outs);y=ys[split].numpy();metrics={'mean_loss':sum(losses)/len(y),'unique_samples':len(y)}
+  if task in ['classification','multilabel']:
+   from sklearn.metrics import accuracy_score,f1_score
+  if task=='classification':metrics.update(accuracy=float(accuracy_score(y,z.argmax(1))),macro_f1=float(f1_score(y,z.argmax(1),average='macro',zero_division=0)))
+  if task=='multilabel':metrics.update(micro_f1=float(f1_score(y,z>0,average='micro',zero_division=0)))
+  if task=='regression':
+   from scipy.stats import spearmanr
+   pred=z[:,0]*sd+mu;metrics.update(mse=float(np.mean((pred-y)**2)),spearman=float(spearmanr(pred,y).statistic))
+  if task=='splice':
+   from sklearn.metrics import average_precision_score
+   metrics['acceptor_donor_AUPRC']=[float(average_precision_score((y==k).ravel(),z[:,k,:].ravel())) for k in [1,2]]
+  return metrics,z
+ net.train();head.train();t,base=meter.begin('actual_supervised_training');steps=[];n=len(data['train']);limit=min(n,3*B) if mode=='probe' else n
+ for epoch in range(1 if mode=='probe' else E):
+  order=np.random.default_rng(42+epoch).permutation(n)[:limit]
+  for start in range(0,limit,B):
+   local=order[start:start+B];ix=offsets['train'][local];torch.cuda.synchronize();t0=time.time();opt.zero_grad(set_to_none=True);z=output(ix);loss=lossfn(z,ys['train'][local].cuda());assert torch.isfinite(loss);loss.backward();S.setdefault('observed_parameters_with_gradient',sum(p.numel() for p in params if p.grad is not None));opt.step();torch.cuda.synchronize();steps.append({'epoch':epoch,'n':len(ix),'seconds':time.time()-t0,'loss':float(loss.detach())});print('STEP',kind,B,epoch,start+len(ix),'/',limit,'loss',steps[-1]['loss'],flush=True);del z,loss
+ S['training']=meter.end(t,base);r=S['training'];r.update(batch_size=B,unique_training_cells=n if mode=='full' else limit,epochs=E if mode=='full' else 0,optimizer_steps=len(steps),processed_inputs=sum(s['n'] for s in steps),allocated_fraction_shared_ram=r['memory']['peak_allocated_gib']/r['memory']['system_total_gib']);r['inputs_per_second']=r['processed_inputs']/r['seconds'];S['training_steps']=steps;after=next(head.parameters()).detach().cpu() if task!='splice' else net.initial_conv.weight.detach().cpu();S['head_or_conv_weights_updated']=not torch.equal(before,after);assert S['head_or_conv_weights_updated'];save();opt.zero_grad(set_to_none=True);del opt;gc.collect();torch.cuda.empty_cache()
+ if mode=='full':
+  S['validation'],_=evaluate('validation');S['test'],test=evaluate('test');np.save(C/'test_outputs.npy',test);ck=C/'model.pt';torch.save({'backbone':net.state_dict(),'head':head.state_dict(),'model':kind,'training_settings':{'seed':42,'lr':1e-5,'weight_decay':.01,'epochs':2,'batch':B},'split_ids':S['split_ids'],'source_weights':'original public checkpoint in local models folder','labels':json.loads((R/'data/input_audit.json').read_text()).get('labels') if (R/'data/input_audit.json').exists() else None,'target_standardization':S.get('target_standardization')},ck);saved=torch.load(ck,map_location='cpu',weights_only=True);net.load_state_dict(saved['backbone']);head.load_state_dict(saved['head']);del saved;_,again=evaluate('test');S['reload_max_abs_outputs']=float(np.abs(test-again).max());assert np.allclose(test,again,atol=1e-4,rtol=1e-4);S['saved_model_reload_verified']=True
+ S['status']='complete';save()
+except BaseException as e:S['status']='failed';S['error']=repr(e);save();raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b128_executed_source.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b128_executed_source.py", "sha256": "11095b56bf1768b5e12be9814eb1ec572938ec22412ab702bc3ee3c7e8babce6", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,time,json,gc,argparse
+import numpy as np,torch
+sys.path.insert(0,'/support');from gpu_support import Meter,write_json
+R=Path('/work');D=R/'results'/os.environ['RUN_ID'];kind=os.environ['MODEL_KIND'];B=int(os.environ['BATCH']);C=D/f'batch_{B}';C.mkdir();meter=Meter(C);S={'status':'running','model':kind,'batch':B,'task':'inference resource batch sweep only, no training','conditions':[]}
+def save():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);torch.manual_seed(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False;torch.cuda.init();torch.cuda.set_per_process_memory_fraction(min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory));S['allocator_budget_gib']=100;meter.phase='load';t=time.time();tokenizer=None
+ if kind=='scvi':
+  import scvi
+  P=R/'models/scvi_20261027_185327_767988/train_10176';m=scvi.model.SCVI.load(str(P),accelerator='cpu');m.to_device('cuda:0');m.module.eval();nets=[m.module];ad=m.adata;assert ad.n_vars==2000 and ad.n_obs>=B;S['checkpoint']=str(P);S['input']={'unique_cells':B,'genes':ad.n_vars,'raw_counts_source':'saved adata.h5ad layers counts, actual 10x PBMC4k+8k','original_pool_cells':ad.n_obs,'batch_covariate':'sample_id, biological batch distinct from GPU batch'}
+  x=ad[:B].copy()
+  def forward():return m.get_latent_representation(adata=x,batch_size=B,give_mean=True)
+ else:
+  records=json.loads((D/'inputs.json').read_text());assert len(records)>=B
+  if kind=='dnabert2':
+   from transformers import AutoModel,AutoTokenizer,BertConfig
+   P=Path('/workspace/dnabert2_eval/model');tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);m=AutoModel.from_pretrained(P,config=BertConfig.from_pretrained(P),trust_remote_code=True,local_files_only=True).float().cuda().eval();nets=[m]
+  elif kind=='ntv2':
+   from transformers import AutoModelForMaskedLM,AutoTokenizer
+   P=R/'models/checkpoint';tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);m=AutoModelForMaskedLM.from_pretrained(P,trust_remote_code=True,local_files_only=True).float().cuda().eval();nets=[m]
+  elif kind=='rnafm':
+   import fm
+   torch.serialization.add_safe_globals([argparse.Namespace]);m,alphabet=fm.pretrained.rna_fm_t12(R/'models/RNA-FM_pretrained.pth');m=m.float().cuda().eval();nets=[m];converter=alphabet.get_batch_converter()
+  elif kind=='openspliceai':
+   from openspliceai.train_base.openspliceai import SpliceAI
+   W=np.array([11]*8+[21]*4+[41]*4);AR=np.array([1]*4+[4]*4+[10]*4+[25]*4);nets=[]
+   for seed in range(10,15):
+    net=SpliceAI(32,W,AR).float().cuda();net.load_state_dict(torch.load(R/f'source/models/openspliceai-mane/10000nt/model_10000nt_rs{seed}.pt',map_location='cpu',weights_only=True));net.eval();nets.append(net)
+  else:raise ValueError(kind)
+ torch.cuda.synchronize();S['load_seconds']=time.time()-t;S['model_only_postload']=meter.memory();S['parameters_total']=sum(p.numel() for net in nets for p in net.parameters());S['parameters_trained_in_this_run']=0;S['theoretical_weight_storage_gib']=sum(p.numel()*p.element_size() for net in nets for p in net.parameters())/2**30;S['parameters_used_backbone']=sum(p.numel() for p in m.esm.parameters()) if kind=='ntv2' else S['parameters_total'];S['checkpoint_reference']={'scvi':'models/scvi_20261027_185327_767988/train_10176','dnabert2':'/workspace/dnabert2_eval/model + model_revision.txt','ntv2':'models/checkpoint; existing setup/download provenance','rnafm':'models/RNA-FM_pretrained.pth; existing data/sources.json','openspliceai':'source/models/openspliceai-mane/10000nt seeds10..14'}[kind];S['environment']={'torch':torch.__version__,'cuda':torch.version.cuda,'gpu':torch.cuda.get_device_name(0),'precision':'FP32','tf32':False};save()
+ if kind!='scvi':
+  cache=D/'token_cache.pt'
+  if not cache.exists():
+   if tokenizer is not None:
+    encoded=tokenizer([r['sequence'] for r in records],padding=True,truncation=False,return_tensors='pt');encoded={k:encoded[k] for k in ['input_ids','attention_mask']}
+   elif kind=='rnafm':
+    _,_,tok=converter([(r['id'],r['sequence']) for r in records]);encoded={'input_ids':tok}
+   else:
+    tab=np.zeros((256,4),np.uint8)
+    for j,c in enumerate('ACGT'):tab[ord(c),j]=1
+    encoded={'onehot':torch.from_numpy(np.stack([tab[np.frombuffer(r['sequence'].encode(),np.uint8)].T for r in records]))}
+   torch.save(encoded,cache)
+  encoded=torch.load(cache,map_location='cpu',weights_only=True);cpu={k:v[:B] for k,v in encoded.items()};S['input']={'unique_sequences':B,'pool_sequences':len(records),'raw_length_min':min(len(r['sequence']) for r in records[:B]),'raw_length_max':max(len(r['sequence']) for r in records[:B]),'input_shapes':{k:list(v.shape) for k,v in cpu.items()},'tokenizer_truncation':False,'padding':'same pool-wide longest token width fixed across batches; explicit crop lengths in inputs provenance','ids':[r['id'] for r in records[:B]]}
+  if kind=='ntv2':assert cpu['input_ids'].shape[1]<=2048
+  if kind=='rnafm':assert cpu['input_ids'].shape[1]<=1024
+  def forward():
+   x={k:(v.cuda().float() if k=='onehot' else v.cuda()) for k,v in cpu.items()}
+   if kind in ['dnabert2','ntv2']:
+    h=m(**x)[0] if kind=='dnabert2' else m.esm(**x,return_dict=True).last_hidden_state;mask=x['attention_mask'].unsqueeze(-1).to(h.dtype);out=(h*mask).sum(1)/mask.sum(1)
+   elif kind=='rnafm':
+    h=m(x['input_ids'],repr_layers=[12],return_contacts=False)['representations'][12];out=torch.stack([h[i,1:len(r['sequence'])+1].mean(0) for i,r in enumerate(records[:B])])
+   else:
+    out=None
+    for net in nets:
+     z=net(x['onehot']);out=z if out is None else out+z
+    out=out/len(nets)
+   return out.cpu().numpy()
+ meter.phase='warmup';t=time.time()
+ with torch.no_grad():out=forward()
+ torch.cuda.synchronize();S['warmup_seconds']=time.time()-t;assert out.shape[0]==B and np.isfinite(out).all();del out;gc.collect();t,base=meter.begin('inference');steps=0
+ with torch.no_grad():
+  while steps<2 or time.time()-t<15:out=forward();assert np.isfinite(out).all();torch.cuda.synchronize();steps+=1
+ r=meter.end(t,base,batch_size=B,unique_inputs=B,processed_inputs=B*steps,repeats=steps);r['inputs_per_second']=B*steps/r['seconds'];r['allocated_fraction_shared_ram']=r['memory']['peak_allocated_gib']/r['memory']['system_total_gib'];r['model_only_allocated_gib']=S['model_only_postload']['allocated_gib'];S['conditions']=[r];np.save(C/'outputs.npy',out);assert np.array_equal(np.load(C/'outputs.npy'),out);S['output_shape']=list(out.shape);S['finite_and_exact_save_reload']=True
+ first=D/'reference_first.npy'
+ if not first.exists():np.save(first,out[0]);S['reference_first_created']=True
+ else:
+  ref=np.load(first);diff=float(np.abs(ref-out[0]).max());S['batch_invariance_max_abs']=diff;assert np.allclose(ref,out[0],atol=1e-4,rtol=1e-4),(kind,diff)
+ S['status']='complete';save();print('BATCH_COMPLETE',kind,B,r['memory']['peak_allocated_gib'],flush=True)
+except BaseException as e:S['status']='failed';S['error']=repr(e);save();raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: full_training_b512_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/full_training_b512_command.json", "sha256": "5d5ef67dcad02b1a73c66696ab4bf0dc3b2e7a22adaf2d94b457a607adc12547", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=512",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: full_training_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/full_training_b8_command.json", "sha256": "d5cec48c8e6d28e95f1cf87134fe7c6d1e88bef984d64a0821e1bc03b7e905ee", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b128_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b128_command.json", "sha256": "e8dfab5cba315951916ea2f74843490f4767491ccf4eba8c6883408af635aac0", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=128",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b256_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b256_command.json", "sha256": "a3930b8afd2501d3fa0da8561ec6eb27ace7993b3c99e63e856889caa451b88a", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=256",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b384_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b384_command.json", "sha256": "297cfe7faf3ed52c584382a1d4f5555ec93997d410e91564e8dea16c3b097514", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=384",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b448_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b448_command.json", "sha256": "8f615827ec7ee61a2ff5c53b9270a8b9af4efca38cdbcd077ecf3f684fc2a390", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=448",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b512_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b512_command.json", "sha256": "3312cf01bf90799a61fd7de9a56d3156ce31739c2fa773203de3679451307aeb", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=512",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b544_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b544_command.json", "sha256": "00733f16285f78ad884ba74fe371dcede4d35c0aaf4f873966d8e0ce51b8ff00", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=544",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b560_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b560_command.json", "sha256": "247e45cb75c823907bd3f0e2fa0a5cb64001da100b910340f42ff6f3a43f708c", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=560",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b576_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b576_command.json", "sha256": "ad90644a82e0ae7264c0ad3e8020bce04e8cc57541efb141c354e831e31d00c5", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=576",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b592_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b592_command.json", "sha256": "0a00902408b70e9a7aa75dec98c32f542fe274ea864a8dd150817a4ce9351403", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=592",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b608_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b608_command.json", "sha256": "0b519ab53f3900f9184631fc075ae709e2f630add7f0fcc5465be6976e045343", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=608",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b624_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b624_command.json", "sha256": "0aa65d453d5a295c3de18aa8376db28fdb19ba7fa817a16d76ac31f4c88cf843", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=624",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/inference_b8_command.json", "sha256": "0ce0c56b05e0ffba6d82b2c079c375991e691e1fb1543614009da31d817a0720", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/inference_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b128_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b128_command.json", "sha256": "3eb2def60bfa4c5a86b2beeac31418496360993c57a99c725d578f4859269bbf", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=128",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b256_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b256_command.json", "sha256": "23b925f827662e84437a771cd1b0f7128f5486f333541b5f8dd949a44eaa13fc", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=256",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b384_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b384_command.json", "sha256": "2987cf5c29ee78b8791ae111d873685728ca562badfcc98055c4ed837d19170e", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=384",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b448_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b448_command.json", "sha256": "af660150ec4a6ae40bd6363908520fb9240b8166ae65c286692eb7c60ae19d40", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=448",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b512_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b512_command.json", "sha256": "b33cae018588aa97f7e41b905af132798664b03f11b27a5056651f294e8f09fa", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=512",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b64_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b64_command.json", "sha256": "6052ddda7f6e65c2b39112e2b22d0b4b2ffa36811ffdf56ac091ae7235c45604", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=64",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: training_probe_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/training_probe_b8_command.json", "sha256": "e3a06fe7834e0de456627374604558900328421244cd3be7ddf851c45ec4c3be", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=real_input_capacity_20261102_152621_008750",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=probe",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/sequence_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: remaining_queue_152f0b87bce32235.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/reproduction_sources/remaining_queue_152f0b87bce32235.py", "sha256": "152f0b87bce32235a41f8616d74f03deabd611eef85dde6419bd68da175973a6", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,json,datetime,subprocess,shlex,time,shutil,csv
+ROOT=Path('/home/hyein/ai-benchmark');P=ROOT/'SUPPLEMENT_EXPERIMENT_STATUS.json';FETCH=ROOT/'scripts/real_training_v3/fetched_inputs'
+def update(**kw):
+ state=json.loads(P.read_text());state.update(**kw);P.write_text(json.dumps(state,indent=2,ensure_ascii=False))
+def idle():assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip(),'another compute job exists'
+def launch(D,label,cmd,source):
+ idle();shutil.copy2(source,D/(label+'_executed_source.py'));(D/(label+'_command.json')).write_text(json.dumps(cmd,indent=2));update(active_stage=label);print('START',label,flush=True);t=time.time()
+ with (D/(label+'.log')).open('w') as f:code=subprocess.call(cmd if cmd[0]!='docker' else ['sg','docker','-c',shlex.join(cmd)],stdout=f,stderr=subprocess.STDOUT)
+ (D/(label+'_exit.json')).write_text(json.dumps({'exit_code':code,'wall_seconds':time.time()-t}));print('EXIT',label,code,flush=True);return code
+if (ROOT/'STOP_AFTER_CELLPOSE').exists():
+ update(status='stopped_after_cellpose_by_user',active_model=None,active_stage=None)
+ print('STOP_AFTER_CELLPOSE: user requested stop; no remaining model launched',flush=True)
+ sys.exit(0)
+for model in ['esm2','dnabert2','ntv2','rnafm','openspliceai','scvi','clair3','colabfold']:
+ if os.environ.get('RESUME_REMAINING')=='1' and model in [v['model'] for v in json.loads(P.read_text()).get('additional_models_measured',[])]:continue
+ run='real_input_capacity_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f');R=ROOT/model;D=R/'results'/run;D.mkdir();(R/'results/REAL_TRAINING_LATEST').write_text(run+'\n');update(active_model=model,active_run=run,status='running');S={'status':'running','run_id':run,'model':model,'scope':'actual unique inputs, inference capacity extension; existing verified training results retained separately','conditions':[],'failed':[],'allocator_policy':'PyTorch process memory cap100GiB, guard available8GiB/swap+2GiB; JAX no preallocation'}
+ if model in ['esm2','rnafm']:
+  src=FETCH/(model+'.json')
+  if not src.exists():S.update(status='blocked',reason='real_input_download_failed');(D/'summary.json').write_text(json.dumps(S));continue
+  records=json.loads(src.read_text());sizes=([1,384,448,512,544,560,576,584,592,600] if model=='esm2' else [1,128,256,512,768,1024,1280,1536,1792,2048,2304,2400])
+ elif model=='dnabert2':records=list(csv.DictReader(Path('/home/hyein/dnabert2-benchmark/dnabert2_eval/external_data/BEND/prepared/20261012_001503_n1000_seed42/train_n1000_bp4000.csv').open()));sizes=[8,512,640,768,800,816,832,848,864,880,896,912,928,944,960,976,992,1000]
+ elif model in ['ntv2','openspliceai']:
+  records=json.loads((R/'data/real_training_v3/inference_inputs.json').read_text());sizes=([8,128,256,384,448,512,544,560,576,592,608,624,640] if model=='ntv2' else [8,512,1024,2048,4096,6144,8192,9216,10240,11264,12288,13312,14336,15360,16000])
+ elif model=='scvi':records=[];sizes=[128,4096,8192,10176]
+ else:records=[];sizes=[]
+ if records:
+  assert len({r['sequence'] for r in records})==len(records);(D/'inputs.json').write_text(json.dumps(records));S['unique_available_sequences']=len(records)
+ if model in ['esm2','dnabert2','ntv2','rnafm','openspliceai','scvi']:
+  for b in sizes:
+   if records and b>len(records):break
+   if model=='esm2':source=R/'scripts/real_training_v3/inference_worker.py';cmd=[str(R/'.venv/bin/python'),'-u',str(source),str(D),str(b)]
+   else:
+    source=ROOT/'scripts/real_training_v3/inference_worker.py';cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro','-e','RUN_ID='+run,'-e','MODEL_KIND='+model,'-e','BATCH='+str(b),'-e','MPLCONFIGDIR=/work/.cache/matplotlib','-e','NUMBA_CACHE_DIR=/work/.cache/numba','-e','HF_HOME=/work/.cache/huggingface','-e','HF_MODULES_CACHE=/work/.cache/modules','-e','HF_HUB_OFFLINE=1','-e','TRANSFORMERS_OFFLINE=1'];python='/work/.venv/bin/python'
+    if model=='dnabert2':cmd+=['-v','/home/hyein/dnabert2-benchmark:/workspace:ro'];python='/workspace/miniforge/envs/dnabert2/bin/python'
+    cmd+=['nvcr.io/nvidia/pytorch:26.06-py3',python,'-u','/support/real_training_v3/inference_worker.py']
+   code=launch(D,'inference_b'+str(b),cmd,source)
+   if code:S['failed'].append({'batch':b,'exit_code':code});S['stop_reason']='actual_worker_error_or_guard';break
+   s=json.loads((D/f'batch_{b}/summary.json').read_text());r=s['conditions'][0];S['conditions'].append(r);S['largest_successful_batch']=b;(D/'summary.json').write_text(json.dumps(S,indent=2))
+   if r['allocated_fraction_shared_ram']>=.8:S['stop_reason']='allocated80pct_shared_ram_reached';break
+  else:S['stop_reason']='tested_real_input_pool_or_planned_range_limit'
+ elif model=='clair3':
+  old=R/'results/candidate_batch_20261028_185641_089149'
+  for kind in ['Clair3_P','Clair3_F']:
+   for suffix in ['_inputs.npy','_reference_first.npy']:
+    os.symlink(old/(kind+suffix),D/(kind+suffix))
+   pool=json.loads((old/'input_audit.json').read_text())[kind]['unique_feature_rows'];b=pool;source=R/'scripts/batch_followup/worker.py';cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro','-e','RUN_ID='+run,'-e','CANDIDATE_MODEL='+kind,'-e','BATCH='+str(b),'local/clair3-spark:9d1dd3f','/work/.venv/bin/python','-u','/work/scripts/batch_followup/worker.py'];code=launch(D,kind+'_full_real_pool',cmd,source)
+   if code:S['failed'].append({'kind':kind,'exit_code':code});continue
+   s=json.loads((D/f'{kind}_batch_{b}/summary.json').read_text());S['conditions'].append(s['condition'])
+  S['stop_reason']='actual_unique_BAM_candidate_cache_limit; no synthetic candidates or pseudo truth labels'
+ elif model=='colabfold':
+  old=R/'results/vmap_fp32_20261028_190843_576148'
+  for p in old.glob('*_processed_features.npz'):os.symlink(p,D/p.name)
+  os.symlink(old/'input_audit.json',D/'input_audit.json');os.symlink(old/'batch_1',D/'batch_1');source=R/'scripts/batch_followup/worker.py';cmd=['docker','run','--rm','--gpus','all','--network','none','--ipc=host','--user','1000:1000','-v',str(R)+':/work','-v',str(R/'cache/colabfold')+':/cache:ro','-e','RUN_ID='+run,'-e','BATCH=4','-e','JAX_PLATFORMS=cuda,cpu','-e','XLA_PYTHON_CLIENT_PREALLOCATE=false','ghcr.io/sokrypton/colabfold:1.6.2-cuda13','python','-u','/work/scripts/batch_followup/worker.py'];code=launch(D,'four_real_queries',cmd,source)
+  if code:S['failed'].append({'batch':4,'exit_code':code})
+  else:S['conditions']=json.loads((D/'batch_4/summary.json').read_text())['conditions']
+  S['stop_reason']='four_actual_cached_MSA_query_pool_limit; no native training in installed ColabFold execution path'
+ if model in ['esm2','dnabert2','ntv2','rnafm','openspliceai']:
+  source=ROOT/'scripts/real_training_v3/sequence_training_worker.py';sizes={'esm2':[8,32,64,96,128,160,192,224,256,288,320,384,448,512,768,1024],'dnabert2':[8,32,48,64,72,80,88,96,104,112,120,128],'ntv2':[8,64,128,256,384,448,512],'rnafm':[8,32,64,96,128,160,192,224,256,288,320,384,448,512,640,768,896],'openspliceai':[8,32,64,96]}[model];safe=[];target=None;S['training_probes']=[]
+  def traincommand(b,mode):
+   env={'RUN_ID':run,'MODEL_KIND':model,'BATCH':str(b),'TRAIN_MODE':mode,'MPLCONFIGDIR':'/work/.cache/matplotlib','NUMBA_CACHE_DIR':'/work/.cache/numba','HF_HOME':'/work/.cache/huggingface','HF_MODULES_CACHE':'/work/.cache/modules','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}
+   if model=='esm2':
+    env.update(MODEL_ROOT=str(R),SUPPORT_PATH=str(ROOT/'scripts'));return ['env']+[k+'='+v for k,v in env.items()]+[str(R/'.venv/bin/python'),'-u',str(source)]
+   cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro'];python='/work/.venv/bin/python'
+   if model=='dnabert2':cmd+=['-v','/home/hyein/dnabert2-benchmark:/workspace:ro'];python='/workspace/miniforge/envs/dnabert2/bin/python'
+   for k,v in env.items():cmd+=['-e',k+'='+v]
+   return cmd+['nvcr.io/nvidia/pytorch:26.06-py3',python,'-u','/support/real_training_v3/sequence_training_worker.py']
+  for b in sizes:
+   code=launch(D,'training_probe_b'+str(b),traincommand(b,'probe'),source)
+   if code:S['training_probe_stop']={'batch':b,'exit_code':code};break
+   w=json.loads((D/f'probe_training_b{b}/summary.json').read_text());r=w['training'];S['training_probes'].append(r);safe.append(b)
+   if r['allocated_fraction_shared_ram']>=.8:target=b;break
+  S['training80_batch']=target;S['full_training_cases']=[]
+  for b in sorted(set(([8] if safe else [])+([target] if target else ([max(safe)] if safe and max(safe)>8 else [])))):
+   code=launch(D,'full_training_b'+str(b),traincommand(b,'full'),source)
+   S['full_training_cases'].append({'batch':b,'exit_code':code})
+   if not code:
+    w=json.loads((D/f'full_training_b{b}/summary.json').read_text());S['full_training_cases'][-1]['summary_path']=str(D/f'full_training_b{b}/summary.json')
+  (D/'summary.json').write_text(json.dumps(S,indent=2))
+ S['reached80']=any(r.get('allocated_fraction_shared_ram',0)>=.8 for r in S['conditions']);S['status']='stopped' if S['failed'] else 'measured';(D/'summary.json').write_text(json.dumps(S,indent=2));subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/update_reports.py')]);state=json.loads(P.read_text());done=state.get('additional_models_measured',[]);done.append({'model':model,'run':run,'status':S['status'],'reached80':S['reached80']});update(additional_models_measured=done);print('MODEL_DONE',model,S['status'],flush=True)
+update(status='all_ten_additional_runs_finished_review_required',active_model=None,active_stage=None)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: update_reports_305433d7fed68d6f.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/reproduction_sources/update_reports_305433d7fed68d6f.py", "sha256": "305433d7fed68d6ff20850b0d00d18708a0de3d92b36924d41dbbfe168034b8e", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import json,re,hashlib,shutil
+ROOT=Path('/home/hyein/ai-benchmark');PUB=Path('/home/hyein/ai-benchmark-publication');mapping={'scgpt':'scGPT.md','cellpose':'Cellpose.md','esm2':'ESM-2.md','colabfold':'AlphaFold2.md','scvi':'scVI.md','dnabert2':'DNABERT-2.md','ntv2':'Nucleotide_Transformer_V2.md','clair3':'Clair3.md','rnafm':'RNA-FM.md','openspliceai':'OpenSpliceAI.md'}
+def f(v):return 'N/A' if v is None else f'{v:.4f}' if isinstance(v,float) else str(v)
+def block(path):
+ b=path.read_bytes();s=b.decode();meta={'path':str(path.relative_to(ROOT)),'sha256':hashlib.sha256(b).hexdigest(),'encoding':'utf-8','added_final_newline':not s.endswith('\n')};n=max([3]+[len(m.group())+1 for m in re.finditer(r'`{3,}',s)]);fence='`'*n
+ return '\n<!-- RESTORE_FILE '+json.dumps(meta)+' -->\n'+fence+('python' if path.suffix=='.py' else 'json')+'\n'+s+('' if s.endswith('\n') else '\n')+fence+'\n<!-- END_RESTORE_FILE -->\n'
+for model,filename in mapping.items():
+ pointer=ROOT/model/'results/REAL_TRAINING_LATEST'
+ if not pointer.exists():continue
+ D=pointer.parent/pointer.read_text().strip();rows=[]
+ for p in sorted(D.glob('*/summary.json')):
+  s=json.loads(p.read_text());r=s.get('training') or s.get('condition') or next(iter(s.get('conditions',[])),None)
+  if not r:continue
+  mem=r.get('memory',{})
+  def pick(d,*keys):return next((d[k] for k in keys if d.get(k) is not None),None)
+  score={k:v for k,v in s.get('test',{}).items() if k in ['accuracy','micro_f1','macro_f1','macro_f1_present_known_classes','mse','spearman','acceptor_donor_AUPRC','AP50_AP75_AP90']}
+  method='추론(가중치 갱신 없음)'
+  if s.get('training'):
+   method='처음부터 학습' if model=='scvi' else '본체·분류기 파인튜닝' if model=='scgpt' else '본체·분할출력층 파인튜닝' if model=='cellpose' else '전체backbone·과제head 파인튜닝'
+   if 'probe' in p.parent.name:method+=' /용량측정'
+  values=[p.parent.name,method,s.get('status'),pick(r,'unique_training_cells','unique_train_images','unique_inputs','unique_candidates','unique_queries'),pick(r,'batch_size','batch') or s.get('batch'),r.get('epochs',s.get('epochs')),pick(r,'optimizer_steps','steps'),r.get('seconds'),pick(r,'cells_per_second','crops_per_second_trainer_scope','inputs_per_second','sequences_per_second','candidates_per_second','queries_per_second'),mem.get('peak_allocated_gib'),mem.get('peak_reserved_gib'),r['allocated_fraction_shared_ram']*100 if 'allocated_fraction_shared_ram' in r else None,r.get('gpu_util_avg'),r.get('gpu_util_max'),score or None,s.get('saved_model_reload_verified',s.get('reload_mask_equal'))]
+  rows.append('|'+ '|'.join(map(f,values))+'|')
+ text='<!-- REAL_TRAINING_V3_START -->\n### 실제 데이터 추가 실험 — '+D.name+'\n\n진행 중인 실행의 완료 조건만 아래에 갱신한다. probe는 짧은 용량 측정이며 전체 학습이나 평가 완료가 아니다. 메모리%는 CUDA allocated peak / 시스템 공유 RAM ×100이며 GPU-Util과 다르다. 독립 실행 1회 기준.\n\n|조건|가중치 갱신 방식·실험 목적|상태|고유 입력|배치|epoch|optimizer steps|실측 시간(s)|입력/s|allocated peak GiB|reserved peak GiB|공유 RAM 대비 allocated %|GPU-Util 평균%|최대%|독립 test 지표|저장 모델 재로드|\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n'+'\n'.join(rows)+'\n\n'
+ if model=='scgpt':text+='입력은 Tabula Sapiens 실제 고유 30만 세포에서 donor 단위로 분리한 학습238,868 / 검증35,738 / test25,394세포이다. 학습 donor의 실제 cell_type161종을 정답으로 사용한다. 새 분류 헤드161개는 기존 pancreas13클래스 실험과 별도 조건이다. 이 실행의 전체 학습 비교는 동일한 고유1만 세포,1epoch,FP32,최대1200토큰(CLS 포함),실제 배치 최장 길이 padding,동일 초기 backbone/seed42/AdamW에서 배치만 바꾼다. 검증2,000 / test5,000세포 고정 부분집합을 평가하며 미등장 라벨은 제외 수를 별도 저장한다. 같은 epoch에서도 배치별 optimizer step수가 달라 정확도 차이를 순수 배치 성능으로 단정하지 않는다. 학습 시간은 주기적 체크포인트 저장 포함이며 순수 step 시간은 원본 summary에 따로 기록한다.\n\n'
+ if model not in ['scgpt','cellpose']:text+='이 run의 추론 capacity 실험과 지도학습 실험은 입력 과제·길이·학습 헤드가 다를 수 있어 각각 비교한다. 3step probe는 전체 학습이 아니다. full_training은 동일한 공개 초기 backbone와 seed42,FP32,AdamW(lr1e-5,weight_decay0.01),고정 전체 split pool padding으로2epoch 수행한다. 각 학습 조건의 원본 summary에 split ID,실제 길이·padding 모양,사용 헤드·학습 범위,라벨,gradient가 관측된 파라미터 수,검증/test지표,저장 모델 재로드 차이를 기록한다. scVI는 아래 설명이 적용되지 않는 별도 처음부터 학습 모델이며 AF2·Clair3에는 이 공통 학습 절차를 적용하지 않는다.\n\n'
+ if model=='dnabert2':text+='새 보완 학습은 기존 BEND train1000 안에서 seed42로800/100/100을 분리한다. 이는 기존 독립 test 평가를 대체하지 않으며 염색체 독립 평가가 아니다. 18개 다중 라벨,masked-mean+linear head,전체 backbone 학습이다.\n\n'
+ if model=='esm2':text+='새 학습은 TAPE fluorescence의 실제 GFP train1024/valid128/test512를 고유 부분집합으로 사용한다. masked-mean+linear regression,학습 라벨 평균/표준편차로 정규화,전체 backbone 학습으로 이전 일부 계층 학습과 구분한다. 새 추론은 별도 UniProt reviewed900–950AA 실제 서열을 사용한다.\n\n'
+ if model=='rnafm':text+='새 지도학습은 기존 RNAcentral 타입 라벨 train896/validation224/test280을 유지하고 전체 backbone+선형 분류기를 갱신한다. 기존 frozen backbone+head-only와 구분한다. 새 추론은 GENCODEv47 실제 lncRNA transcript 첫1000nt(T→U)2400개를 사용하며 타입 라벨 학습 데이터와 다르다.\n\n'
+ if model=='ntv2':text+='새 학습은 기존 enhancer train512/validation128/test400,199–200nt 정답을 사용한다. 새 masked-mean+linear head는 이전 native CLS MLP head와 다른 별도 조건이며 이번 배치 비교 내에서는 고정한다. 추론은 실제 GRCh38 비중첩6000nt window1024개를 별도로 사용한다.\n\n'
+ if model=='openspliceai':text+='추론은 GRCh38 실제 비중첩15000nt window16000개,기존5개 모델 앙상블이다. 학습은 기존 라벨이 검증된96/24/36개15000nt 입력→5000nt 정답,seed10단일 모델만 갱신한다. 비지도 reference window에 임의 정답을 만들지 않는다.\n\n'
+ if model=='cellpose':text+='BBBC039 원본 이미지 단위 공식 분리100train/50validation/50test를 확인했다. 학습100장 중 정답 객체가 없는2장은 공식 min_train_masks5 정책으로 제외하여 실제 학습98장이다. 검증50장에는 빈 마스크1장이 있으며 test는50장이다. 원본520×696 uint16 grayscale와 정답 instance mask를 공식256×256 무작위 crop/회전/크기 증강으로 학습한다. FP32,AdamW,lr1e-5,weight_decay0.1,seed42 고정. 네트워크 입력은[B,3,256,256]이며 grayscale 외 두 채널은0이다. 공식 warmup의 epoch0 학습률0이므로 probe도2epoch 실행하고 실제 가중치 변화를 확인한다. 전체 학습 비교는10epoch이고 독립 test50장의 AP50/AP75/AP90이다. CUDA allocator budget100GiB로 캐시 예약이 공유 RAM을 잠식하는 것을 제한한 별도 정책이며 모든 배치에서 동일하다. 학습 시간에는 전처리/검증/체크포인트 저장이 포함된다. flow 준비는 별도 실행으로 재사용한다.\n\n'
+ text+='입력 및 메모리 기준값(같은 실행에서 측정):\n\n|조건|실제 모델 입력 모양/정책|모델 적재 직후 allocated GiB|실행 시작 allocated GiB|peak 추가 allocated GiB|프로세스 RSS sampled peak GiB|시스템 가용 RAM sampled 최소 GiB|\n|---|---|---|---|---|---|---|\n'
+ for p in sorted(D.glob('*/summary.json')):
+  v=json.loads(p.read_text());q=v.get('training') or v.get('condition') or next(iter(v.get('conditions',[])),None)
+  if not q:continue
+  inp=v.get('input',{});shape=inp.get('actual_token_shape',inp.get('input_shapes',v.get('input_shape',v.get('training_input',v.get('fixed_pool_padded_shapes','상세 전처리 정책 참조')))))
+  text+='|'+'|'.join(map(f,[p.parent.name,shape,v.get('model_only_postload',v.get('model_postload',{})).get('allocated_gib'),q.get('baseline',{}).get('allocated_gib'),q.get('peak_delta_gib'),q.get('rss_sampled_peak_gib'),q.get('available_sampled_min_gib')]))+'|\n'
+ text+='\n'
+ run_summary=D/'summary.json'
+ if run_summary.exists():
+  v=json.loads(run_summary.read_text());text+='실행 상태: `'+str(v.get('status','기록 확인'))+'`; 중단/관측 범위: `'+str(v.get('stop_reason','해당 조건별 상태 참조'))+'`.\n\n'
+ if model=='colabfold':
+  for pp in sorted(D.glob('batch_*/summary.json')):
+   v=json.loads(pp.read_text());qq=next(iter(v.get('conditions',[])),{});jm=qq.get('jax_memory_stats',{});text+='JAX 계측 '+pp.parent.name+': 누적 process peak_bytes_in_use='+str(jm.get('peak_bytes_in_use'))+'bytes,실제 실행 구간 sampled peak_bytes_in_use='+str(qq.get('execution_sampled_peak_bytes_in_use'))+'bytes. 누적 peak에는 compile/warmup이 포함되며 CUDA allocated/reserved와 직접 동일시하지 않는다.\n\n'
+ if model=='cellpose':text+='이 Cellpose run은 학습·test 평가·저장 모델 재로드가 완료됐다. 용량probe는 배치26까지90.5200GiB(공유 RAM74.39%) 성공,배치28은100GiB allocator budget에서OOM이 발생해 종료했다. 전체10epoch 학습은 배치1만 수행했으며 80% 학습 조건은 확인되지 않았다.\n\n'
+ text+='실행 코드 블록의 파일은 원문SHA256으로 검증하며, 명령JSON에 기록된 실행 경로로 해당 snapshot을 복사하면 복원할 수 있다. 대용량 원본 데이터·가중치는 아래 전처리/다운로드 코드와 출처를 사용하고 로컬 원본도 보존한다.\n\n'
+ text+='로컬 원시 결과: `'+str(D)+'`. 메모리 부족/guard 실패는 성공 조건으로 기재하지 않는다.\n<!-- REAL_TRAINING_V3_END -->\n'
+ path=PUB/filename;old=path.read_text()
+ if '<!-- REAL_TRAINING_V3_START -->' in old:old=re.sub(r'<!-- REAL_TRAINING_V3_START -->[\s\S]*?<!-- REAL_TRAINING_V3_END -->\n',lambda _:text,old)
+ else:
+  m=re.search(r'^## 4[.\s]',old,re.M);pos=m.start() if m else old.index('## 4');old=old[:pos]+text+'\n'+old[pos:]
+ extra_sources=[ROOT/'scripts/gpu_support.py',ROOT/'scripts/real_training_v3/remaining_queue.py',ROOT/'scripts/real_training_v3/update_reports.py'] if model not in ['scgpt','cellpose'] else []
+ if model in ['esm2','rnafm']:extra_sources += [ROOT/'scripts/real_training_v3/fetch_real_sequences.py',ROOT/'scripts/real_training_v3/fetched_inputs'/('uniprot_source.json' if model=='esm2' else 'gencode_source.json')]
+ if model in ['ntv2','openspliceai']:extra_sources += [ROOT/'scripts/real_training_v3/prepare_genome_pools.py',ROOT/model/'data/real_training_v3/inference_audit.json']
+ for source in sorted(D.glob('*_executed_source.py'))+sorted(D.glob('*_controller_source.py'))+sorted(D.glob('*_command.json'))+extra_sources:
+  sha=hashlib.sha256(source.read_bytes()).hexdigest()
+  if source in extra_sources:
+   snapdir=D/'reproduction_sources';snapdir.mkdir(exist_ok=True);snapshot=snapdir/(source.stem+'_'+sha[:16]+source.suffix)
+   if not snapshot.exists():shutil.copy2(source,snapshot)
+   source=snapshot
+  if ('"sha256": "'+sha+'"') not in old:old+='\n<details><summary>추가 실험 실행 원문: '+source.name+'</summary>\n'+block(source)+'\n</details>\n'
+ path.write_text(old);shutil.copy2(path,ROOT/filename);print(model,'report updated',len(rows),'rows')
+
+# Keep the model/input/learning-scope overview consistent as every new run finishes.
+import subprocess,sys
+subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/standardize_overview.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: prepare_genome_pools_46b78d96d41c9f09.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/reproduction_sources/prepare_genome_pools_46b78d96d41c9f09.py", "sha256": "46b78d96d41c9f095a49916c206deb4ce29f0d16065ee5dd436a0fdd02bb8070", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import json,os,hashlib
+import pysam
+R=Path('/work');kind=os.environ['MODEL_KIND'];fa=pysam.FastaFile('/reference/GRCh38.primary_assembly.genome.fa');length=6000 if kind=='ntv2' else 15000;target=1024 if kind=='ntv2' else 16000;records=[];seen=set();chrom='chr2'
+# Unique nonoverlapping real reference windows; input-only benchmark, never claimed labelled training data.
+for chrom in ['chr2','chr4']:
+ for start in range(2000000,fa.get_reference_length(chrom)-length,length):
+  seq=fa.fetch(chrom,start,start+length).upper()
+  if set(seq)<=set('ACGT') and seq not in seen:
+   seen.add(seq);records.append({'id':f'{chrom}:{start}-{start+length}','sequence':seq,'reference':'GRCh38.primary_assembly.genome.fa','chromosome':chrom,'start0':start,'end0':start+length,'task':'unlabelled embedding/splice-score inference only'})
+  if len(records)>=target:break
+ if len(records)>=target:break
+assert len(records)==target
+out=R/'data/real_training_v3';out.mkdir(exist_ok=True);(out/'inference_inputs.json').write_text(json.dumps(records));(out/'inference_audit.json').write_text(json.dumps({'unique_sequences':len(records),'raw_nt':length,'source_reference':'existing BEND GRCh38.primary_assembly.genome.fa','selection':'chr2 then chr4 from2Mb, fixed nonoverlapping reference windows, ACGT only, exactsequence dedup; no repeated or synthetic sequences','labels':None,'task':'inference only; not substituted for labelled training splits'},indent=2));print(kind,len(records),length,flush=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 실험 실행 원문: inference_audit_f09c12349d92f115.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/real_input_capacity_20261102_152621_008750/reproduction_sources/inference_audit_f09c12349d92f115.json", "sha256": "f09c12349d92f11508f7369c4ebe046413020efa4eb183d16b183c8248164a80", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+{
+  "unique_sequences": 1024,
+  "raw_nt": 6000,
+  "source_reference": "existing BEND GRCh38.primary_assembly.genome.fa",
+  "selection": "chr2 from2Mb, fixed nonoverlapping reference windows, ACGT only, exactsequence dedup; no repeated or synthetic sequences",
+  "labels": null,
+  "task": "inference only; not substituted for labelled training splits"
+}
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: executed_worker.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/executed_worker_edd5f6f99647c80e.py", "sha256": "edd5f6f99647c80e961dd6d68cc22ce156cb57bd447583b1d837358246c5ca57", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import sys,os,json,time,csv,gc,argparse,random,pickle
+import numpy as np,torch
+sys.path.insert(0,os.environ.get('SUPPORT_PATH','/support'));from gpu_support import Meter,write_json
+kind=os.environ['MODEL_KIND'];R=Path(os.environ.get('MODEL_ROOT','/work'));D=R/'results'/os.environ['RUN_ID'];B=int(os.environ['BATCH']);mode=os.environ['TRAIN_MODE'];E=int(os.environ.get('EPOCHS','2'));N=int(os.environ.get('TRAIN_N','0'));C=D/f'{mode}_training_b{B}_e{E}_n{N}';C.mkdir();meter=Meter(C);S={'status':'running','model':kind,'mode':mode,'batch':B,'epochs':E if mode=='full' else 0,'seed':42,'precision':'FP32','training_scope':'all backbone parameters plus task head; new separate comparison from earlier partial/frozen-head runs','conditions':[],'allocator_budget_gib':100}
+def save():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.cuda.manual_seed_all(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False;torch.cuda.init();torch.cuda.set_per_process_memory_fraction(min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory));tokenizer=None;alphabet=None
+ if kind=='dnabert2':
+  from transformers import AutoModel,AutoTokenizer,BertConfig
+  P=Path('/workspace/dnabert2_eval/model');tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=AutoModel.from_pretrained(P,config=BertConfig.from_pretrained(P),trust_remote_code=True,local_files_only=True);rows=list(csv.DictReader(Path('/workspace/dnabert2_eval/external_data/BEND/prepared/20261012_001503_n1000_seed42/train_n1000_bp4000.csv').open()));order=np.random.default_rng(42).permutation(len(rows));data={s:[rows[i] for i in idx] for s,idx in [('train',order[:800]),('validation',order[800:900]),('test',order[900:])]};head=torch.nn.Linear(net.config.hidden_size,18);task='multilabel';S['split_note']='new seed42 800/100/100 within BEND originaltrain1000; prior independent originaltest metrics retained; no donor/chromosome independent validation claimed'
+ elif kind=='ntv2':
+  from transformers import AutoModelForMaskedLM,AutoTokenizer
+  P=R/'models/checkpoint';tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);base=AutoModelForMaskedLM.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=base.esm;del base;data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(net.config.hidden_size,2);task='classification';S['head_note']='masked-mean pooled new linear head, distinct from earlier native CLS MLP head; fixed within this batch comparison'
+ elif kind=='rnafm':
+  import fm
+  torch.serialization.add_safe_globals([argparse.Namespace]);net,alphabet=fm.pretrained.rna_fm_t12(R/'models/RNA-FM_pretrained.pth');data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(640,max(r['label'] for r in data['train'])+1);task='classification';S['head_note']='all backbone plus linear RNA-type classifier trained; unlike previous frozen embeddings+linear-only training'
+ elif kind=='esm2':
+  import esm,lmdb
+  raw=torch.load(R/'models/esm2_t33_650M_UR50D.pt',map_location='cpu',weights_only=False);reg=torch.load(R/'models/esm2_t33_650M_UR50D-contact-regression.pt',map_location='cpu',weights_only=True);net,alphabet=esm.pretrained.load_model_and_alphabet_core('esm2_t33_650M_UR50D',raw,reg);del raw,reg;data={}
+  for split,n in [('train',1024),('valid',128),('test',512)]:
+   env=lmdb.open(str(R/'data/fluorescence'/f'fluorescence_{split}.lmdb'),readonly=True,lock=False)
+   with env.begin() as txn:
+    size=pickle.loads(txn.get(b'num_examples'));indices=random.Random(42).sample(range(size),n);rs=[pickle.loads(txn.get(str(i).encode())) for i in indices]
+   env.close();data['validation' if split=='valid' else split]=[{'id':split+'_'+str(i),'sequence':r['primary'],'label':float(r['log_fluorescence'][0])} for i,r in zip(indices,rs)]
+  head=torch.nn.Linear(1280,1);task='regression';S['training_scope']='full backbone+linear GFP regression, distinct from earlier partial adapter/head training';mu=float(np.mean([r['label'] for r in data['train']]));sd=float(np.std([r['label'] for r in data['train']]));S['target_standardization']={'mean':mu,'std':sd}
+ elif kind=='openspliceai':
+  from openspliceai.train_base.openspliceai import SpliceAI
+  W=np.array([11]*8+[21]*4+[41]*4);AR=np.array([1]*4+[4]*4+[10]*4+[25]*4);net=SpliceAI(32,W,AR);net.load_state_dict(torch.load(R/'source/models/openspliceai-mane/10000nt/model_10000nt_rs10.pt',map_location='cpu',weights_only=True));head=torch.nn.Identity();data=json.loads((R/'data/inputs.json').read_text());task='splice';S['training_scope']='one seed10model full training, not five-model inference ensemble'
+ else:raise ValueError(kind)
+ data={s:data[s] for s in ['train','validation','test']};S['split_ids']={s:[r['id'] for r in rs] for s,rs in data.items()};S['split_counts']={s:len(rs) for s,rs in data.items()};assert B<=len(data['train']);allrows=[r for rs in data.values() for r in rs];offsets={};encoded={};ys={};pos=0
+ if tokenizer is not None:
+  z=tokenizer([r['sequence'] for r in allrows],padding=True,truncation=False,return_tensors='pt');encoded={k:z[k] for k in ['input_ids','attention_mask']}
+ elif alphabet is not None:
+  _,_,z=alphabet.get_batch_converter()([(r['id'],r['sequence']) for r in allrows]);encoded={'input_ids':z,'attention_mask':z.ne(alphabet.padding_idx).long()}
+ else:
+  tab=np.zeros((256,4),np.float32)
+  for j,c in enumerate('ACGT'):tab[ord(c),j]=1
+  encoded={'onehot':torch.from_numpy(np.stack([tab[np.frombuffer(r['sequence'][2500:17500].encode(),np.uint8)].T for r in allrows]))}
+ S['fixed_pool_padded_shapes']={k:list(v.shape) for k,v in encoded.items()};S['raw_training_lengths']={'min':min(len(r['sequence']) for r in data['train']),'max':max(len(r['sequence']) for r in data['train']),'mean':float(np.mean([len(r['sequence']) for r in data['train']]))};S['padding_policy']='one fixed full split pool width across all batch sizes, no truncation; valid lengths separately reported'
+ for split,rs in data.items():
+  offsets[split]=np.arange(pos,pos+len(rs));pos+=len(rs)
+  if task=='multilabel':
+   y=torch.zeros(len(rs),18)
+   for i,r in enumerate(rs):y[i,json.loads(r['labels'])]=1
+  elif task=='splice':y=torch.tensor([r['labels_10000'][2500:7500] for r in rs])
+  else:y=torch.tensor([r['label'] for r in rs],dtype=torch.float32 if task=='regression' else torch.long)
+  ys[split]=y
+ if N:
+  assert 0<N<=len(data['train']);data['train']=data['train'][:N];S['split_ids']['train']=S['split_ids']['train'][:N];S['split_counts']['train']=N
+ selected=data['train'];S['raw_training_lengths']={'min':min(len(r['sequence']) for r in selected),'max':max(len(r['sequence']) for r in selected),'mean':float(np.mean([len(r['sequence']) for r in selected]))}
+ y_selected=ys['train'][:len(selected)].numpy()
+ if task=='multilabel':S['selected_train_positive_counts_per_class']=y_selected.sum(0).tolist()
+ elif task in ['classification','splice']:
+  keys,counts=np.unique(y_selected,return_counts=True);S['selected_train_label_counts']={str(int(k)):int(v) for k,v in zip(keys,counts)}
+ else:S['selected_train_label_summary']={'mean':float(y_selected.mean()),'std':float(y_selected.std()),'min':float(y_selected.min()),'max':float(y_selected.max())}
+ S['factor_control']={'fixed_model':True,'fixed_precision':'FP32','fixed_seed':42,'fixed_batch':B,'epochs':E,'actual_unique_train_n':len(data['train']),'padding':'original full split token cache width held fixed even when train count is reduced','initialization':'reload same public pretrained weights and fresh seed42 head each independent condition','optimizer':'AdamW lr1e-5 weight_decay.01','label_standardization':'ESM target mean/std kept from the complete1024train pool across count subsets'}
+ net=net.float().cuda();head=head.float().cuda();torch.cuda.synchronize();S['model_only_postload']=meter.memory();S['parameters_total']=sum(p.numel() for p in net.parameters())+sum(p.numel() for p in head.parameters());params=list(net.parameters())+list(head.parameters());opt=torch.optim.AdamW(params,lr=1e-5,weight_decay=.01);before=next(head.parameters()).detach().cpu().clone() if task!='splice' else net.initial_conv.weight.detach().cpu().clone()
+ def output(ix):
+  x={k:v[ix].cuda() for k,v in encoded.items()}
+  if task=='splice':return net(x['onehot'])
+  if kind=='dnabert2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'])[0];mask=x['attention_mask'].unsqueeze(-1)
+  elif kind=='ntv2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'],return_dict=True).last_hidden_state;mask=x['attention_mask'].unsqueeze(-1)
+  else:
+   layer=33 if kind=='esm2' else 12;h=net(x['input_ids'],repr_layers=[layer],return_contacts=False)['representations'][layer];mask=x['attention_mask'].clone();mask[:,0]=0;last=mask.sum(1);mask[torch.arange(len(mask),device='cuda'),last]=0;mask=mask.unsqueeze(-1)
+  mask=mask.to(h.dtype);return head((h*mask).sum(1)/mask.sum(1).clamp_min(1))
+ def lossfn(z,y):
+  if task=='regression':return torch.nn.functional.mse_loss(z.squeeze(-1),(y-mu)/sd)
+  if task=='multilabel':return torch.nn.functional.binary_cross_entropy_with_logits(z,y)
+  if task=='splice':return torch.nn.functional.nll_loss(torch.log(z.clamp_min(1e-10)),y,ignore_index=-1)
+  return torch.nn.functional.cross_entropy(z,y)
+ def evaluate(split):
+  net.eval();head.eval();outs=[];losses=[]
+  with torch.no_grad():
+   for start in range(0,len(data[split]),8):
+    idx=offsets[split][start:start+8];z=output(idx);y=ys[split][start:start+8].cuda();losses.append(float(lossfn(z,y))*len(idx));outs.append(z.cpu().numpy())
+  z=np.concatenate(outs);y=ys[split].numpy();metrics={'mean_loss':sum(losses)/len(y),'unique_samples':len(y)}
+  if task in ['classification','multilabel']:
+   from sklearn.metrics import accuracy_score,f1_score
+  if task=='classification':metrics.update(accuracy=float(accuracy_score(y,z.argmax(1))),macro_f1=float(f1_score(y,z.argmax(1),average='macro',zero_division=0)))
+  if task=='multilabel':metrics.update(micro_f1=float(f1_score(y,z>0,average='micro',zero_division=0)))
+  if task=='regression':
+   from scipy.stats import spearmanr
+   pred=z[:,0]*sd+mu;metrics.update(mse=float(np.mean((pred-y)**2)),spearman=float(spearmanr(pred,y).statistic))
+  if task=='splice':
+   from sklearn.metrics import average_precision_score
+   metrics['acceptor_donor_AUPRC']=[float(average_precision_score((y==k).ravel(),z[:,k,:].ravel())) for k in [1,2]]
+  return metrics,z
+ net.train();head.train();t,base=meter.begin('actual_supervised_training');steps=[];n=len(data['train']);limit=min(n,3*B) if mode=='probe' else n
+ for epoch in range(1 if mode=='probe' else E):
+  order=np.random.default_rng(42+epoch).permutation(n)[:limit]
+  for start in range(0,limit,B):
+   local=order[start:start+B];ix=offsets['train'][local];torch.cuda.synchronize();t0=time.time();opt.zero_grad(set_to_none=True);z=output(ix);loss=lossfn(z,ys['train'][local].cuda());assert torch.isfinite(loss);loss.backward();S.setdefault('observed_parameters_with_gradient',sum(p.numel() for p in params if p.grad is not None));opt.step();torch.cuda.synchronize();steps.append({'epoch':epoch,'n':len(ix),'seconds':time.time()-t0,'loss':float(loss.detach())});print('STEP',kind,B,epoch,start+len(ix),'/',limit,'loss',steps[-1]['loss'],flush=True);del z,loss
+ S['training']=meter.end(t,base);r=S['training'];r.update(batch_size=B,unique_training_cells=n if mode=='full' else limit,epochs=E if mode=='full' else 0,optimizer_steps=len(steps),processed_inputs=sum(s['n'] for s in steps),allocated_fraction_shared_ram=r['memory']['peak_allocated_gib']/r['memory']['system_total_gib']);r['inputs_per_second']=r['processed_inputs']/r['seconds'];S['training_steps']=steps;after=next(head.parameters()).detach().cpu() if task!='splice' else net.initial_conv.weight.detach().cpu();S['head_or_conv_weights_updated']=not torch.equal(before,after);assert S['head_or_conv_weights_updated'];save();opt.zero_grad(set_to_none=True);del opt;gc.collect();torch.cuda.empty_cache()
+ if mode=='full':
+  S['validation'],_=evaluate('validation');S['test'],test=evaluate('test');np.save(C/'test_outputs.npy',test);ck=C/'model.pt';torch.save({'backbone':net.state_dict(),'head':head.state_dict(),'model':kind,'training_settings':{'seed':42,'lr':1e-5,'weight_decay':.01,'epochs':2,'batch':B},'split_ids':S['split_ids'],'source_weights':'original public checkpoint in local models folder','labels':json.loads((R/'data/input_audit.json').read_text()).get('labels') if (R/'data/input_audit.json').exists() else None,'target_standardization':S.get('target_standardization')},ck);saved=torch.load(ck,map_location='cpu',weights_only=True);net.load_state_dict(saved['backbone']);head.load_state_dict(saved['head']);del saved;_,again=evaluate('test');S['reload_max_abs_outputs']=float(np.abs(test-again).max());assert np.allclose(test,again,atol=1e-4,rtol=1e-4);S['saved_model_reload_verified']=True
+ S['status']='complete';save()
+except BaseException as e:S['status']='failed';S['error']=repr(e);save();raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: executed_controller.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/executed_controller_73cb685d1ccd06e4.py", "sha256": "73cb685d1ccd06e466865497eda421c3e07ccf539d2f8b8d1ecebfc1431ffb61", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,json,time,datetime,subprocess,shlex,shutil
+ROOT=Path('/home/hyein/ai-benchmark');P=ROOT/'FACTOR_EXPERIMENT_STATUS.json';STATE={'status':'waiting_existing_queue','scope':'one-factor-at-a-time epochs/count training comparison; original batch/length inference comparisons retained','conditions':[]};P.write_text(json.dumps(STATE,indent=2))
+# Wait for the existing sequential queue plus its recovery supervisor; never overlap GPU work.
+for pid in map(int,sys.argv[1:]):
+ while True:
+  try:os.kill(pid,0)
+  except ProcessLookupError:break
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():sys.exit(0)
+  time.sleep(5)
+for model,n in [('esm2',1024),('dnabert2',800),('ntv2',512),('rnafm',896),('openspliceai',96)]:
+ if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+ R=ROOT/model;run='factor_control_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f');D=R/'results'/run;D.mkdir();(R/'results/FACTOR_LATEST').write_text(run+'\n');source=ROOT/'scripts/real_training_v3/factor_training_worker.py';shutil.copy2(source,D/'executed_worker.py');shutil.copy2(__file__,D/'executed_controller.py');STATE.update(status='running',active_model=model,active_run=run)
+ for e,nn in [(1,n),(2,n),(4,n),(2,n//4),(2,n//2)]:
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+  assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip(),'another GPU compute job exists'
+  env={'RUN_ID':run,'MODEL_KIND':model,'BATCH':'8','TRAIN_MODE':'full','EPOCHS':str(e),'TRAIN_N':str(nn),'MPLCONFIGDIR':'/work/.cache/matplotlib','NUMBA_CACHE_DIR':'/work/.cache/numba','HF_HOME':'/work/.cache/huggingface','HF_MODULES_CACHE':'/work/.cache/modules','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}
+  if model=='esm2':
+   env.update(MODEL_ROOT=str(R),SUPPORT_PATH=str(ROOT/'scripts'));cmd=['env']+[k+'='+v for k,v in env.items()]+[str(R/'.venv/bin/python'),'-u',str(source)]
+  else:
+   cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro'];python='/work/.venv/bin/python'
+   if model=='dnabert2':cmd+=['-v','/home/hyein/dnabert2-benchmark:/workspace:ro'];python='/workspace/miniforge/envs/dnabert2/bin/python'
+   for k,v in env.items():cmd+=['-e',k+'='+v]
+   cmd+=['nvcr.io/nvidia/pytorch:26.06-py3',python,'-u','/support/real_training_v3/factor_training_worker.py']
+  label=f'epochs{e}_n{nn}_b8';(D/(label+'_command.json')).write_text(json.dumps(cmd,indent=2));STATE['active_condition']=label;P.write_text(json.dumps(STATE,indent=2));print('START',model,label,flush=True);t=time.time()
+  with (D/(label+'.log')).open('w') as f:code=subprocess.call(cmd if cmd[0]!='docker' else ['sg','docker','-c',shlex.join(cmd)],stdout=f,stderr=subprocess.STDOUT)
+  rec={'model':model,'run':run,'condition':label,'exit_code':code,'wall_seconds':time.time()-t};(D/(label+'_exit.json')).write_text(json.dumps(rec));STATE['conditions'].append(rec);P.write_text(json.dumps(STATE,indent=2));print('EXIT',model,label,code,flush=True)
+  if code:STATE.setdefault('failed',[]).append(rec)
+  subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+STATE.update(status='finished_review_required',active_model=None,active_condition=None);P.write_text(json.dumps(STATE,indent=2));subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs1_n512_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/epochs1_n512_b8_command_50cb3c2f3d7dad30.json", "sha256": "50cb3c2f3d7dad30f3b956dad475e2d09bb801ee4373664bfd8f9c33210cf02b", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261102_182012_734207",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=1",
+  "-e",
+  "TRAIN_N=512",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n512_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/epochs2_n512_b8_command_e886f1320f59f5fe.json", "sha256": "e886f1320f59f5fec8d74ee0070690400cda0b3cb74b5cf0e3fc76323cb100e7", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261102_182012_734207",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "TRAIN_N=512",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs4_n512_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/epochs4_n512_b8_command_a53a35d86ac0e007.json", "sha256": "a53a35d86ac0e0073a9c937439c7fadf9ee9c788bca971222b7b09d9176964ca", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261102_182012_734207",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=4",
+  "-e",
+  "TRAIN_N=512",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n128_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/epochs2_n128_b8_command_6eb6c43fe3d06529.json", "sha256": "6eb6c43fe3d0652994c444d0de1bfee25203564f5c900c338e329cc2640d98c6", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261102_182012_734207",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "TRAIN_N=128",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n256_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261102_182012_734207/report_snapshots/epochs2_n256_b8_command_f0ffdc2c6b733d89.json", "sha256": "f0ffdc2c6b733d89852c5e86373496d490a81083d86cf4f266f68b3f61a6449e", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261102_182012_734207",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "TRAIN_N=256",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: executed_controller.py</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261103_093231_014557/report_snapshots/executed_controller_55f68e6b36f806b3.py", "sha256": "55f68e6b36f806b344b1b0a58cbf7845e61c08acb17cd8a77dc4a045fff30a0f", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,json,time,datetime,subprocess,shlex,shutil
+ROOT=Path('/home/hyein/ai-benchmark');P=ROOT/'FACTOR_EXPERIMENT_STATUS.json';STATE=json.loads(P.read_text()) if os.environ.get('RESUME_FACTORS')=='1' else {'scope':'one-factor-at-a-time epochs/count training comparison; original batch/length inference comparisons retained','conditions':[]};STATE['status']='waiting_existing_queue';P.write_text(json.dumps(STATE,indent=2))
+# Wait for the existing sequential queue plus its recovery supervisor; never overlap GPU work.
+for pid in map(int,sys.argv[1:]):
+ while True:
+  try:os.kill(pid,0)
+  except ProcessLookupError:break
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():sys.exit(0)
+  time.sleep(5)
+for model,n in [('esm2',1024),('dnabert2',800),('ntv2',512),('rnafm',896),('openspliceai',96)]:
+ if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+ expected=[f'epochs{e}_n{nn}_b8' for e,nn in [(1,n),(2,n),(4,n),(2,n//4),(2,n//2)]]
+ completed={v['condition']:v for v in STATE.get('conditions',[]) if v['model']==model and v['exit_code']==0}
+ if all(label in completed for label in expected):
+  print('REUSE_MODEL',model,len(completed),flush=True);continue
+ R=ROOT/model;run='factor_control_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f');D=R/'results'/run;D.mkdir();(R/'results/FACTOR_LATEST').write_text(run+'\n');source=ROOT/'scripts/real_training_v3/factor_training_worker.py';shutil.copy2(source,D/'executed_worker.py');shutil.copy2(__file__,D/'executed_controller.py');STATE.update(status='running',active_model=model,active_run=run)
+ reused=[]
+ for label,record in completed.items():
+  match=__import__('re').fullmatch(r'epochs(\d+)_n(\d+)_b8',label)
+  if not match:continue
+  ee,nnn=map(int,match.groups());oldD=R/'results'/record['run'];folder=f'full_training_b8_e{ee}_n{nnn}';oldcase=oldD/folder;summary=json.loads((oldcase/'summary.json').read_text());assert summary['status']=='complete' and summary.get('saved_model_reload_verified')
+  (D/folder).symlink_to(os.path.relpath(oldcase,D),target_is_directory=True);reused.append(record)
+  oldcommand=oldD/(label+'_command.json')
+  if oldcommand.exists():shutil.copy2(oldcommand,D/(label+'_reused_command.json'))
+ (D/'reused_conditions.json').write_text(json.dumps(reused,indent=2))
+ for e,nn in [(1,n),(2,n),(4,n),(2,n//4),(2,n//2)]:
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+  assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip(),'another GPU compute job exists'
+  env={'RUN_ID':run,'MODEL_KIND':model,'BATCH':'8','TRAIN_MODE':'full','EPOCHS':str(e),'TRAIN_N':str(nn),'MPLCONFIGDIR':'/work/.cache/matplotlib','NUMBA_CACHE_DIR':'/work/.cache/numba','HF_HOME':'/work/.cache/huggingface','HF_MODULES_CACHE':'/work/.cache/modules','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}
+  if model=='esm2':
+   env.update(MODEL_ROOT=str(R),SUPPORT_PATH=str(ROOT/'scripts'));cmd=['env']+[k+'='+v for k,v in env.items()]+[str(R/'.venv/bin/python'),'-u',str(source)]
+  else:
+   cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro'];python='/work/.venv/bin/python'
+   if model=='dnabert2':cmd+=['-v','/home/hyein/dnabert2-benchmark:/workspace:ro'];python='/workspace/miniforge/envs/dnabert2/bin/python'
+   for k,v in env.items():cmd+=['-e',k+'='+v]
+   cmd+=['nvcr.io/nvidia/pytorch:26.06-py3',python,'-u','/support/real_training_v3/factor_training_worker.py']
+  label=f'epochs{e}_n{nn}_b8'
+  if label in completed:print('REUSE_CONDITION',model,label,flush=True);continue
+  (D/(label+'_command.json')).write_text(json.dumps(cmd,indent=2));STATE['active_condition']=label;P.write_text(json.dumps(STATE,indent=2));print('START',model,label,flush=True);t=time.time()
+  with (D/(label+'.log')).open('w') as f:code=subprocess.call(cmd if cmd[0]!='docker' else ['sg','docker','-c',shlex.join(cmd)],stdout=f,stderr=subprocess.STDOUT)
+  rec={'model':model,'run':run,'condition':label,'exit_code':code,'wall_seconds':time.time()-t};(D/(label+'_exit.json')).write_text(json.dumps(rec));STATE['conditions'].append(rec);P.write_text(json.dumps(STATE,indent=2));print('EXIT',model,label,code,flush=True)
+  if code:STATE.setdefault('failed',[]).append(rec)
+  subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+STATE.update(status='finished_review_required',active_model=None,active_condition=None);P.write_text(json.dumps(STATE,indent=2));subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n256_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "ntv2/results/factor_control_20261103_093231_014557/report_snapshots/epochs2_n256_b8_command_1194600779a53d13.json", "sha256": "1194600779a53d1375c7ef258a18bd6858f0177cd2cec6315bc8921bd9dfd852", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "docker",
+  "run",
+  "--rm",
+  "--gpus",
+  "all",
+  "--ipc=host",
+  "--network",
+  "none",
+  "--user",
+  "1000:1000",
+  "-v",
+  "/home/hyein/ai-benchmark/ntv2:/work",
+  "-v",
+  "/home/hyein/ai-benchmark/scripts:/support:ro",
+  "-e",
+  "RUN_ID=factor_control_20261103_093231_014557",
+  "-e",
+  "MODEL_KIND=ntv2",
+  "-e",
+  "BATCH=8",
+  "-e",
+  "TRAIN_MODE=full",
+  "-e",
+  "EPOCHS=2",
+  "-e",
+  "TRAIN_N=256",
+  "-e",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "-e",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "-e",
+  "HF_HOME=/work/.cache/huggingface",
+  "-e",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "-e",
+  "HF_HUB_OFFLINE=1",
+  "-e",
+  "TRANSFORMERS_OFFLINE=1",
+  "nvcr.io/nvidia/pytorch:26.06-py3",
+  "/work/.venv/bin/python",
+  "-u",
+  "/support/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>

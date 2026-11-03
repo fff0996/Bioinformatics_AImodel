@@ -48,14 +48,27 @@
 |배치|한step은 길어질 수 있고step수는 줄어든다. 처리량 상승/포화는 실측으로 판단|같은입력길이·정밀도에서 동시중간값 증가가 주된영향|배치확대 완료조건 본문;새 학습batch8/64 비교|
 |샘플당 실제입력 크기|GPU에들어간실제token/타일 크기가 커졌을때 계산량 변화 비교|토큰길이·패치/타일크기·attention구조에 따라 증가;원본크기와 다를수있음|기본UniProt 길이/개수 비교 있음;GFP 학습은 별도|
 |고유 데이터수|같은batch·epoch에서 총처리step가늘어 총시간이늘어나는지 비교|고정batch의동시입력이같으면 데이터총수만으로peak가크게늘지않을수있음|입력개수비교는본문참조;새지도학습데이터수비교는아래결과가생긴조건만완료|
-|epoch|같은train입력을 반복하므로 누적시간 증가;검증성능개선은 보장안됨|동일batch·입력에서epoch자체가peak를선형증가시키는요인은아님|GFP epoch1/2/4 및 train256/512/1024 추가 비교 대기|
+|epoch|같은train입력을 반복하므로 누적시간 증가;검증성능개선은 보장안됨|동일batch·입력에서epoch자체가peak를선형증가시키는요인은아님|GFP epoch1/2/4 및 train256/512/1024 추가 비교 완료 → 실제완료 5/5조건(test·재로드확인)|
 |학습방식·갱신범위|추론/본체동결head학습/부분·전체미세조정/처음부터학습은 계산범위가다름|gradient·optimizer·역전파용중간값의유무가다름|1절의가중치갱신방식과X/y를참조;다른데이터·목적의시간을단순배수비교하지않음|
 |모델·정밀도·전처리|구조·dtype·토큰화·타일화·컴파일·후처리도영향|모델적재기준값과실행중추가량을분리|원인후보/고정조건으로기록;모델크기나dtype의단독영향sweep은미실험|
 
 추가 통제 비교에서는 **batch8·FP32·공개초기weight·seed42·optimizer·원래전체pool의padding폭·검증/test를고정**하고,(1)같은train의epoch1/2/4,(2)epoch2의중첩train1/4·1/2·전체를각각실행한다. 전체데이터를바꾸면서epoch도함께바꾼행끼리는단독효과로해석하지않는다. 단일실행이며데이터부분집합의label분포변화는정확도해석의제약이다. 이비교는해당지도학습지원모델에만적용한다.
 
+통제실험run:`factor_control_20261102_173651_829163`
 
-추가epoch/데이터수통제비교 수치: **아직미실험/대기**. 기존측정을추정해서채우지않는다.
+|조건|고유train수|batch|epoch|optimizersteps|훈련시간s|처리입력/s|allocatedpeakGiB|reservedpeakGiB|GPU-Util평균%|독립test지표|재로드|
+|---|---|---|---|---|---|---|---|---|---|---|---|
+|full_training_b8_e1_n1024|1024|8|1|128|160.1806|6.3928|16.0687|16.8711|95.1581|{'mean_loss': 2.6651233406737447, 'mse': 1.8923025131225586, 'spearman': 0.14236458255807552}|True|
+|full_training_b8_e2_n1024|1024|8|2|256|319.8299|6.4034|16.0687|16.8711|95.5439|{'mean_loss': 2.988137884065509, 'mse': 2.1216509342193604, 'spearman': 0.2993711444496251}|True|
+|full_training_b8_e2_n256|256|8|2|64|80.3507|6.3721|16.0687|16.8711|93.4966|{'mean_loss': 2.9035832760855556, 'mse': 2.061614990234375, 'spearman': -0.1233638526278358}|True|
+|full_training_b8_e2_n512|512|8|2|128|160.3232|6.3871|16.0687|16.8711|94.7732|{'mean_loss': 3.3599097561091185, 'mse': 2.385617971420288, 'spearman': 0.34129324415511514}|True|
+|full_training_b8_e4_n1024|1024|8|4|512|638.7804|6.4122|16.0687|16.8711|95.5986|{'mean_loss': 2.8408352248370647, 'mse': 2.0170624256134033, 'spearman': 0.40543441935354296}|True|
+
+**현재계획한5조건의학습·test평가·저장모델재로드완료.**
+
+- 고정train1024개,epoch1/2/4의훈련시간: 160.18초 / 319.83초 / 638.78초. 같은순서의allocated peak: 16.069GiB / 16.069GiB / 16.069GiB.
+- 고정epoch2,train256/512/1024개의훈련시간: 80.35초 / 160.32초 / 319.83초.
+- 이번관측에서는epoch·처리데이터수증가에따라총훈련시간이늘었고,batch·padding폭이같아최대allocated는거의유지됐다. 정확도는단조증가하지않아개별test지표를확인해야한다.
 
 <!-- FACTOR_EFFECTS_END -->
 
@@ -2144,6 +2157,298 @@ for model,filename in mapping.items():
 # Keep the model/input/learning-scope overview consistent as every new run finishes.
 import subprocess,sys
 subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/standardize_overview.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: executed_worker.py</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/executed_worker_edd5f6f99647c80e.py", "sha256": "edd5f6f99647c80e961dd6d68cc22ce156cb57bd447583b1d837358246c5ca57", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import sys,os,json,time,csv,gc,argparse,random,pickle
+import numpy as np,torch
+sys.path.insert(0,os.environ.get('SUPPORT_PATH','/support'));from gpu_support import Meter,write_json
+kind=os.environ['MODEL_KIND'];R=Path(os.environ.get('MODEL_ROOT','/work'));D=R/'results'/os.environ['RUN_ID'];B=int(os.environ['BATCH']);mode=os.environ['TRAIN_MODE'];E=int(os.environ.get('EPOCHS','2'));N=int(os.environ.get('TRAIN_N','0'));C=D/f'{mode}_training_b{B}_e{E}_n{N}';C.mkdir();meter=Meter(C);S={'status':'running','model':kind,'mode':mode,'batch':B,'epochs':E if mode=='full' else 0,'seed':42,'precision':'FP32','training_scope':'all backbone parameters plus task head; new separate comparison from earlier partial/frozen-head runs','conditions':[],'allocator_budget_gib':100}
+def save():write_json(C/'summary.json',S)
+try:
+ torch.set_num_threads(8);random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.cuda.manual_seed_all(42);torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False;torch.cuda.init();torch.cuda.set_per_process_memory_fraction(min(.9,100*2**30/torch.cuda.get_device_properties(0).total_memory));tokenizer=None;alphabet=None
+ if kind=='dnabert2':
+  from transformers import AutoModel,AutoTokenizer,BertConfig
+  P=Path('/workspace/dnabert2_eval/model');tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=AutoModel.from_pretrained(P,config=BertConfig.from_pretrained(P),trust_remote_code=True,local_files_only=True);rows=list(csv.DictReader(Path('/workspace/dnabert2_eval/external_data/BEND/prepared/20261012_001503_n1000_seed42/train_n1000_bp4000.csv').open()));order=np.random.default_rng(42).permutation(len(rows));data={s:[rows[i] for i in idx] for s,idx in [('train',order[:800]),('validation',order[800:900]),('test',order[900:])]};head=torch.nn.Linear(net.config.hidden_size,18);task='multilabel';S['split_note']='new seed42 800/100/100 within BEND originaltrain1000; prior independent originaltest metrics retained; no donor/chromosome independent validation claimed'
+ elif kind=='ntv2':
+  from transformers import AutoModelForMaskedLM,AutoTokenizer
+  P=R/'models/checkpoint';tokenizer=AutoTokenizer.from_pretrained(P,trust_remote_code=True,local_files_only=True);base=AutoModelForMaskedLM.from_pretrained(P,trust_remote_code=True,local_files_only=True);net=base.esm;del base;data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(net.config.hidden_size,2);task='classification';S['head_note']='masked-mean pooled new linear head, distinct from earlier native CLS MLP head; fixed within this batch comparison'
+ elif kind=='rnafm':
+  import fm
+  torch.serialization.add_safe_globals([argparse.Namespace]);net,alphabet=fm.pretrained.rna_fm_t12(R/'models/RNA-FM_pretrained.pth');data=json.loads((R/'data/inputs.json').read_text());head=torch.nn.Linear(640,max(r['label'] for r in data['train'])+1);task='classification';S['head_note']='all backbone plus linear RNA-type classifier trained; unlike previous frozen embeddings+linear-only training'
+ elif kind=='esm2':
+  import esm,lmdb
+  raw=torch.load(R/'models/esm2_t33_650M_UR50D.pt',map_location='cpu',weights_only=False);reg=torch.load(R/'models/esm2_t33_650M_UR50D-contact-regression.pt',map_location='cpu',weights_only=True);net,alphabet=esm.pretrained.load_model_and_alphabet_core('esm2_t33_650M_UR50D',raw,reg);del raw,reg;data={}
+  for split,n in [('train',1024),('valid',128),('test',512)]:
+   env=lmdb.open(str(R/'data/fluorescence'/f'fluorescence_{split}.lmdb'),readonly=True,lock=False)
+   with env.begin() as txn:
+    size=pickle.loads(txn.get(b'num_examples'));indices=random.Random(42).sample(range(size),n);rs=[pickle.loads(txn.get(str(i).encode())) for i in indices]
+   env.close();data['validation' if split=='valid' else split]=[{'id':split+'_'+str(i),'sequence':r['primary'],'label':float(r['log_fluorescence'][0])} for i,r in zip(indices,rs)]
+  head=torch.nn.Linear(1280,1);task='regression';S['training_scope']='full backbone+linear GFP regression, distinct from earlier partial adapter/head training';mu=float(np.mean([r['label'] for r in data['train']]));sd=float(np.std([r['label'] for r in data['train']]));S['target_standardization']={'mean':mu,'std':sd}
+ elif kind=='openspliceai':
+  from openspliceai.train_base.openspliceai import SpliceAI
+  W=np.array([11]*8+[21]*4+[41]*4);AR=np.array([1]*4+[4]*4+[10]*4+[25]*4);net=SpliceAI(32,W,AR);net.load_state_dict(torch.load(R/'source/models/openspliceai-mane/10000nt/model_10000nt_rs10.pt',map_location='cpu',weights_only=True));head=torch.nn.Identity();data=json.loads((R/'data/inputs.json').read_text());task='splice';S['training_scope']='one seed10model full training, not five-model inference ensemble'
+ else:raise ValueError(kind)
+ data={s:data[s] for s in ['train','validation','test']};S['split_ids']={s:[r['id'] for r in rs] for s,rs in data.items()};S['split_counts']={s:len(rs) for s,rs in data.items()};assert B<=len(data['train']);allrows=[r for rs in data.values() for r in rs];offsets={};encoded={};ys={};pos=0
+ if tokenizer is not None:
+  z=tokenizer([r['sequence'] for r in allrows],padding=True,truncation=False,return_tensors='pt');encoded={k:z[k] for k in ['input_ids','attention_mask']}
+ elif alphabet is not None:
+  _,_,z=alphabet.get_batch_converter()([(r['id'],r['sequence']) for r in allrows]);encoded={'input_ids':z,'attention_mask':z.ne(alphabet.padding_idx).long()}
+ else:
+  tab=np.zeros((256,4),np.float32)
+  for j,c in enumerate('ACGT'):tab[ord(c),j]=1
+  encoded={'onehot':torch.from_numpy(np.stack([tab[np.frombuffer(r['sequence'][2500:17500].encode(),np.uint8)].T for r in allrows]))}
+ S['fixed_pool_padded_shapes']={k:list(v.shape) for k,v in encoded.items()};S['raw_training_lengths']={'min':min(len(r['sequence']) for r in data['train']),'max':max(len(r['sequence']) for r in data['train']),'mean':float(np.mean([len(r['sequence']) for r in data['train']]))};S['padding_policy']='one fixed full split pool width across all batch sizes, no truncation; valid lengths separately reported'
+ for split,rs in data.items():
+  offsets[split]=np.arange(pos,pos+len(rs));pos+=len(rs)
+  if task=='multilabel':
+   y=torch.zeros(len(rs),18)
+   for i,r in enumerate(rs):y[i,json.loads(r['labels'])]=1
+  elif task=='splice':y=torch.tensor([r['labels_10000'][2500:7500] for r in rs])
+  else:y=torch.tensor([r['label'] for r in rs],dtype=torch.float32 if task=='regression' else torch.long)
+  ys[split]=y
+ if N:
+  assert 0<N<=len(data['train']);data['train']=data['train'][:N];S['split_ids']['train']=S['split_ids']['train'][:N];S['split_counts']['train']=N
+ selected=data['train'];S['raw_training_lengths']={'min':min(len(r['sequence']) for r in selected),'max':max(len(r['sequence']) for r in selected),'mean':float(np.mean([len(r['sequence']) for r in selected]))}
+ y_selected=ys['train'][:len(selected)].numpy()
+ if task=='multilabel':S['selected_train_positive_counts_per_class']=y_selected.sum(0).tolist()
+ elif task in ['classification','splice']:
+  keys,counts=np.unique(y_selected,return_counts=True);S['selected_train_label_counts']={str(int(k)):int(v) for k,v in zip(keys,counts)}
+ else:S['selected_train_label_summary']={'mean':float(y_selected.mean()),'std':float(y_selected.std()),'min':float(y_selected.min()),'max':float(y_selected.max())}
+ S['factor_control']={'fixed_model':True,'fixed_precision':'FP32','fixed_seed':42,'fixed_batch':B,'epochs':E,'actual_unique_train_n':len(data['train']),'padding':'original full split token cache width held fixed even when train count is reduced','initialization':'reload same public pretrained weights and fresh seed42 head each independent condition','optimizer':'AdamW lr1e-5 weight_decay.01','label_standardization':'ESM target mean/std kept from the complete1024train pool across count subsets'}
+ net=net.float().cuda();head=head.float().cuda();torch.cuda.synchronize();S['model_only_postload']=meter.memory();S['parameters_total']=sum(p.numel() for p in net.parameters())+sum(p.numel() for p in head.parameters());params=list(net.parameters())+list(head.parameters());opt=torch.optim.AdamW(params,lr=1e-5,weight_decay=.01);before=next(head.parameters()).detach().cpu().clone() if task!='splice' else net.initial_conv.weight.detach().cpu().clone()
+ def output(ix):
+  x={k:v[ix].cuda() for k,v in encoded.items()}
+  if task=='splice':return net(x['onehot'])
+  if kind=='dnabert2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'])[0];mask=x['attention_mask'].unsqueeze(-1)
+  elif kind=='ntv2':h=net(input_ids=x['input_ids'],attention_mask=x['attention_mask'],return_dict=True).last_hidden_state;mask=x['attention_mask'].unsqueeze(-1)
+  else:
+   layer=33 if kind=='esm2' else 12;h=net(x['input_ids'],repr_layers=[layer],return_contacts=False)['representations'][layer];mask=x['attention_mask'].clone();mask[:,0]=0;last=mask.sum(1);mask[torch.arange(len(mask),device='cuda'),last]=0;mask=mask.unsqueeze(-1)
+  mask=mask.to(h.dtype);return head((h*mask).sum(1)/mask.sum(1).clamp_min(1))
+ def lossfn(z,y):
+  if task=='regression':return torch.nn.functional.mse_loss(z.squeeze(-1),(y-mu)/sd)
+  if task=='multilabel':return torch.nn.functional.binary_cross_entropy_with_logits(z,y)
+  if task=='splice':return torch.nn.functional.nll_loss(torch.log(z.clamp_min(1e-10)),y,ignore_index=-1)
+  return torch.nn.functional.cross_entropy(z,y)
+ def evaluate(split):
+  net.eval();head.eval();outs=[];losses=[]
+  with torch.no_grad():
+   for start in range(0,len(data[split]),8):
+    idx=offsets[split][start:start+8];z=output(idx);y=ys[split][start:start+8].cuda();losses.append(float(lossfn(z,y))*len(idx));outs.append(z.cpu().numpy())
+  z=np.concatenate(outs);y=ys[split].numpy();metrics={'mean_loss':sum(losses)/len(y),'unique_samples':len(y)}
+  if task in ['classification','multilabel']:
+   from sklearn.metrics import accuracy_score,f1_score
+  if task=='classification':metrics.update(accuracy=float(accuracy_score(y,z.argmax(1))),macro_f1=float(f1_score(y,z.argmax(1),average='macro',zero_division=0)))
+  if task=='multilabel':metrics.update(micro_f1=float(f1_score(y,z>0,average='micro',zero_division=0)))
+  if task=='regression':
+   from scipy.stats import spearmanr
+   pred=z[:,0]*sd+mu;metrics.update(mse=float(np.mean((pred-y)**2)),spearman=float(spearmanr(pred,y).statistic))
+  if task=='splice':
+   from sklearn.metrics import average_precision_score
+   metrics['acceptor_donor_AUPRC']=[float(average_precision_score((y==k).ravel(),z[:,k,:].ravel())) for k in [1,2]]
+  return metrics,z
+ net.train();head.train();t,base=meter.begin('actual_supervised_training');steps=[];n=len(data['train']);limit=min(n,3*B) if mode=='probe' else n
+ for epoch in range(1 if mode=='probe' else E):
+  order=np.random.default_rng(42+epoch).permutation(n)[:limit]
+  for start in range(0,limit,B):
+   local=order[start:start+B];ix=offsets['train'][local];torch.cuda.synchronize();t0=time.time();opt.zero_grad(set_to_none=True);z=output(ix);loss=lossfn(z,ys['train'][local].cuda());assert torch.isfinite(loss);loss.backward();S.setdefault('observed_parameters_with_gradient',sum(p.numel() for p in params if p.grad is not None));opt.step();torch.cuda.synchronize();steps.append({'epoch':epoch,'n':len(ix),'seconds':time.time()-t0,'loss':float(loss.detach())});print('STEP',kind,B,epoch,start+len(ix),'/',limit,'loss',steps[-1]['loss'],flush=True);del z,loss
+ S['training']=meter.end(t,base);r=S['training'];r.update(batch_size=B,unique_training_cells=n if mode=='full' else limit,epochs=E if mode=='full' else 0,optimizer_steps=len(steps),processed_inputs=sum(s['n'] for s in steps),allocated_fraction_shared_ram=r['memory']['peak_allocated_gib']/r['memory']['system_total_gib']);r['inputs_per_second']=r['processed_inputs']/r['seconds'];S['training_steps']=steps;after=next(head.parameters()).detach().cpu() if task!='splice' else net.initial_conv.weight.detach().cpu();S['head_or_conv_weights_updated']=not torch.equal(before,after);assert S['head_or_conv_weights_updated'];save();opt.zero_grad(set_to_none=True);del opt;gc.collect();torch.cuda.empty_cache()
+ if mode=='full':
+  S['validation'],_=evaluate('validation');S['test'],test=evaluate('test');np.save(C/'test_outputs.npy',test);ck=C/'model.pt';torch.save({'backbone':net.state_dict(),'head':head.state_dict(),'model':kind,'training_settings':{'seed':42,'lr':1e-5,'weight_decay':.01,'epochs':2,'batch':B},'split_ids':S['split_ids'],'source_weights':'original public checkpoint in local models folder','labels':json.loads((R/'data/input_audit.json').read_text()).get('labels') if (R/'data/input_audit.json').exists() else None,'target_standardization':S.get('target_standardization')},ck);saved=torch.load(ck,map_location='cpu',weights_only=True);net.load_state_dict(saved['backbone']);head.load_state_dict(saved['head']);del saved;_,again=evaluate('test');S['reload_max_abs_outputs']=float(np.abs(test-again).max());assert np.allclose(test,again,atol=1e-4,rtol=1e-4);S['saved_model_reload_verified']=True
+ S['status']='complete';save()
+except BaseException as e:S['status']='failed';S['error']=repr(e);save();raise
+finally:meter.close()
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: executed_controller.py</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/executed_controller_73cb685d1ccd06e4.py", "sha256": "73cb685d1ccd06e466865497eda421c3e07ccf539d2f8b8d1ecebfc1431ffb61", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+from pathlib import Path
+import os,sys,json,time,datetime,subprocess,shlex,shutil
+ROOT=Path('/home/hyein/ai-benchmark');P=ROOT/'FACTOR_EXPERIMENT_STATUS.json';STATE={'status':'waiting_existing_queue','scope':'one-factor-at-a-time epochs/count training comparison; original batch/length inference comparisons retained','conditions':[]};P.write_text(json.dumps(STATE,indent=2))
+# Wait for the existing sequential queue plus its recovery supervisor; never overlap GPU work.
+for pid in map(int,sys.argv[1:]):
+ while True:
+  try:os.kill(pid,0)
+  except ProcessLookupError:break
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():sys.exit(0)
+  time.sleep(5)
+for model,n in [('esm2',1024),('dnabert2',800),('ntv2',512),('rnafm',896),('openspliceai',96)]:
+ if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+ R=ROOT/model;run='factor_control_'+datetime.datetime.now().strftime('%Y%m%d_%H%M%S_%f');D=R/'results'/run;D.mkdir();(R/'results/FACTOR_LATEST').write_text(run+'\n');source=ROOT/'scripts/real_training_v3/factor_training_worker.py';shutil.copy2(source,D/'executed_worker.py');shutil.copy2(__file__,D/'executed_controller.py');STATE.update(status='running',active_model=model,active_run=run)
+ for e,nn in [(1,n),(2,n),(4,n),(2,n//4),(2,n//2)]:
+  if (ROOT/'STOP_AFTER_CELLPOSE').exists():break
+  assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader,nounits'],text=True).strip(),'another GPU compute job exists'
+  env={'RUN_ID':run,'MODEL_KIND':model,'BATCH':'8','TRAIN_MODE':'full','EPOCHS':str(e),'TRAIN_N':str(nn),'MPLCONFIGDIR':'/work/.cache/matplotlib','NUMBA_CACHE_DIR':'/work/.cache/numba','HF_HOME':'/work/.cache/huggingface','HF_MODULES_CACHE':'/work/.cache/modules','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}
+  if model=='esm2':
+   env.update(MODEL_ROOT=str(R),SUPPORT_PATH=str(ROOT/'scripts'));cmd=['env']+[k+'='+v for k,v in env.items()]+[str(R/'.venv/bin/python'),'-u',str(source)]
+  else:
+   cmd=['docker','run','--rm','--gpus','all','--ipc=host','--network','none','--user','1000:1000','-v',str(R)+':/work','-v',str(ROOT/'scripts')+':/support:ro'];python='/work/.venv/bin/python'
+   if model=='dnabert2':cmd+=['-v','/home/hyein/dnabert2-benchmark:/workspace:ro'];python='/workspace/miniforge/envs/dnabert2/bin/python'
+   for k,v in env.items():cmd+=['-e',k+'='+v]
+   cmd+=['nvcr.io/nvidia/pytorch:26.06-py3',python,'-u','/support/real_training_v3/factor_training_worker.py']
+  label=f'epochs{e}_n{nn}_b8';(D/(label+'_command.json')).write_text(json.dumps(cmd,indent=2));STATE['active_condition']=label;P.write_text(json.dumps(STATE,indent=2));print('START',model,label,flush=True);t=time.time()
+  with (D/(label+'.log')).open('w') as f:code=subprocess.call(cmd if cmd[0]!='docker' else ['sg','docker','-c',shlex.join(cmd)],stdout=f,stderr=subprocess.STDOUT)
+  rec={'model':model,'run':run,'condition':label,'exit_code':code,'wall_seconds':time.time()-t};(D/(label+'_exit.json')).write_text(json.dumps(rec));STATE['conditions'].append(rec);P.write_text(json.dumps(STATE,indent=2));print('EXIT',model,label,code,flush=True)
+  if code:STATE.setdefault('failed',[]).append(rec)
+  subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+STATE.update(status='finished_review_required',active_model=None,active_condition=None);P.write_text(json.dumps(STATE,indent=2));subprocess.run([sys.executable,str(ROOT/'scripts/real_training_v3/factor_reports.py')],check=True)
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs1_n1024_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/epochs1_n1024_b8_command_64159d0c605bb35e.json", "sha256": "64159d0c605bb35e9a73bff9e458ce3764936c208801fd0f57f444b1b79a3805", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "env",
+  "RUN_ID=factor_control_20261102_173651_829163",
+  "MODEL_KIND=esm2",
+  "BATCH=8",
+  "TRAIN_MODE=full",
+  "EPOCHS=1",
+  "TRAIN_N=1024",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "HF_HOME=/work/.cache/huggingface",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "MODEL_ROOT=/home/hyein/ai-benchmark/esm2",
+  "SUPPORT_PATH=/home/hyein/ai-benchmark/scripts",
+  "/home/hyein/ai-benchmark/esm2/.venv/bin/python",
+  "-u",
+  "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n1024_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/epochs2_n1024_b8_command_9900c55b968db4b2.json", "sha256": "9900c55b968db4b251ff1da237a5b9912cfa9e9c6bb6dca8e9516cc9218215f6", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "env",
+  "RUN_ID=factor_control_20261102_173651_829163",
+  "MODEL_KIND=esm2",
+  "BATCH=8",
+  "TRAIN_MODE=full",
+  "EPOCHS=2",
+  "TRAIN_N=1024",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "HF_HOME=/work/.cache/huggingface",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "MODEL_ROOT=/home/hyein/ai-benchmark/esm2",
+  "SUPPORT_PATH=/home/hyein/ai-benchmark/scripts",
+  "/home/hyein/ai-benchmark/esm2/.venv/bin/python",
+  "-u",
+  "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs4_n1024_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/epochs4_n1024_b8_command_ed60fe31fd6c8d5a.json", "sha256": "ed60fe31fd6c8d5a8f6cbb6e56141f6dbc921764db0c02a9f0d45f734bfd4bb8", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "env",
+  "RUN_ID=factor_control_20261102_173651_829163",
+  "MODEL_KIND=esm2",
+  "BATCH=8",
+  "TRAIN_MODE=full",
+  "EPOCHS=4",
+  "TRAIN_N=1024",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "HF_HOME=/work/.cache/huggingface",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "MODEL_ROOT=/home/hyein/ai-benchmark/esm2",
+  "SUPPORT_PATH=/home/hyein/ai-benchmark/scripts",
+  "/home/hyein/ai-benchmark/esm2/.venv/bin/python",
+  "-u",
+  "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n256_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/epochs2_n256_b8_command_3fdf1a4db3315d79.json", "sha256": "3fdf1a4db3315d79e7b67480a713b0951ebe82c1b896973e57147586c73e1251", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "env",
+  "RUN_ID=factor_control_20261102_173651_829163",
+  "MODEL_KIND=esm2",
+  "BATCH=8",
+  "TRAIN_MODE=full",
+  "EPOCHS=2",
+  "TRAIN_N=256",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "HF_HOME=/work/.cache/huggingface",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "MODEL_ROOT=/home/hyein/ai-benchmark/esm2",
+  "SUPPORT_PATH=/home/hyein/ai-benchmark/scripts",
+  "/home/hyein/ai-benchmark/esm2/.venv/bin/python",
+  "-u",
+  "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
+]
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>추가 요인 비교 실행·보고 원문: epochs2_n512_b8_command.json</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/results/factor_control_20261102_173651_829163/report_snapshots/epochs2_n512_b8_command_0fe7dcc6f95e4c3e.json", "sha256": "0fe7dcc6f95e4c3e5bf2ac6da4b382f615e9a695a9ceefe0da1213332674e682", "encoding": "utf-8", "added_final_newline": true} -->
+```json
+[
+  "env",
+  "RUN_ID=factor_control_20261102_173651_829163",
+  "MODEL_KIND=esm2",
+  "BATCH=8",
+  "TRAIN_MODE=full",
+  "EPOCHS=2",
+  "TRAIN_N=512",
+  "MPLCONFIGDIR=/work/.cache/matplotlib",
+  "NUMBA_CACHE_DIR=/work/.cache/numba",
+  "HF_HOME=/work/.cache/huggingface",
+  "HF_MODULES_CACHE=/work/.cache/modules",
+  "HF_HUB_OFFLINE=1",
+  "TRANSFORMERS_OFFLINE=1",
+  "MODEL_ROOT=/home/hyein/ai-benchmark/esm2",
+  "SUPPORT_PATH=/home/hyein/ai-benchmark/scripts",
+  "/home/hyein/ai-benchmark/esm2/.venv/bin/python",
+  "-u",
+  "/home/hyein/ai-benchmark/scripts/real_training_v3/factor_training_worker.py"
+]
 ```
 <!-- END_RESTORE_FILE -->
 
