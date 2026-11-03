@@ -25,56 +25,144 @@
 
 **용어:** 처음부터 학습=무작위 초기화에서 시작; 전체/일부 층 파인튜닝=공개 가중치에서 해당 부분 갱신; 분류기만 학습=본체를 동결하고 head만 갱신. **용량probe는 학습 방식이 아니라 짧은 자원 측정 목적**이며,실제로 수행한 가중치 갱신 방식과 함께 표기한다. 원본 전체 데이터 수와 해당 run에서 실제 사용한 부분집합 수를 구분한다.
 
-### 실제 입력 파일은 이렇게 생겼다
+### 실제 파일 → 토큰 → 임베딩 → 최종 예측: 한 샘플을 끝까지 따라가기
 
-**추론용 UniProt와 파인튜닝용 GFP 데이터는 서로 다른 파일·과제다.** 표의 한 레코드는 단백질 한 개다.
+**ESM-2 본체의 임베딩과, 추가 회귀 head의 최종 예측은 서로 다른 출력이다.** 아래는 저장된2epoch 파인튜닝 모델의 **test 샘플 `test_20952` 한 건**을 동일하게 끝까지 따라간 예다. test는 평가용이며 이 샘플로 가중치를 갱신하지 않는다. train도 같은 레코드 구조를 사용한다.
 
-|단계|실제 파일 형식·경로(esm2/기준)|레코드 한 개의 내용|정답 유무|
+#### 0. 처음 읽는 파일부터 구분
+
+|과제|원본·실제 실행 파일|레코드 한 개|정답|
 |---|---|---|---|
-|추론 원본|FASTA: `data/uniprot_reviewed_900_950_20261028.fasta` 및 추가 UniProt 페이지|`>`로 시작하는 단백질ID 헤더 + 아미노산 문자열|GFP 형광 정답 없음|
-|추론 실제 실행 입력|JSON 배열: `results/real_input_capacity_20261102_143107_778283/inputs.json`|`{"id": "단백질ID", "sequence": "아미노산 문자열"}`; 실제 고유 서열의 선택·순서 저장|없음; 출력은 임베딩|
-|파인튜닝 원본|LMDB: `data/fluorescence/fluorescence_train.lmdb`; 별도 valid/test LMDB|숫자 key로 저장한 pickle dictionary: `primary`, `protein_length`, `log_fluorescence`, `num_mutations`|서열마다 실수 형광값1개|
-|GPU 모델 입력|원본 파일을 토큰화해 만든 PyTorch int64 tensor|`tokens[B,L+2]`: B개 단백질 × BOS/아미노산/EOS 및 padding|파인튜닝 정답은 별도 float32 `[B]`|
+|긴 서열 임베딩 추론|UniProt FASTA → 실제 선택·순서를 저장한 run의 `inputs.json`|`id`와900–950AA `sequence`|없음;최종 산출물은1280차원임베딩|
+|GFP 형광 예측 파인튜닝·평가|`data/fluorescence/fluorescence_train.lmdb`, `fluorescence_valid.lmdb`, `fluorescence_test.lmdb`|숫자key의pickle dictionary;237AA `primary`와실수 `log_fluorescence` 등|단백질당실수1개|
 
-#### 파인튜닝 LMDB에서 직접 읽은 실제 레코드
+아래1–7단계는 두 번째 과제다. `.lmdb`는CSV가 아닌 key-value 저장소다. 아래 JSON은 실제 record를 읽어서 사람이 볼 수 있게 펼친 표시다.
 
-원본 train에는 **21446개 레코드**가 있다. 추가 실험은 그중 seed42로 고른 **1,024개**를 사용하며, 아래는 그 선택의 첫 레코드(key `20952`, 실행ID `train_20952`)다. 아래 JSON은 **이해를 위해 LMDB dictionary를 펼쳐 표시한 것**이며, 원본 파일이 JSON이라는 뜻은 아니다.
+#### 1. 원본 레코드 — 입력 X와 정답 y가 같이 저장됨
+
+파일: `data/fluorescence/fluorescence_test.lmdb`, key: `20952`.
 
 ```json
 {
-  "primary": "SKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIRVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGVDELYK",
-  "protein_length": 237,
+  "primary": "SKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDALVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKDGIKVNFKIRHNIDGCVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK",
+  "protein_length": 236,
   "log_fluorescence": [
-    3.7892184257507324
+    3.200873613357544
   ],
-  "num_mutations": 2
+  "num_mutations": 4
 }
 ```
 
-|필드|실제 모양·자료형|실험에서의 역할|
-|---|---|---|
-|`primary`|아미노산 문자237개|**학습 입력 X**|
-|`protein_length`|정수237|길이 확인용 metadata|
-|`log_fluorescence`|float32 배열 `[1]`, 값 **3.7892184257507324**|**정답 y**; 단백질 전체의 형광값1개를 예측하는 회귀|
-|`num_mutations`|정수2|metadata; 이번 회귀 정답으로 사용하지 않음|
+- **X:** `primary`의237개 아미노산 문자. 모델이 읽을 단백질서열이다.
+- **y:** `log_fluorescence[0]`의실제측정값 **3.200874**. 한서열의형광값을예측하는회귀이며 위치별237개라벨이아니다.
+- `protein_length`, `num_mutations`는검사용metadata. 이번예측모델에별도입력하지않는다.
 
-#### 파일에서 GPU까지: 실제 shape
+#### 2. 토큰화 — 문자서열이 정수ID 배열로 바뀜
 
 ```text
-파인튜닝: LMDB의 primary(237 AA) + log_fluorescence(실수1개)
-        → 토큰화 [B,239] int64 + 정답 [B] float32
-        → ESM-2의 토큰별 표현 [B,239,1280]
-        → 실제 아미노산 부분 평균 [B,1280]
-        → 회귀 head [B,1] → 형광값 예측
+237개 아미노산 문자
+  → BOS 1개 + 아미노산 token237개 + EOS 1개
+  → tokens shape [1,239], dtype int64
 
-긴 서열 추론: 실제 JSON의 sequence(900–950 AA), 전체pool 최대950AA
-        → padding 포함 tokens [B,952] int64
-        → 단백질별 임베딩 [B,1280]
+첫16개 실제 ID: [0, 8, 15, 6, 9, 9, 4, 18, 11, 6, 7, 7, 14, 12, 4, 7]
+마지막8개 실제 ID: [6, 20, 13, 9, 4, 19, 15, 2]
 ```
 
-따라서 **배치8의 파인튜닝은 `[8,239]`이고, 같은 배치8의 긴 서열 추론은 `[8,952]`**다. 파인튜닝 서열237AA와 추론 서열950AA를 같은 입력으로 생각하면 안 된다. epoch는 같은 학습 서열들을 몇 번 반복했는지이며,토큰 길이를 뜻하지 않는다.
+BOS ID=0,EOS ID=2,PAD ID=1. token ID는vocabulary에서문자를찾는번호이며형광값이아니다. 일반batch는 `[B,239]`;배치8이면 `[8,239]`다.
 
-실제 GFP 예제의 첫16개 token ID: `[0, 8, 15, 6, 9, 9, 4, 18, 11, 6, 7, 7, 14, 12, 4, 7]`. 숫자는 vocabulary ID이며 아미노산 개수나 형광값이 아니다. 평균·표준편차를 이용한 정답 표준화는 train 기준으로만 계산하며 평가값은 원래 형광 스케일로 복원한다.
+#### 3. ESM-2 본체 출력 — 아직 단백질당 벡터1개가 아님
+
+```text
+입력: [1,239] int64
+  → ESM-2의33층 Transformer
+  → 마지막층 token별 표현: [1,239,1280] float32
+```
+
+239개token각각에1280개숫자가생긴다. BOS/EOS도이단계에는포함된다. **첫번째아미노산token의1280차원중앞8개 실제값:**
+
+```text
+[0.004640, 0.062401, -0.013886, 0.135095, -0.048517, -0.090614, -0.070437, 0.081359]
+```
+
+전체값은 `intermediate_arrays.npz`의 `token_representations`에저장했다.
+
+#### 4. Mean pooling — 단백질당1280차원 임베딩1개
+
+BOS/EOS/PAD를제외한실제아미노산237개의벡터만평균한다.
+
+```text
+[1,239,1280]
+  → 유효아미노산237개만 선택 [1,237,1280]
+  → 아미노산축 평균
+  → 단백질 임베딩 [1,1280] float32
+```
+
+**단백질임베딩의앞8개 실제값(전체1280개중일부):**
+
+```text
+[0.038023, -0.053853, 0.006550, 0.028618, -0.004662, -0.032065, -0.008983, 0.151076]
+```
+
+이값이임베딩이다. 입력서열의문자도,최종형광예측값도아니다. 무라벨단백질임베딩과제는이단계의벡터를최종산출물로저장한다.
+
+#### 5. 회귀 head — 임베딩을 실수 예측1개로 변환
+
+```text
+단백질 임베딩 [1,1280]
+  → Linear(weight [1,1280], bias [1])
+  → 표준화된 형광 예측값 [1,1] float32
+```
+
+이샘플의실제head출력은 **0.010264454**다. class확률이나softmax출력이아니며,train라벨기준으로표준화된회귀값이다. 일반batch출력은 `[B,1]`이다.
+
+#### 6. 정답 스케일로 복원 → 실제 형광값과 비교
+
+학습train1024개의정답에서계산한평균·표준편차를그대로사용한다.
+
+```text
+train label mean = 3.171193587
+train label std  = 0.842629501
+예측 log_fluorescence = head출력 × train std + train mean
+```
+
+|이 test 샘플의 값|실측·재계산값|
+|---|---:|
+|head의표준화예측|0.010264454|
+|원래log형광스케일로복원한최종예측|**3.179843**|
+|원본레코드의실제정답|**3.200874**|
+|표준화한정답 `(y-mean)/std`|0.035223103|
+|이한샘플의표준화squared error|0.000622934|
+
+**훈련에서는**표준화한예측과정답의MSE로역전파해가중치를갱신한다. **test평가에서는**가중치갱신없이예측·정답을비교한다. 위1개예시의오차는전체512개test의MSE/Spearman을대체하지않는다. 여기서복원은원래**log형광**스케일이며물리적선형형광으로역로그변환한값은아니다.
+
+#### 7. 실제 저장 파일과 각 배열의 모양
+
+|단계|저장된파일/내부key|한샘플shape·dtype|의미|
+|---|---|---|---|
+|원본|test LMDB의key `20952`|문자열237AA + float32정답 `[1]`|X와y를같이보관|
+|토큰|`intermediate_arrays.npz::tokens`|`[1,239]`,int64|ESM-2실제입력|
+|token별표현|`intermediate_arrays.npz::token_representations`|`[1,239,1280]`,float32|각위치의문맥표현|
+|평균낼위치|`intermediate_arrays.npz::valid_residue_mask`|`[1,239]`,bool;True237개|BOS/EOS/PAD제외|
+|단백질임베딩|`intermediate_arrays.npz::protein_embedding`|`[1,1280]`,float32|유효token표현의평균|
+|head직후|`intermediate_arrays.npz::standardized_prediction`|`[1,1]`,float32|표준화된형광예측|
+|최종예측|`intermediate_arrays.npz::log_fluorescence_prediction`|`[1,1]`,float32|원래log형광스케일|
+|정답|`intermediate_arrays.npz::true_log_fluorescence`|`[1]`,float32|실제측정log형광|
+|읽기쉬운출력|`prediction.json`|아래JSON|ID·예측·정답대조|
+|기존GPU test 전체출력|원run의 `test_outputs.npy`|`[512,1]`,float32|전체test의head표준화출력.원형광스케일은별도복원필요|
+
+`::key`는별도파일이아닌NPZ안의배열이름이다. 새단계별배열위치: `results/factor_control_20261102_173651_829163/full_training_b8_e2_n1024/input_output_trace_cpu/intermediate_arrays.npz`.
+
+```json
+{
+  "sample_id": "test_20952",
+  "predicted_log_fluorescence": 3.179842710494995,
+  "true_log_fluorescence": 3.200873613357544,
+  "standardized_model_output": 0.010264454409480095,
+  "note": "CPU replay of saved fine-tuned model; sourceGPU raw output verified"
+}
+```
+
+**검증범위:**위중간값은기존저장파인튜닝모델을CPU에서새로불러와확인·저장했다. 원GPU벤치마크중에모든중간배열을캡처했던것처럼표현하지않는다. 원GPU `test_outputs.npy`의같은샘플과head출력차이는 **6.333e-08**로확인했다. GPU학습/측정재실행은하지않았으며이CPU추적시간을벤치마크시간에섞지않는다.
 
 ### 모델 적재 직후 — 첫 입력 forward 이전
 
@@ -2525,5 +2613,181 @@ env.close();seq=row['primary'];_,_,tok=converter([(f'train_{index}',seq)]);D=R/'
 print(json.dumps(out,ensure_ascii=False,indent=2))
 ```
 <!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>입력→출력 단계별 확인 실행 원문: trace_saved_model.py</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/scripts/report_inputs/trace_saved_model.py", "sha256": "79bfe4db72a652f2e72d791c8b0c3d605d5ecb03d48f8d358ca8cafa7178f35d", "encoding": "utf-8", "added_final_newline": false} -->
+```python
+"""CPU-only stage trace of one held-out sample using an already saved fine-tuned model."""
+from pathlib import Path
+import os,json,pickle,gc,hashlib
+os.environ['CUDA_VISIBLE_DEVICES']=''
+import torch,numpy as np,esm,lmdb
+R=Path('/home/hyein/ai-benchmark/esm2');D=R/'results'/(R/'results/FACTOR_LATEST').read_text().strip();C=D/'full_training_b8_e2_n1024';O=C/'input_output_trace_cpu';O.mkdir(exist_ok=True);torch.set_num_threads(8);torch.manual_seed(42)
+ck=torch.load(C/'model.pt',map_location='cpu',weights_only=True);sample_id=ck['split_ids']['test'][0];index=int(sample_id.split('_')[-1]);env=lmdb.open(str(R/'data/fluorescence/fluorescence_test.lmdb'),readonly=True,lock=False)
+with env.begin() as txn:row=pickle.loads(txn.get(str(index).encode()))
+env.close();raw=torch.load(R/'models/esm2_t33_650M_UR50D.pt',map_location='cpu',weights_only=False);reg=torch.load(R/'models/esm2_t33_650M_UR50D-contact-regression.pt',map_location='cpu',weights_only=True);model,alphabet=esm.pretrained.load_model_and_alphabet_core('esm2_t33_650M_UR50D',raw,reg);del raw,reg;gc.collect();model.load_state_dict(ck['backbone'],strict=True);head=torch.nn.Linear(1280,1);head.load_state_dict(ck['head'],strict=True);norm=ck['target_standardization'];del ck;gc.collect();model.float().eval();head.float().eval();seq=row['primary'];_,_,tokens=alphabet.get_batch_converter()([(sample_id,seq)])
+with torch.no_grad():
+ output=model(tokens,repr_layers=[33],return_contacts=False);h=output['representations'][33];valid=tokens.ne(alphabet.padding_idx);valid[:,0]=False;valid[torch.arange(len(valid)),valid.sum(1)]=False;embedding=(h*valid.unsqueeze(-1)).sum(1)/valid.sum(1).unsqueeze(-1);standardized=head(embedding);prediction=standardized*norm['std']+norm['mean']
+truth=float(row['log_fluorescence'][0]);target_standard=(truth-norm['mean'])/norm['std'];gpu=np.load(C/'test_outputs.npy')[0,0];diff=abs(float(standardized[0,0])-float(gpu));assert diff<1e-4,diff
+np.savez(O/'intermediate_arrays.npz',tokens=tokens.numpy(),valid_residue_mask=valid.numpy(),token_representations=h.numpy(),protein_embedding=embedding.numpy(),standardized_prediction=standardized.numpy(),log_fluorescence_prediction=prediction.numpy(),true_log_fluorescence=np.asarray([truth],np.float32))
+S={'sample_id':sample_id,'split':'held-out test, first row of saved test_outputs.npy','source_lmdb':'data/fluorescence/fluorescence_test.lmdb','source_key':str(index),'raw_record':{'primary':seq,'protein_length':int(row['protein_length']),'log_fluorescence':row['log_fluorescence'].tolist(),'num_mutations':int(row['num_mutations'])},'tokens':{'shape':list(tokens.shape),'dtype':str(tokens.dtype),'first16':tokens[0,:16].tolist(),'last8':tokens[0,-8:].tolist(),'bos_id':alphabet.cls_idx,'eos_id':alphabet.eos_idx,'pad_id':alphabet.padding_idx},'token_representations':{'shape':list(h.shape),'dtype':str(h.dtype),'first_residue_first8':h[0,1,:8].tolist()},'valid_residue_mask':{'shape':list(valid.shape),'true_count':int(valid.sum()),'policy':'exclude BOS/EOS/PAD'},'protein_embedding':{'shape':list(embedding.shape),'dtype':str(embedding.dtype),'first8':embedding[0,:8].tolist()},'head':{'weight_shape':list(head.weight.shape),'bias_shape':list(head.bias.shape),'output_shape':list(standardized.shape)},'standardization':norm,'standardized_prediction':float(standardized[0,0]),'log_fluorescence_prediction':float(prediction[0,0]),'true_log_fluorescence':truth,'standardized_target':target_standard,'single_sample_standardized_squared_error':float((float(standardized[0,0])-target_standard)**2),'saved_gpu_standardized_prediction':float(gpu),'cpu_saved_gpu_prediction_abs_difference':diff,'provenance':'New CPU-only replay with saved fine-tuned checkpoint; intermediate arrays were not captured during the original GPU timing run. No new fine-tuning or GPU benchmark.','saved_model':str((C/'model.pt').relative_to(R)),'saved_arrays':str((O/'intermediate_arrays.npz').relative_to(R))};(O/'trace.json').write_text(json.dumps(S,ensure_ascii=False,indent=2));print(json.dumps({k:S[k] for k in ['sample_id','log_fluorescence_prediction','true_log_fluorescence','cpu_saved_gpu_prediction_abs_difference']},indent=2))
+```
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<details><summary>입력→출력 단계별 확인 실행 원문: build_stage_section.py</summary>
+
+<!-- RESTORE_FILE {"path": "esm2/scripts/report_inputs/build_stage_section.py", "sha256": "5da5c881a6bde335b4f2789d54fd9fa2fb59d2f548ca25f8f00d905360ad5fcc", "encoding": "utf-8", "added_final_newline": false} -->
+````python
+from pathlib import Path
+import json
+R=Path('/home/hyein/ai-benchmark/esm2');D=R/'results'/(R/'results/FACTOR_LATEST').read_text().strip();C=D/'full_training_b8_e2_n1024';T=C/'input_output_trace_cpu';x=json.loads((T/'trace.json').read_text());row=x['raw_record'];short=lambda a:'['+', '.join(f'{v:.6f}' for v in a)+']';arr=x['saved_arrays'];norm=x['standardization']
+prediction={'sample_id':x['sample_id'],'predicted_log_fluorescence':x['log_fluorescence_prediction'],'true_log_fluorescence':x['true_log_fluorescence'],'standardized_model_output':x['standardized_prediction'],'note':'CPU replay of saved fine-tuned model; sourceGPU raw output verified'};(T/'prediction.json').write_text(json.dumps(prediction,ensure_ascii=False,indent=2))
+t='''### 실제 파일 → 토큰 → 임베딩 → 최종 예측: 한 샘플을 끝까지 따라가기
+
+**ESM-2 본체의 임베딩과, 추가 회귀 head의 최종 예측은 서로 다른 출력이다.** 아래는 저장된2epoch 파인튜닝 모델의 **test 샘플 `'''+x['sample_id']+'''` 한 건**을 동일하게 끝까지 따라간 예다. test는 평가용이며 이 샘플로 가중치를 갱신하지 않는다. train도 같은 레코드 구조를 사용한다.
+
+#### 0. 처음 읽는 파일부터 구분
+
+|과제|원본·실제 실행 파일|레코드 한 개|정답|
+|---|---|---|---|
+|긴 서열 임베딩 추론|UniProt FASTA → 실제 선택·순서를 저장한 run의 `inputs.json`|`id`와900–950AA `sequence`|없음;최종 산출물은1280차원임베딩|
+|GFP 형광 예측 파인튜닝·평가|`data/fluorescence/fluorescence_train.lmdb`, `fluorescence_valid.lmdb`, `fluorescence_test.lmdb`|숫자key의pickle dictionary;237AA `primary`와실수 `log_fluorescence` 등|단백질당실수1개|
+
+아래1–7단계는 두 번째 과제다. `.lmdb`는CSV가 아닌 key-value 저장소다. 아래 JSON은 실제 record를 읽어서 사람이 볼 수 있게 펼친 표시다.
+
+#### 1. 원본 레코드 — 입력 X와 정답 y가 같이 저장됨
+
+파일: `'''+x['source_lmdb']+'''`, key: `'''+x['source_key']+'''`.
+
+```json
+'''+json.dumps(row,ensure_ascii=False,indent=2)+'''
+```
+
+- **X:** `primary`의237개 아미노산 문자. 모델이 읽을 단백질서열이다.
+- **y:** `log_fluorescence[0]`의실제측정값 **'''+f"{x['true_log_fluorescence']:.6f}"+'''**. 한서열의형광값을예측하는회귀이며 위치별237개라벨이아니다.
+- `protein_length`, `num_mutations`는검사용metadata. 이번예측모델에별도입력하지않는다.
+
+#### 2. 토큰화 — 문자서열이 정수ID 배열로 바뀜
+
+```text
+237개 아미노산 문자
+  → BOS 1개 + 아미노산 token237개 + EOS 1개
+  → tokens shape [1,239], dtype int64
+
+첫16개 실제 ID: '''+str(x['tokens']['first16'])+'''
+마지막8개 실제 ID: '''+str(x['tokens']['last8'])+'''
+```
+
+BOS ID='''+str(x['tokens']['bos_id'])+''',EOS ID='''+str(x['tokens']['eos_id'])+''',PAD ID='''+str(x['tokens']['pad_id'])+'''. token ID는vocabulary에서문자를찾는번호이며형광값이아니다. 일반batch는 `[B,239]`;배치8이면 `[8,239]`다.
+
+#### 3. ESM-2 본체 출력 — 아직 단백질당 벡터1개가 아님
+
+```text
+입력: [1,239] int64
+  → ESM-2의33층 Transformer
+  → 마지막층 token별 표현: [1,239,1280] float32
+```
+
+239개token각각에1280개숫자가생긴다. BOS/EOS도이단계에는포함된다. **첫번째아미노산token의1280차원중앞8개 실제값:**
+
+```text
+'''+short(x['token_representations']['first_residue_first8'])+'''
+```
+
+전체값은 `intermediate_arrays.npz`의 `token_representations`에저장했다.
+
+#### 4. Mean pooling — 단백질당1280차원 임베딩1개
+
+BOS/EOS/PAD를제외한실제아미노산237개의벡터만평균한다.
+
+```text
+[1,239,1280]
+  → 유효아미노산237개만 선택 [1,237,1280]
+  → 아미노산축 평균
+  → 단백질 임베딩 [1,1280] float32
+```
+
+**단백질임베딩의앞8개 실제값(전체1280개중일부):**
+
+```text
+'''+short(x['protein_embedding']['first8'])+'''
+```
+
+이값이임베딩이다. 입력서열의문자도,최종형광예측값도아니다. 무라벨단백질임베딩과제는이단계의벡터를최종산출물로저장한다.
+
+#### 5. 회귀 head — 임베딩을 실수 예측1개로 변환
+
+```text
+단백질 임베딩 [1,1280]
+  → Linear(weight [1,1280], bias [1])
+  → 표준화된 형광 예측값 [1,1] float32
+```
+
+이샘플의실제head출력은 **'''+f"{x['standardized_prediction']:.9f}"+'''**다. class확률이나softmax출력이아니며,train라벨기준으로표준화된회귀값이다. 일반batch출력은 `[B,1]`이다.
+
+#### 6. 정답 스케일로 복원 → 실제 형광값과 비교
+
+학습train1024개의정답에서계산한평균·표준편차를그대로사용한다.
+
+```text
+train label mean = '''+f"{norm['mean']:.9f}"+'''
+train label std  = '''+f"{norm['std']:.9f}"+'''
+예측 log_fluorescence = head출력 × train std + train mean
+```
+
+|이 test 샘플의 값|실측·재계산값|
+|---|---:|
+|head의표준화예측|'''+f"{x['standardized_prediction']:.9f}"+'''|
+|원래log형광스케일로복원한최종예측|**'''+f"{x['log_fluorescence_prediction']:.6f}"+'''**|
+|원본레코드의실제정답|**'''+f"{x['true_log_fluorescence']:.6f}"+'''**|
+|표준화한정답 `(y-mean)/std`|'''+f"{x['standardized_target']:.9f}"+'''|
+|이한샘플의표준화squared error|'''+f"{x['single_sample_standardized_squared_error']:.9f}"+'''|
+
+**훈련에서는**표준화한예측과정답의MSE로역전파해가중치를갱신한다. **test평가에서는**가중치갱신없이예측·정답을비교한다. 위1개예시의오차는전체512개test의MSE/Spearman을대체하지않는다. 여기서복원은원래**log형광**스케일이며물리적선형형광으로역로그변환한값은아니다.
+
+#### 7. 실제 저장 파일과 각 배열의 모양
+
+|단계|저장된파일/내부key|한샘플shape·dtype|의미|
+|---|---|---|---|
+|원본|test LMDB의key `'''+x['source_key']+'''`|문자열237AA + float32정답 `[1]`|X와y를같이보관|
+|토큰|`intermediate_arrays.npz::tokens`|`[1,239]`,int64|ESM-2실제입력|
+|token별표현|`intermediate_arrays.npz::token_representations`|`[1,239,1280]`,float32|각위치의문맥표현|
+|평균낼위치|`intermediate_arrays.npz::valid_residue_mask`|`[1,239]`,bool;True237개|BOS/EOS/PAD제외|
+|단백질임베딩|`intermediate_arrays.npz::protein_embedding`|`[1,1280]`,float32|유효token표현의평균|
+|head직후|`intermediate_arrays.npz::standardized_prediction`|`[1,1]`,float32|표준화된형광예측|
+|최종예측|`intermediate_arrays.npz::log_fluorescence_prediction`|`[1,1]`,float32|원래log형광스케일|
+|정답|`intermediate_arrays.npz::true_log_fluorescence`|`[1]`,float32|실제측정log형광|
+|읽기쉬운출력|`prediction.json`|아래JSON|ID·예측·정답대조|
+|기존GPU test 전체출력|원run의 `test_outputs.npy`|`[512,1]`,float32|전체test의head표준화출력.원형광스케일은별도복원필요|
+
+`::key`는별도파일이아닌NPZ안의배열이름이다. 새단계별배열위치: `'''+arr+'''`.
+
+```json
+'''+json.dumps(prediction,ensure_ascii=False,indent=2)+'''
+```
+
+**검증범위:**위중간값은기존저장파인튜닝모델을CPU에서새로불러와확인·저장했다. 원GPU벤치마크중에모든중간배열을캡처했던것처럼표현하지않는다. 원GPU `test_outputs.npy`의같은샘플과head출력차이는 **'''+f"{x['cpu_saved_gpu_prediction_abs_difference']:.3e}"+'''**로확인했다. GPU학습/측정재실행은하지않았으며이CPU추적시간을벤치마크시간에섞지않는다.
+
+'''
+(R/'data/report_input_section.txt').write_text(t)
+print('Stage section generated from verified saved-model CPU trace')
+````
+<!-- END_RESTORE_FILE -->
+
+</details>
+
+<!-- CPU_TRACE_COMMANDS -->
+<details><summary>단계별 CPU 확인 및 보고서 생성 명령</summary>
+
+```bash
+CUDA_VISIBLE_DEVICES='' esm2/.venv/bin/python -u esm2/scripts/report_inputs/trace_saved_model.py > esm2/results/trace_saved_model_cpu.log 2>&1
+python3 esm2/scripts/report_inputs/build_stage_section.py
+python3 scripts/real_training_v3/standardize_overview.py
+```
 
 </details>
